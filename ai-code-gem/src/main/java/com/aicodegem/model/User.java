@@ -12,6 +12,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String phoneNum;
 
     // 기본 생성자 (No-args constructor)
     public User() {}
@@ -22,6 +23,7 @@ public class User {
         this.username = username; // 로그인아이디 (중복체크함)
         this.password = password;
         this.email = email;
+        this.phoneNum = phoneNum;
     }
 
     // Getters and Setters
@@ -57,14 +59,23 @@ public class User {
         this.email = email;
     }
 
-    // Optional: toString() method for debugging
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public String getPhoneNum() {
+        return phoneNum;
     }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
+    // Optional: toString() method for debugging
+   @Override
+public String toString() {
+    return "User{" +
+            "id='" + id + '\'' +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", email='" + email + '\'' +
+            ", phoneNum='" + phoneNum + '\'' +  
+            '}';
+}
 }

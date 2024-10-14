@@ -6,6 +6,7 @@ public class UserDTO {
     private String username;
     private String password;
     private String email;
+    private String phoneNum;
 
     // Constructor, Getters and Setters
     public UserDTO() {}
@@ -13,6 +14,7 @@ public class UserDTO {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.phoneNum = phoneNum;
     }
 
     public String getUsername(){
@@ -39,4 +41,11 @@ public class UserDTO {
         this.email = email;
     }
         
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
 }

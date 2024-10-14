@@ -28,6 +28,7 @@ public class UserService {
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
+        user.setPhoneNum(userDTO.getPhoneNum());
 
         userRepository.save(user);
         return "User registered successfully";
