@@ -1,0 +1,55 @@
+.menu-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+.menu-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-link {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.logo-highlight {
+  color: #1abc9c; /* Highlight color for part of the logo */
+}
+
+.logo-subtext {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.menu-items, .menu-auth {
+  display: flex;
+  gap: 20px;
+}
+
+.menu-item {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.menu-item:hover {
+  color: #1abc9c;
+}
+
+.menu-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.menu-auth {
+  gap: 15px; /* Add spacing between login and sign-up links */
+}
