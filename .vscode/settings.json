@@ -1,3 +1,11 @@
 {
+    "java.home": "C:/Program Files/Java/jdk-17",
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/.classpath": true,
+      "**/.project": true,
+      "**/.settings": true,
+      "**/.vscode": true
+    },
     "java.configuration.updateBuildConfiguration": "interactive"
 }
