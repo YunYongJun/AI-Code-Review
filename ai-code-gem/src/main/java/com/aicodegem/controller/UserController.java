@@ -18,3 +18,19 @@ public class UserController {
         return userService.registerUser(userDTO);
     }
 }
+
+// UserController.java
+@PostMapping("/login")
+public String login(@RequestBody UserDTO userDTO) throws Exception {
+    // 인증 처리 (username, password)
+    try {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
+    } catch (Exception e) {
+        throw new Exception("Invalid username or password");
+    }
+
+    // 사용자 정보를 기반으로 JWT 토큰 발급
+    final UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUsername());
+    return jwtUtil.generateToken(userDetails.getUsername());
+}
