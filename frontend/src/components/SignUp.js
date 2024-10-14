@@ -52,18 +52,6 @@ const SignUp = () => {
           />
         </div>
 
-        {/* Id 입력 필드 */}
-        <div style={inputContainerStyle}>
-          <label>아이디</label>
-          <input
-            type="text"
-            name="id"
-            value={formData.id}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-        </div>
 
         {/* Password 입력 필드 */}
         <div style={inputContainerStyle}>
