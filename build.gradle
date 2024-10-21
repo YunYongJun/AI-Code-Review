@@ -37,11 +37,20 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+sourceSets {
+    main.java.srcDirs = ['src/main/java']
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-// task clean(type: Delete) {
-//     delete rootProject.buildDir
-// }
+// 올바른 mainClass 설정 추가
+bootJar {
+    mainClass.set('com.aicodegem.AiCodeGemApplication')
+}
+
+bootRun {
+    mainClass.set('com.aicodegem.AiCodeGemApplication')
+}
 
