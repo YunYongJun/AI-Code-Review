@@ -1,13 +1,13 @@
 // 사용자 엔티티
-package com.aicodegrader.model;
+package com.aicodegem.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "users")  // MongoDB에서 "users" 컬렉션과 매핑
+@Document(collection = "users") // MongoDB에서 "users" 컬렉션과 매핑
 public class User {
 
-    @Id  // MongoDB의 _id 필드와 매핑
+    @Id // MongoDB의 _id 필드와 매핑
     private String id;
     private String username;
     private String password;
@@ -15,11 +15,12 @@ public class User {
     private String phoneNum;
 
     // 기본 생성자 (No-args constructor)
-    public User() {}
+    public User() {
+    }
 
     // 모든 필드를 받는 생성자
     public User(String id, String username, String password, String email) {
-        this.id = id; //몽고디비에서 자동으로 설정됨
+        this.id = id; // 몽고디비에서 자동으로 설정됨
         this.username = username; // 로그인아이디 (중복체크함)
         this.password = password;
         this.email = email;
@@ -68,14 +69,14 @@ public class User {
     }
 
     // Optional: toString() method for debugging
-   @Override
-public String toString() {
-    return "User{" +
-            "id='" + id + '\'' +
-            ", username='" + username + '\'' +
-            ", password='" + password + '\'' +
-            ", email='" + email + '\'' +
-            ", phoneNum='" + phoneNum + '\'' +  
-            '}';
-}
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                '}';
+    }
 }
