@@ -1,9 +1,9 @@
 //회원가입 관련 비지니스 로직
-package com.aicodegrader.service;
+package com.aicodegem.service;
 
-import com.aicodegrader.dto.UserDTO;
-import com.aicodegrader.model.User;
-import com.aicodegrader.repository.UserRepository;
+import com.aicodegem.dto.UserDTO;
+import com.aicodegem.model.User;
+import com.aicodegem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
