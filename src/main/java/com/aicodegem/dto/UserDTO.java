@@ -1,6 +1,4 @@
-//사용자 데이터 전송 객체
-
-package com.aicodegrader.dto;
+package com.aicodegem.dto;
 
 public class UserDTO {
     private String username;
@@ -9,15 +7,17 @@ public class UserDTO {
     private String phoneNum;
 
     // Constructor, Getters and Setters
-    public UserDTO() {}
-    public UserDTO(String username, String password, String email) {
+    public UserDTO() {
+    }
+
+    public UserDTO(String username, String password, String email, String phoneNum) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.phoneNum = phoneNum;
+        this.phoneNum = phoneNum; // 수정된 부분
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
@@ -40,7 +40,7 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-        
+
     public String getPhoneNum() {
         return phoneNum;
     }
