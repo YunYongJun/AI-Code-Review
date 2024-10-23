@@ -1,4 +1,3 @@
-
 package com.aicodegem;
 
 import org.springframework.boot.SpringApplication;

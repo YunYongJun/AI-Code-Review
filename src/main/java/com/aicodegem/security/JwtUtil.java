@@ -1,3 +1,4 @@
+package com.aicodegem.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
