@@ -9,14 +9,17 @@ import com.aicodegem.model.User;
 import com.aicodegem.repository.UserRepository;
 import com.aicodegem.dto.UserDTO;
 import java.util.ArrayList;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -28,8 +31,20 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
+    // 유저 등록 로직
     public String registerUser(UserDTO userDTO) {
-        // 유저 등록 로직 구현
-        return "User registered";
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new IllegalStateException("Username already taken.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        User newUser = new User();
+        newUser.setUsername(userDTO.getUsername());
+        newUser.setPassword(encodedPassword);
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setPhoneNum(userDTO.getPhoneNum());
+
+        userRepository.save(newUser);
+        return "User registered successfully";
     }
 }

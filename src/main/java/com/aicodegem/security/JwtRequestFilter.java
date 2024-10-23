@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import com.aicodegem.service.UserService;
+import org.springframework.context.annotation.Lazy;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -19,7 +20,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    public JwtRequestFilter(UserService userService, JwtUtil jwtUtil) {
+    public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) { // @Lazy 추가
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
@@ -30,7 +31,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String jwt = extractJwtFromRequest(request);
 
-        // JWT가 없는 경우 필터 체인 계속 진행
         if (jwt == null || jwt.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
