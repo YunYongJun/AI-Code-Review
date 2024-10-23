@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3c4ddb7dd3d1602d57d79ea05a316b253166a909
 package com.aicodegem.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +32,21 @@ public class UserService implements UserDetailsService {
     }
 
     public String registerUser(UserDTO userDTO) {
-        // 유저 등록 로직 구현
-        return "User registered";
+        // 유저가 이미 존재하는지 확인
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            return "User with this username already exists.";
+        }
+
+        // User 객체 생성
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword()); // 비밀번호 해시화하지 않음
+        user.setEmail(userDTO.getEmail());
+        user.setPhoneNum(userDTO.getPhoneNum());
+
+        // 사용자 정보 저장
+        userRepository.save(user);
+
+        return "User registered successfully.";
     }
 }

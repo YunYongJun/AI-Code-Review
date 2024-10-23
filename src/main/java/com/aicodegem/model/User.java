@@ -1,4 +1,3 @@
-// 사용자 엔티티
 package com.aicodegem.model;
 
 import org.springframework.data.annotation.Id;
@@ -19,8 +18,7 @@ public class User {
     }
 
     // 모든 필드를 받는 생성자
-    public User(String id, String username, String password, String email) {
-        this.id = id; // 몽고디비에서 자동으로 설정됨
+    public User(String username, String password, String email, String phoneNum) {
         this.username = username; // 로그인아이디 (중복체크함)
         this.password = password;
         this.email = email;

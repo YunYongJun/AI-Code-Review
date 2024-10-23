@@ -44,13 +44,22 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     
     // Spring Boot 개발 편의를 위한 DevTools
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    //developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // 테스트 의존성
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     // JUnit Platform 런처 (테스트 실행 관련)
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //  // Spring Boot 테스트 의존성
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // // MockMvc 테스트를 위한 의존성
+    // testImplementation 'org.springframework:spring-test'
+
+    // // JsonPath를 사용할 경우 필요한 의존성
+    // testImplementation 'com.jayway.jsonpath:json-path'
 }
 
 tasks.named('test') {
