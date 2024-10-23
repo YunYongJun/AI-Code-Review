@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 3c4ddb7dd3d1602d57d79ea05a316b253166a909
 package com.aicodegem.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
