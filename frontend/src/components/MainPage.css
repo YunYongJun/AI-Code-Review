@@ -1,0 +1,140 @@
+.App {
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    background-image: linear-gradient(to right, #062950, #5d7db9); /* 왼쪽에서 오른쪽으로 그라데이션 */
+    color: white;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .header-content {
+    max-width: 700px;
+    margin: auto;
+  }
+  
+  .spring-label {
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 15px;
+    font-weight: bold;
+  }
+  
+  .signup-button {
+    background-image: linear-gradient(to right, #2f0e6ba6, #aa97ca);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .hiring-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #f39c12;
+    padding: 10px;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+  }
+  
+  .code-review-section {
+    text-align: center;
+    padding: 100px;
+  }
+  
+  .code-review-section h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .code-review-section .underline {
+    width: 50px;
+    height: 2px;
+    background-color: #333;
+    margin: 10px auto;
+  }
+  
+  .code-review-section p {
+    font-size: 16px;
+    color: #555;
+    margin-top: 0;
+  }
+  
+  .footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-content {
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .multi-column-section {
+    background-color: #212121;
+    color: #ddd;
+    padding: 40px 0;
+  }
+  
+  .multi-column-container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: auto;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    flex: 1;
+    margin: 20px;
+    min-width: 200px;
+  }
+  
+  .column h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffffff;
+  }
+  
+  .column ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .column ul li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .column ul li:hover {
+    color: #1abc9c; /* 마우스를 올리면 글씨 색상이 바뀌게 설정 */
+    cursor: pointer;
+  }
+  
+  @media (max-width: 768px) {
+    .multi-column-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .column {
+      margin-bottom: 30px;
+    }
+  }
+  
+
+
+
+

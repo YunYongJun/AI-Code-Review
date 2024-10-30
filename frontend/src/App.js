@@ -1,12 +1,13 @@
-import React from 'react';
 import './App.css';
-import SignUp from './components/SignUp';
+import AppRouter from './Router';
+import MenuBar from './components/MenuBar';
 
 function App() {
   return (
-    <div className="App">
-      <SignUp />
-    </div>
+    <>
+      <MenuBar />
+      <AppRouter />
+    </>
   );
 }
 
