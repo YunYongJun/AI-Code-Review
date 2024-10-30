@@ -1,13 +1,19 @@
 package com.aicodegem.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Document(collection = "users") // MongoDB에서 "users" 컬렉션과 매핑
+@Entity // JPA 엔티티로 설정
+@Table(name = "users") // MySQL의 "users" 테이블과 매핑
 public class User {
 
-    @Id // MongoDB의 _id 필드와 매핑
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL에서 자동 생성되는 기본 키
+    private Long id; // id 타입을 Long으로 변경
+
     private String username;
     private String password;
     private String email;
@@ -26,11 +32,11 @@ public class User {
     }
 
     // Getters and Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,7 +76,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id + // Long 타입으로 변경
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +

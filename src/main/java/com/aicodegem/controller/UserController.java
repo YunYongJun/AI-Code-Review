@@ -1,5 +1,6 @@
 package com.aicodegem.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.aicodegem.service.UserService;
@@ -16,8 +17,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String registerUser(@RequestBody UserDTO userDTO) {
-        return userService.registerUser(userDTO);
+    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+        return userService.registerUser(userDTO); // ResponseEntity로 반환
     }
 
     @PostMapping("/login")

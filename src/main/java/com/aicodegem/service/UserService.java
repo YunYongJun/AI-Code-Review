@@ -1,5 +1,8 @@
 package com.aicodegem.service;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,22 +30,24 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public String registerUser(UserDTO userDTO) {
+    public ResponseEntity<String> registerUser(UserDTO userDTO) {
         // 유저가 이미 존재하는지 확인
         if (userRepository.existsByUsername(userDTO.getUsername())) {
-            return "User with this username already exists.";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON); // Content-Type 명시
+            return ResponseEntity.badRequest()
+                    .headers(headers)
+                    .body("{\"message\": \"User with this username already exists.\"}");
         }
 
-        // User 객체 생성
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword()); // 비밀번호 해시화하지 않음
-        user.setEmail(userDTO.getEmail());
-        user.setPhoneNum(userDTO.getPhoneNum());
-
-        // 사용자 정보 저장
+        // User 객체 생성 및 저장
+        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getEmail(), userDTO.getPhoneNum());
         userRepository.save(user);
 
-        return "User registered successfully.";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON); // Content-Type 명시
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body("{\"message\": \"User registered successfully.\"}");
     }
 }

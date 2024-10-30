@@ -1,42 +1,79 @@
 import React, { useState } from 'react';
 
 const SignUp = () => {
-  // 입력 데이터를 관리하기 위한 state 설정
   const [formData, setFormData] = useState({
     email: '',
-    id: '',
+    username: '',
     password: '',
-    passwordConfirm: '',
     phoneNum: '',
-    agreedToPrivacy: false, // 개인정보 수집 동의 여부
   });
 
-  // 입력 값이 변경될 때 호출되는 함수
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value, // 체크박스의 경우 체크 여부 처리
+      [name]: value,
     }));
   };
 
-  // 폼 제출 시 호출되는 함수
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
-    console.log(formData); // 콘솔에 입력 데이터 출력 (추후 API 요청 등 추가 가능)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        // 응답을 JSON으로 시도하고 실패하면 텍스트로 처리
+        let errorMessage;
+        try {
+          const errorData = await response.json(); // JSON 형식일 경우
+          errorMessage = errorData.message || "An error occurred";
+        } catch {
+          errorMessage = await response.text(); // 텍스트 형식일 경우
+        }
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json(); // 성공 시 JSON으로 변환
+      console.log(result); // 결과 출력
+
+      window.location.href = '/main';
+    } catch (error) {
+      console.error('Error:', error);
+      alert('회원가입 중 오류가 발생했습니다: ' + error.message); // 오류 메시지 출력
+    }
   };
 
   return (
     <div style={backgroundStyle}>
       <form onSubmit={handleSubmit} style={formStyle}>
-        {/* 안내 메시지 추가 */}
         <div style={messageStyle}>
           <h2>회원가입</h2>
           <p>계정이 이미 있는 경우에는 <strong>로그인해주세요.</strong></p>
           <p>
-            가입을 하면 AI 코드잼 <a href="#">이용약관</a>, <a href="#">개인정보취급방침</a> 및 <a href="#">개인정보 3자제공</a>에 동의하게 됩니다.
+            가입을 하면 AI 코드잼 <button type="button" onClick={() => alert('이용약관에 대한 내용입니다.')} style={linkStyle}>이용약관</button>,
+            <button type="button" onClick={() => alert('개인정보취급방침에 대한 내용입니다.')} style={linkStyle}>개인정보취급방침</button> 및
+            <button type="button" onClick={() => alert('개인정보 3자 제공에 대한 내용입니다.')} style={linkStyle}>개인정보 3자 제공</button>에 동의하게 됩니다.
           </p>
           <p>가입 후 아이디는 변경할 수 없습니다.</p>
+        </div>
+
+        {/* Username 입력 필드 추가 */}
+        <div style={inputContainerStyle}>
+          <label>사용자 이름</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
         </div>
 
         {/* Email 입력 필드 */}
@@ -48,10 +85,9 @@ const SignUp = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={inputStyle} // 부드러운 스타일 추가
+            style={inputStyle}
           />
         </div>
-
 
         {/* Password 입력 필드 */}
         <div style={inputContainerStyle}>
@@ -60,19 +96,6 @@ const SignUp = () => {
             type="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}
-            required
-            style={inputStyle}
-          />
-        </div>
-
-        {/* Password 확인 필드 */}
-        <div style={inputContainerStyle}>
-          <label>비밀번호 확인</label>
-          <input
-            type="password"
-            name="passwordConfirm"
-            value={formData.passwordConfirm}
             onChange={handleChange}
             required
             style={inputStyle}
@@ -92,19 +115,6 @@ const SignUp = () => {
           />
         </div>
 
-        {/* 개인정보 수집 동의 체크박스 */}
-        <div style={inputContainerStyle}>
-          <label>
-            <input
-              type="checkbox"
-              name="agreedToPrivacy"
-              checked={formData.agreedToPrivacy}
-              onChange={handleChange}
-            />
-            개인정보 수집 동의
-          </label>
-        </div>
-
         {/* 제출 버튼 */}
         <button type="submit" style={buttonStyle}>회원가입</button>
       </form>
@@ -114,7 +124,7 @@ const SignUp = () => {
 
 // 스타일 설정
 const backgroundStyle = {
-  backgroundImage: 'url(https://example.com/your-background-image.jpg)', // 배경 이미지 URL
+  backgroundImage: 'url(https://example.com/your-background-image.jpg)',
   backgroundSize: 'cover',
   height: '100vh',
   display: 'flex',
@@ -127,9 +137,9 @@ const formStyle = {
   flexDirection: 'column',
   width: '350px',
   padding: '20px',
-  backgroundColor: 'rgba(255, 255, 255, 0.8)', // 배경 반투명
-  borderRadius: '10px', // 둥근 모서리 추가
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // 그림자 추가
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  borderRadius: '10px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
 const inputContainerStyle = {
@@ -141,10 +151,10 @@ const inputContainerStyle = {
 const inputStyle = {
   padding: '10px',
   border: '1px solid #ddd',
-  borderRadius: '5px', // 둥근 모서리로 부드러운 느낌
+  borderRadius: '5px',
   outline: 'none',
   fontSize: '16px',
-  transition: 'border 0.3s ease', // 마우스 올렸을 때의 전환 효과
+  transition: 'border 0.3s ease',
 };
 
 const buttonStyle = {
@@ -152,7 +162,7 @@ const buttonStyle = {
   color: 'white',
   padding: '10px',
   border: 'none',
-  borderRadius: '5px', // 버튼 모서리 둥글게
+  borderRadius: '5px',
   cursor: 'pointer',
   fontSize: '16px',
   transition: 'background-color 0.3s ease',
@@ -161,13 +171,15 @@ const buttonStyle = {
 // 메시지 스타일
 const messageStyle = {
   marginBottom: '20px',
-  textAlign: 'center', // 중앙 정렬
-  color: '#333', // 텍스트 색상
+  textAlign: 'center',
+  color: '#333',
 };
 
-// hover 스타일
-buttonStyle[':hover'] = {
-  backgroundColor: '#333', // 마우스 오버 시 색상 변경
+// 링크 스타일
+const linkStyle = {
+  color: 'blue',
+  textDecoration: 'underline',
+  cursor: 'pointer',
 };
 
 export default SignUp;
