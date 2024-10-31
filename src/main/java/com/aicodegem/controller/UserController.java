@@ -1,22 +1,28 @@
 package com.aicodegem.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.aicodegem.service.UserService;
 import com.aicodegem.dto.UserDTO;
+import com.aicodegem.security.JwtUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/signup")
@@ -24,13 +30,21 @@ public class UserController {
         return userService.registerUser(userDTO); // ResponseEntity로 반환
     }
 
-    // 토큰 기능 로그인 기능 추가하시면 될 것 같아요.
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) throws Exception {
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) throws Exception {
+        // 사용자 인증 시도
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
+
+        // 사용자 로드
         final UserDetails userDetails = userService.loadUserByUsername(userDTO.getUsername());
 
-        // JWT 토큰 생성 로직 추가
-        // 로그인 기능 추가
-        return ResponseEntity.ok("User logged in");
+        // JWT 토큰 생성
+        final String jwtToken = jwtUtil.generateToken(userDetails);
+
+        // 응답으로 토큰 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtToken);
+        return ResponseEntity.ok(response);
     }
 }
