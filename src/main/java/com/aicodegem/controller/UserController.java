@@ -1,5 +1,8 @@
 package com.aicodegem.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +24,13 @@ public class UserController {
         return userService.registerUser(userDTO); // ResponseEntity로 반환
     }
 
+    // 토큰 기능 로그인 기능 추가하시면 될 것 같아요.
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO) throws Exception {
+    public ResponseEntity<String> login(@RequestBody UserDTO userDTO) throws Exception {
         final UserDetails userDetails = userService.loadUserByUsername(userDTO.getUsername());
-        // JWT 토큰 생성 로직
-        return "User logged in";
+
+        // JWT 토큰 생성 로직 추가
+        // 로그인 기능 추가
+        return ResponseEntity.ok("User logged in");
     }
 }

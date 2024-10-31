@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const Login = () => {
   // State for managing input data
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
 
@@ -17,9 +17,37 @@ const Login = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // You can replace this with API call logic
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData), // formData를 JSON 문자열로 변환
+      });
+
+      if (!response.ok) {
+        let errorMessage;
+        try {
+          const errorData = await response.json(); // JSON 형식일 경우
+          errorMessage = errorData.message || "An error occurred";
+        } catch {
+          errorMessage = await response.text(); // 텍스트 형식일 경우
+        }
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json(); // 성공 시 JSON으로 변환
+      console.log(result); // 결과 출력
+
+      alert('로그인 성공!'); // 로그인 성공 알림
+      window.location.href = '/main'; // 메인 페이지로 이동
+    } catch (error) {
+      console.error('Error:', error);
+      alert('로그인 중 오류가 발생했습니다: ' + error.message); // 오류 메시지 출력
+    }
   };
 
   return (
@@ -27,11 +55,11 @@ const Login = () => {
       <form onSubmit={handleSubmit} style={formStyle}>
         <h2 style={titleStyle}>로그인</h2>
         <div style={inputContainerStyle}>
-          <label>이메일</label>
+          <label>사용자 이름</label>
           <input
-            type="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             required
             style={inputStyle}
