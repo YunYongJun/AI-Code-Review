@@ -28,20 +28,15 @@ const SignUp = () => {
       });
 
       if (!response.ok) {
-        // 응답을 JSON으로 시도하고 실패하면 텍스트로 처리
-        let errorMessage;
-        try {
-          const errorData = await response.json(); // JSON 형식일 경우
-          errorMessage = errorData.message || "An error occurred";
-        } catch {
-          errorMessage = await response.text(); // 텍스트 형식일 경우
-        }
-        throw new Error(errorMessage);
+        // 응답이 실패한 경우
+        const errorData = await response.json();
+        throw new Error(errorData.message || "An error occurred");
       }
 
       const result = await response.json(); // 성공 시 JSON으로 변환
       console.log(result); // 결과 출력
 
+      alert('회원가입에 성공하였습니다'); // 회원가입 성공 알림
       window.location.href = '/main';
     } catch (error) {
       console.error('Error:', error);
