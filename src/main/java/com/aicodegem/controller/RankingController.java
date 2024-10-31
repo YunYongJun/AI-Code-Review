@@ -1,10 +1,17 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.model.Ranking;
-import com.aicodegem.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+
+import com.aicodegem.model.Ranking;
+import com.aicodegem.service.RankingService;
 
 // Ranking API를 제공하는 컨트롤러 클래스
 @RestController
@@ -26,5 +33,12 @@ public class RankingController {
     public ResponseEntity<Ranking> createRanking(@RequestBody Ranking ranking) {
         Ranking savedRanking = rankingService.saveRanking(ranking); // 순위 저장
         return ResponseEntity.ok(savedRanking); // 성공 응답 반환
+    }
+
+    // 모든 랭킹 정보를 조회하는 GET 요청 처리
+    @GetMapping
+    public ResponseEntity<List<Ranking>> getAllRankings() {
+        List<Ranking> rankings = rankingService.getAllRankings(); // 모든 랭킹 조회
+        return ResponseEntity.ok(rankings); // 성공 응답 반환
     }
 }
