@@ -20,7 +20,17 @@ const MenuBar = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setUsername('');
-    window.location.href = '/login';
+    alert('로그아웃 되었습니다.');
+    window.location.href = '/';
+  };
+
+  const handleMenuClick = (url) => {
+    // 코드 제출 페이지는 로그인 여부에 관계없이 이동 가능
+    if (url === '/submission' || isLoggedIn) {
+      window.location.href = url;
+    } else {
+      alert('로그인이 필요합니다.');
+    }
   };
 
   return (
@@ -33,20 +43,20 @@ const MenuBar = () => {
       </div>
 
       <div className="menu-items">
-        <a href="/ranking" className="menu-item">
+        <span onClick={() => handleMenuClick('/ranking')} className="menu-item">
           <FaChartLine className="menu-icon" />
           순위
-        </a>
+        </span>
 
-        <a href="/achievement" className="menu-item">
+        <span onClick={() => handleMenuClick('/achievement')} className="menu-item">
           <FaTrophy className="menu-icon" />
           업적
-        </a>
+        </span>
 
-        <a href="/submission" className="menu-item">
+        <span onClick={() => handleMenuClick('/submission')} className="menu-item">
           <FaStar className="menu-icon" />
           코드 제출
-        </a>
+        </span>
       </div>
 
       <div className="menu-auth">
