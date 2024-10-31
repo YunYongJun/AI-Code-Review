@@ -20,7 +20,8 @@
 }
 
 .logo-highlight {
-  color: #1abc9c; /* Highlight color for part of the logo */
+  color: #1abc9c;
+  /* Highlight color for part of the logo */
 }
 
 .logo-subtext {
@@ -28,7 +29,8 @@
   color: #bbb;
 }
 
-.menu-items, .menu-auth {
+.menu-items,
+.menu-auth {
   display: flex;
   gap: 20px;
 }
@@ -51,5 +53,24 @@
 }
 
 .menu-auth {
-  gap: 15px; /* Add spacing between login and sign-up links */
+  gap: 15px;
+  /* Add spacing between login and sign-up links */
+}
+
+.menu-auth .logout-button {
+  background-color: #1abc9c;
+  /* 버튼 배경색 */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  /* 버튼 내부 여백 */
+  border-radius: 4px;
+  /* 둥근 모서리 */
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.menu-auth .logout-button:hover {
+  background-color: #16a085;
+  /* 호버 시 더 진한 색상 */
 }

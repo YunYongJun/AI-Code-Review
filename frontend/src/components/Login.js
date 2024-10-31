@@ -16,7 +16,7 @@ const Login = () => {
     }));
   };
 
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -31,24 +31,24 @@ const Login = () => {
       if (!response.ok) {
         let errorMessage;
         try {
-          const errorData = await response.json(); // JSON 형식일 경우
+          const errorData = await response.json();
           errorMessage = errorData.message || "An error occurred";
         } catch {
-          errorMessage = await response.text(); // 텍스트 형식일 경우
+          errorMessage = await response.text();
         }
         throw new Error(errorMessage);
       }
 
-      const result = await response.json(); // 성공 시 JSON으로 변환
-      console.log(result); // 결과 출력
-
-      alert('로그인 성공!'); // 로그인 성공 알림
+      const result = await response.json();
+      localStorage.setItem('token', result.token); // JWT 토큰 저장
+      alert('로그인 성공!');
       window.location.href = '/main'; // 메인 페이지로 이동
     } catch (error) {
       console.error('Error:', error);
-      alert('로그인 중 오류가 발생했습니다: ' + error.message); // 오류 메시지 출력
+      alert('로그인 중 오류가 발생했습니다: ' + error.message);
     }
   };
+
 
   return (
     <div style={containerStyle}>
