@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.aicodegem.model.User;
 import com.aicodegem.repository.UserRepository;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -40,8 +43,9 @@ public class UserService implements UserDetailsService {
                     .body("{\"message\": \"User with this username already exists.\"}");
         }
 
-        // User 객체 생성 및 저장
-        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getEmail(), userDTO.getPhoneNum());
+        // 비밀번호를 해싱하여 User 객체 생성 및 저장
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        User user = new User(userDTO.getUsername(), encodedPassword, userDTO.getEmail(), userDTO.getPhoneNum());
         userRepository.save(user);
 
         HttpHeaders headers = new HttpHeaders();
