@@ -1,4 +1,3 @@
-/* Footer.css */
 .footer {
     background-color: #1f2023;
     color: #aaaaaa;
@@ -9,14 +8,30 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 750px;
+    max-width: 800px;
     margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.footer-logo {
+.footer-menuBar-logo {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    /* 로고 부분 줄바꿈 방지 */
+}
+
+.footer-menuBar-logo-highlight {
+    color: #1abc9c;
+}
+
+.footer-menuBar-logo-subtext {
+    font-size: 14px;
+    color: #bbb;
+    margin-top: 5px;
 }
 
 .footer-info {
@@ -43,6 +58,7 @@
     background-color: #555;
 }
 
+/* 반응형 스타일 */
 @media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
@@ -53,21 +69,18 @@
     .footer-info {
         margin: 10px 0;
     }
-}
 
-.footer-menuBar-logo-highlight {
-    color: #1abc9c;
-    /* Highlight color for part of the logo */
-}
+    .footer-menuBar-logo {
+        font-size: 20px;
+        /* 작은 화면에서 폰트 크기 조정 */
+    }
 
-.footer-menuBar-logo-subtext {
-    font-size: 24px;
-    color: #bbb;
-}
+    .footer-menuBar-logo-subtext {
+        font-size: 12px;
+    }
 
-.footer-menuBar-logo {
-    display: flex;
-    flex-direction: column;
-    font-size: 24px;
-    font-weight: bold;
+    .footer-info {
+        font-size: 12px;
+        /* 작은 화면에서 정보 글씨 크기 조정 */
+    }
 }
