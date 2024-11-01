@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import './SubmittedCodes.css';
+import './SubmittedCodes.css'; // 스타일링 파일
 
+// 임의의 제출된 코드 데이터
 const submittedCodes = [
   {
     id: 1,
@@ -34,23 +35,6 @@ const submittedCodes = [
 
 function SubmittedCodes() {
   const [selectedCode, setSelectedCode] = useState(null);
-  const [editedDetail, setEditedDetail] = useState(''); // 수정된 내용 상태
-
-  const handleCodeSelect = (code) => {
-    setSelectedCode(code);
-    setEditedDetail(code.detail); // 선택된 코드의 detail로 초기화
-  };
-
-  const handleSave = () => {
-    if (selectedCode) {
-      // 수정된 내용을 적용
-      const updatedCode = { ...selectedCode, detail: editedDetail };
-      setSelectedCode(updatedCode);
-
-      // 실제 데이터베이스 업데이트 로직이 필요할 경우 여기에 추가합니다.
-      alert('코드가 저장되었습니다.');
-    }
-  };
 
   return (
     <div className="submitted-codes-page">
@@ -58,7 +42,7 @@ function SubmittedCodes() {
         <h3>제출 코드 목록</h3>
         <ul>
           {submittedCodes.map((code) => (
-            <li key={code.id} onClick={() => handleCodeSelect(code)}>
+            <li key={code.id} onClick={() => setSelectedCode(code)}>
               {code.title}
             </li>
           ))}
@@ -68,14 +52,12 @@ function SubmittedCodes() {
         {selectedCode ? (
           <>
             <h4>{selectedCode.title}</h4>
-            <textarea
-              value={editedDetail}
-              onChange={(e) => setEditedDetail(e.target.value)}
-              style={{ whiteSpace: 'pre-wrap', width: '100%', height: '200px' }}
-            />
+            <p style={{ whiteSpace: 'pre-wrap' }}>{selectedCode.detail}</p> {/* 줄바꿈을 유지하는 스타일 적용 */}
             <p>점수: {selectedCode.status}</p>
             <p>제출 시간: {selectedCode.submissionTime}</p>
-            <button onClick={handleSave}>재채점</button>
+            <a href="/submission">
+              <button>수정</button>
+            </a>
           </>
         ) : (
           <p>코드를 선택해 주세요.</p>

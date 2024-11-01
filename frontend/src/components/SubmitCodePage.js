@@ -37,7 +37,7 @@ function SubmitCodePage() {
       }
 
       // 성공 시 처리 로직 (예: 제출 완료 메시지, 리디렉션 등)
-      window.location.href = '/grading';
+      window.location.href = '/grading'; // 제출 버튼 클릭 시 grading으로 이동
     } catch (error) {
       console.error('Error:', error);
       alert('제출 중 오류가 발생했습니다.');
@@ -52,7 +52,7 @@ function SubmitCodePage() {
     }
 
     // 목록 페이지로 이동
-    window.location.href = '/grading';
+    window.location.href = '/submitted-codes'; // 목록 버튼 클릭 시 submitted-codes로 이동
   };
 
   return (
