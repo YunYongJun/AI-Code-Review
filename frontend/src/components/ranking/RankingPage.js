@@ -1,52 +1,58 @@
-// src/RankingPage.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './RankingPage.css';
 
 const RankingPage = () => {
+  const [rankings, setRankings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRankings = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/rankings');
+        if (!response.ok) {
+          throw new Error('네트워크 응답이 좋지 않습니다.');
+        }
+        const data = await response.json();
+        setRankings(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRankings();
+  }, []);
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div>오류: {error}</div>;
+  }
+
   return (
     <div className="ranking-page">
-      <div className="ranking-user-profile">
-        <div className="ranking-user-avatar">👤</div>
-        <div className="ranking-user-info">
-          <h2>윤용준</h2>
-          <div className="ranking-user-rank">
-            Silver 13
-            <div className="ranking-progress-bar">
-              <div className="ranking-progress" style={{ width: '70%' }}></div>
-            </div>
-            Gold 승급까지 -17
-          </div>
-          <div className="ranking-user-achievements">13개의 업적</div>
-        </div>
-        <button className="ranking-page-menu-icon">☰</button>
-      </div>
-
       {/* Ranking Table */}
       <div className="ranking-table">
         <table>
           <thead>
             <tr>
+              <th>Rank</th>
               <th>User Id</th>
-              <th>Tier</th>
-              <th>획득한 업적 수</th>
+              <th>Total Score</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>박승아</td>
-              <td className="ranking-gold">Gold</td>
-              <td>56</td>
-            </tr>
-            <tr>
-              <td>윤용준</td>
-              <td className="ranking-silver">Silver</td>
-              <td>13</td>
-            </tr>
-            <tr>
-              <td>박기량</td>
-              <td className="ranking-bronze">Bronze</td>
-              <td>8</td>
-            </tr>
+            {rankings.map((ranking, index) => (
+              <tr key={index}>
+                <td className={`ranking-${ranking.userRank}`}>{ranking.userRank}</td>
+                <td>{ranking.userId}</td>
+                <td>{ranking.totalScore}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

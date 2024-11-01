@@ -1,126 +1,50 @@
-  .ranking-page {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
+.ranking-page {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
 
-  /* User Profile Section */
-  .ranking-user-profile {
-    display: flex;
-    align-items: center;
-    background-color: #f4f4f9;
-    padding: 20px;
-    border-radius: 10px;
-    position: relative;
-  }
+/* Ranking Table */
+.ranking-table {
+  margin-top: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  .ranking-user-avatar {
-    font-size: 60px;
-    color: #bbb;
-    margin-right: 20px;
-  }
+.ranking-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  .ranking-user-info {
-    flex-grow: 1;
-  }
+.ranking-table th,
+.ranking-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
 
-  .ranking-user-info h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: normal;
-  }
+.ranking-table th {
+  background-color: #f7f7f7;
+  color: #666;
+  font-weight: bold;
+}
 
-  .ranking-user-rank {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #666;
-  }
+.ranking-table tr:hover {
+  background-color: #f1f1f1;
+}
 
-  .ranking-progress-bar {
-    width: 200px;
-    height: 8px;
-    background-color: #ddd;
-    margin: 0 10px;
-    border-radius: 4px;
-  }
+.ranking-gold {
+  color: gold;
+  font-weight: bold;
+}
 
-  .ranking-progress {
-    height: 100%;
-    background-color: #3498db;
-    border-radius: 4px;
-  }
+.ranking-silver {
+  color: silver;
+  font-weight: bold;
+}
 
-  .ranking-user-achievements {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #333;
-  }
-
-  .ranking-page-menu-icon {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-  }
-
-  /* Tabs Section */
-  .ranking-tabs {
-    display: flex;
-    margin-top: 20px;
-  }
-
-  .ranking-tab {
-    flex: 1;
-    padding: 10px 0;
-    text-align: center;
-    background-color: #f4f4f9;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  .ranking-tab.active {
-    border-bottom: 2px solid #3498db;
-    font-weight: bold;
-  }
-
-  /* Ranking Table */
-  .ranking-table {
-    margin-top: 20px;
-    background-color: white;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-
-  .ranking-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .ranking-th,
-  .ranking-td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-
-  .ranking-rank-number {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-
-  .ranking-gold {
-    color: gold;
-  }
-
-  .ranking-silver {
-    color: silver;
-  }
-
-  .ranking-bronze {
-    color: #cd7f32;
-  }
+.ranking-bronze {
+  color: #cd7f32;
+  font-weight: bold;
+}

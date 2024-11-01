@@ -6,19 +6,19 @@ const AchievementPage = () => {
   return (
     <div className="achievement-page">
       <div className="achievement-user-profile"> {/* Updated class name */}
-        <div className="user-avatar">👤</div>
-        <div className="user-info">
+        <div className="achievement-user-avatar">👤</div>
+        <div className="achievement-user-info">
           <h2>사용자ID...1</h2>
-          <div className="user-rank">
+          <div className="achievement-user-rank">
             Silver V 295
-            <div className="progress-bar">
-              <div className="progress" style={{ width: '70%' }}></div>
+            <div className="achievement-progress-bar">
+              <div className="achievement-progress" style={{ width: '70%' }}></div>
             </div>
             Silver IV 승급까지 -5
           </div>
-          <div className="user-achievements">13개의 업적</div>
+          <div className="achievement-user-achievements">13개의 업적</div>
         </div>
-        <button className="menu-icon">☰</button>
+        <button className="achievement-menu-icon">☰</button>
       </div>
 
       {/* Achievements List */}
