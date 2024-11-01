@@ -9,6 +9,7 @@ const submittedCodes = [
     submissionTime: '2024-10-21 10:30',
     detail: 'console.log("Hello World") // 세미콜론이 없습니다. \nint n = true; // 형식이 맞지 않습니다. \n\n\n\n',
   },
+  
   {
     id: 2,
     title: '회원가입',
@@ -16,6 +17,7 @@ const submittedCodes = [
     submissionTime: '2024-10-21 11:00',
     detail: 'function nextNum(n) { return n + 1; }\n\n\n\n',
   },
+
   {
     id: 3,
     title: '로그인',

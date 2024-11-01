@@ -61,6 +61,7 @@ function SubmitCodePage() {
         <h1 className="scp-title">코드 제출</h1>
       </header>
 
+
       <div className="scp-form-container">
         <div className="scp-form-group">
           <label htmlFor="title-input">제목</label>
@@ -86,6 +87,7 @@ function SubmitCodePage() {
             <option value="C++">C++</option>
           </select>
         </div>
+
 
         <div className="scp-form-group">
           <label htmlFor="source-code">소스 코드</label>

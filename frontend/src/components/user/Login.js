@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css'; // CSS 파일을 임포트
+import './Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -51,11 +51,15 @@ const Login = () => {
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
         <h2 className="login-title">로그인</h2>
+        <p className="login-description">
+          로그인 아이디와 비밀번호를 입력하신 후<br />
+          <strong>로그인</strong> 버튼을 클릭하세요.
+        </p>
         <div className="login-input-container">
-          <label>사용자 이름</label>
           <input
             type="text"
             name="username"
+            placeholder="아이디를 입력하세요"
             value={formData.username}
             onChange={handleChange}
             required
@@ -63,21 +67,24 @@ const Login = () => {
           />
         </div>
         <div className="login-input-container">
-          <label>비밀번호</label>
           <input
             type="password"
             name="password"
+            placeholder="비밀번호를 입력하세요"
             value={formData.password}
             onChange={handleChange}
             required
             className="login-input"
           />
+
         </div>
         <button type="submit" className="login-button">로그인</button>
-        <p className="login-footer">
-          회원 가입은 <a href="/signup">여기</a>에서 할 수 있습니다.
-        </p>
+        <div className="login-footer">
+          <a href="/forgot-id">아이디</a>
+          <a href="/forgot-password">/비밀번호 찾기</a> | <a href="/signup">회원가입</a>
+        </div>
       </form>
+
     </div>
   );
 };
