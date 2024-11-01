@@ -1,0 +1,76 @@
+.menuBar-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+.menuBar-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuBar-logo-link {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.menuBar-logo-highlight {
+  color: #1abc9c;
+  /* Highlight color for part of the logo */
+}
+
+.menuBar-logo-subtext {
+  font-size: 12px;
+  color: #bbb;
+}
+
+.menuBar-items,
+.menuBar-auth {
+  display: flex;
+  gap: 20px;
+}
+
+.menuBar-item {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.menuBar-item:hover {
+  color: #1abc9c;
+}
+
+.menuBar-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.menuBar-auth {
+  gap: 15px;
+  /* Add spacing between login and sign-up links */
+}
+
+.menuBar-auth .menuBar-logout-button {
+  background-color: #1abc9c;
+  /* 버튼 배경색 */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  /* 버튼 내부 여백 */
+  border-radius: 4px;
+  /* 둥근 모서리 */
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.menuBar-auth .menuBar-logout-button:hover {
+  background-color: #16a085;
+  /* 호버 시 더 진한 색상 */
+}

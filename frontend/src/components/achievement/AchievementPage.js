@@ -5,7 +5,7 @@ import './AchievementPage.css';
 const AchievementPage = () => {
   return (
     <div className="achievement-page">
-      <div className="user-profile">
+      <div className="achievement-user-profile"> {/* Updated class name */}
         <div className="user-avatar">👤</div>
         <div className="user-info">
           <h2>사용자ID...1</h2>
@@ -22,7 +22,7 @@ const AchievementPage = () => {
       </div>
 
       {/* Achievements List */}
-      <div className="achievements-list">
+      <div className="achievement-list"> {/* Updated class name */}
         <div className="achievement-item">
           <h3>신입 문제해결사</h3>
           <p>10문제 해결</p>

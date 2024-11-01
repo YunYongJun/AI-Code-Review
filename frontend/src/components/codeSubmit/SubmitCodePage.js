@@ -6,10 +6,53 @@ function SubmitCodePage() {
   const [sourceCode, setSourceCode] = useState('');
   const [title, setTitle] = useState(''); // 제목 상태 추가
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 제출 처리 로직
     console.log('제출된 제목:', title);
     console.log('제출된 소스 코드:', sourceCode);
+
+    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    const submissionData = {
+      submittedCode: sourceCode,
+      submissionDate: new Date().toISOString().split('T')[0], // 현재 날짜를 ISO 포맷으로 변환
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/code/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // JWT 토큰 포함
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        throw new Error('제출 실패'); // 오류 발생 시 예외 처리
+      }
+
+      // 성공 시 처리 로직 (예: 제출 완료 메시지, 리디렉션 등)
+      window.location.href = '/grading'; // 제출 버튼 클릭 시 grading으로 이동
+    } catch (error) {
+      console.error('Error:', error);
+      alert('제출 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleListClick = () => {
+    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    // 목록 페이지로 이동
+    window.location.href = '/submitted-codes'; // 목록 버튼 클릭 시 submitted-codes로 이동
   };
 
   return (
@@ -58,14 +101,12 @@ function SubmitCodePage() {
         </div>
 
         <div className="scp-submit-button-container">
-          <a href="/submitted-codes" className="menu-item">
-            <button className="scp-submit-button">목록</button>
-          </a>
-          <a href="/grading" className="menu-item">
-            <button className="scp-submit-button" onClick={handleSubmit}>
-              제출
-            </button>
-          </a>
+          <button className="scp-submit-button" onClick={handleListClick}>
+            목록
+          </button>
+          <button className="scp-submit-button" onClick={handleSubmit}>
+            제출
+          </button>
         </div>
       </div>
     </div>

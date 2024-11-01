@@ -1,10 +1,10 @@
-.ranking-page {
+  .ranking-page {
     font-family: Arial, sans-serif;
     margin: 20px;
   }
-  
+
   /* User Profile Section */
-  .user-profile {
+  .ranking-user-profile {
     display: flex;
     align-items: center;
     background-color: #f4f4f9;
@@ -12,50 +12,50 @@
     border-radius: 10px;
     position: relative;
   }
-  
-  .user-avatar {
+
+  .ranking-user-avatar {
     font-size: 60px;
     color: #bbb;
     margin-right: 20px;
   }
-  
-  .user-info {
+
+  .ranking-user-info {
     flex-grow: 1;
   }
-  
-  .user-info h2 {
+
+  .ranking-user-info h2 {
     margin: 0;
     font-size: 24px;
     font-weight: normal;
   }
-  
-  .user-rank {
+
+  .ranking-user-rank {
     display: flex;
     align-items: center;
     font-size: 14px;
     color: #666;
   }
-  
-  .progress-bar {
+
+  .ranking-progress-bar {
     width: 200px;
     height: 8px;
     background-color: #ddd;
     margin: 0 10px;
     border-radius: 4px;
   }
-  
-  .progress {
+
+  .ranking-progress {
     height: 100%;
     background-color: #3498db;
     border-radius: 4px;
   }
-  
-  .user-achievements {
+
+  .ranking-user-achievements {
     margin: 5px 0;
     font-size: 14px;
     color: #333;
   }
-  
+
   .ranking-page-menu-icon {
     background: none;
     border: none;
@@ -65,14 +65,14 @@
     right: 20px;
     top: 20px;
   }
-  
+
   /* Tabs Section */
-  .tabs {
+  .ranking-tabs {
     display: flex;
     margin-top: 20px;
   }
-  
-  .tab {
+
+  .ranking-tab {
     flex: 1;
     padding: 10px 0;
     text-align: center;
@@ -81,12 +81,12 @@
     font-size: 16px;
     cursor: pointer;
   }
-  
-  .tab.active {
+
+  .ranking-tab.active {
     border-bottom: 2px solid #3498db;
     font-weight: bold;
   }
-  
+
   /* Ranking Table */
   .ranking-table {
     margin-top: 20px;
@@ -95,32 +95,32 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
-  table {
+
+  .ranking-table {
     width: 100%;
     border-collapse: collapse;
   }
-  
-  th, td {
+
+  .ranking-th,
+  .ranking-td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #eee;
   }
-  
-  .rank-number {
+
+  .ranking-rank-number {
     font-weight: bold;
     margin-right: 10px;
   }
-  
-  .gold {
+
+  .ranking-gold {
     color: gold;
   }
-  
-  .silver {
+
+  .ranking-silver {
     color: silver;
   }
-  
-  .bronze {
+
+  .ranking-bronze {
     color: #cd7f32;
   }
-  

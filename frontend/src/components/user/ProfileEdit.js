@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './ProfileEdit.css';
 
 const ProfileEdit = () => {
   const [formData, setFormData] = useState({
@@ -22,10 +23,10 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      <h2 style={titleStyle}>개인정보 수정</h2>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <div style={inputContainerStyle}>
+    <div className="profileEdit-container">
+      <h2 className="profileEdit-title">개인정보 수정</h2>
+      <form onSubmit={handleSubmit} className="profileEdit-form">
+        <div className="profileEdit-input-container">
           <label>이메일</label>
           <input
             type="email"
@@ -33,10 +34,10 @@ const ProfileEdit = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>기존 비밀번호</label>
           <input
             type="password"
@@ -44,10 +45,10 @@ const ProfileEdit = () => {
             value={formData.currentPassword}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>새 비밀번호</label>
           <input
             type="password"
@@ -55,10 +56,10 @@ const ProfileEdit = () => {
             value={formData.newPassword}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>전화번호</label>
           <input
             type="text"
@@ -66,15 +67,16 @@ const ProfileEdit = () => {
             value={formData.phone}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <button type="submit" style={buttonStyle}>제출</button>
+        <button type="submit" className="profileEdit-button">제출</button>
       </form>
     </div>
   );
 };
 
+<<<<<<< HEAD:frontend/src/components/ProfileEdit.js
 // 스타일 정의
 const containerStyle = {
   display: 'flex',
@@ -131,4 +133,6 @@ const buttonStyle = {
   fontSize: '16px',
 };
 
+=======
+>>>>>>> 4afb417c171383afc2c7cb87dc76404ef76dbbfd:frontend/src/components/user/ProfileEdit.js
 export default ProfileEdit;
