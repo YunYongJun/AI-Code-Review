@@ -1,3 +1,4 @@
+// src/MenuBar.js
 import React, { useState, useEffect } from 'react';
 import './MenuBar.css';
 import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt } from 'react-icons/fa';
@@ -34,48 +35,48 @@ const MenuBar = () => {
   };
 
   return (
-    <div className="menu-bar">
-      <div className="menu-logo">
-        <a href="/" className="logo-link">
-          CODE<span className="logo-highlight">REVIEW</span>
+    <div className="menuBar-bar">
+      <div className="menuBar-logo">
+        <a href="/" className="menuBar-logo-link">
+          CODE<span className="menuBar-logo-highlight">REVIEW</span>
         </a>
-        <span className="logo-subtext">코드 체점 사이트</span>
+        <span className="menuBar-logo-subtext">코드 체점 사이트</span>
       </div>
 
-      <div className="menu-items">
-        <span onClick={() => handleMenuClick('/ranking')} className="menu-item">
-          <FaChartLine className="menu-icon" />
+      <div className="menuBar-items">
+        <span onClick={() => handleMenuClick('/ranking')} className="menuBar-item">
+          <FaChartLine className="menuBar-icon" />
           순위
         </span>
 
-        <span onClick={() => handleMenuClick('/achievement')} className="menu-item">
-          <FaTrophy className="menu-icon" />
+        <span onClick={() => handleMenuClick('/achievement')} className="menuBar-item">
+          <FaTrophy className="menuBar-icon" />
           업적
         </span>
 
-        <span onClick={() => handleMenuClick('/submission')} className="menu-item">
-          <FaStar className="menu-icon" />
+        <span onClick={() => handleMenuClick('/submission')} className="menuBar-item">
+          <FaStar className="menuBar-icon" />
           코드 제출
         </span>
       </div>
 
-      <div className="menu-auth">
+      <div className="menuBar-auth">
         {isLoggedIn ? (
           <>
-            <a href="/profile-edit" className="menu-item">
+            <a href="/profile-edit" className="menuBar-item">
               안녕하세요, {username}님!
             </a>
-            <button onClick={handleLogout} className="menu-item logout-button" style={{ cursor: 'pointer' }}>
-              <FaSignOutAlt className="menu-icon" />
+            <button onClick={handleLogout} className="menuBar-item menuBar-logout-button">
+              <FaSignOutAlt className="menuBar-icon" />
               로그아웃
             </button>
           </>
         ) : (
           <>
-            <a href="/login" className="menu-item">
+            <a href="/login" className="menuBar-item">
               로그인
             </a>
-            <a href="/signup" className="menu-item">
+            <a href="/signup" className="menuBar-item">
               회원가입
             </a>
           </>

@@ -1,0 +1,67 @@
+/* Styles for the components */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-input-container {
+    margin-bottom: 10px;
+}
+
+.login-input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.login-button {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #000000 !important;
+    background-color: rgb(255, 255, 255) !important;
+}
+
+
+.login-footer a {
+    color: rgb(95, 67, 219);
+    /* 링크 색상 */
+    text-decoration: underline;
+    /* 링크에 밑줄 */
+}
+
+.login-footer a:hover {
+    color: #007BFF;
+    /* 링크 hover 시 색상 변경 */
+}

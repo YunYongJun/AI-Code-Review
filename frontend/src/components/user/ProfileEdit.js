@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './ProfileEdit.css';
 
 const ProfileEdit = () => {
   const [formData, setFormData] = useState({
@@ -22,10 +23,10 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      <h2 style={titleStyle}>개인정보 수정</h2>
-      <form onSubmit={handleSubmit} style={formStyle}>
-        <div style={inputContainerStyle}>
+    <div className="profileEdit-container">
+      <h2 className="profileEdit-title">개인정보 수정</h2>
+      <form onSubmit={handleSubmit} className="profileEdit-form">
+        <div className="profileEdit-input-container">
           <label>이메일</label>
           <input
             type="email"
@@ -33,10 +34,10 @@ const ProfileEdit = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>기존 비밀번호</label>
           <input
             type="password"
@@ -44,10 +45,10 @@ const ProfileEdit = () => {
             value={formData.currentPassword}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>새 비밀번호</label>
           <input
             type="password"
@@ -55,10 +56,10 @@ const ProfileEdit = () => {
             value={formData.newPassword}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <div style={inputContainerStyle}>
+        <div className="profileEdit-input-container">
           <label>전화번호</label>
           <input
             type="text"
@@ -66,67 +67,13 @@ const ProfileEdit = () => {
             value={formData.phone}
             onChange={handleChange}
             required
-            style={inputStyle}
+            className="profileEdit-input"
           />
         </div>
-        <button type="submit" style={buttonStyle}>제출</button>
+        <button type="submit" className="profileEdit-button">제출</button>
       </form>
     </div>
   );
-};
-
-// 스타일 정의
-const containerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  maxWidth: '400px',
-  padding: '20px',
-  backgroundColor: '#FFFFFF', // 배경색을 흰색으로 변경
-  borderRadius: '10px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-  margin: 'auto',
-  marginTop: '50px',
-};
-
-const titleStyle = {
-  marginBottom: '20px',
-  fontSize: '24px',
-  textAlign: 'center',
-  color: '#333',
-};
-
-const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-};
-
-const inputContainerStyle = {
-  marginBottom: '15px',
-};
-
-const inputStyle = {
-  padding: '10px',
-  borderRadius: '5px',
-  border: '1px solid #ccc',
-  width: '100%',
-  boxSizing: 'border-box',
-  transition: 'border-color 0.3s',
-  fontSize: '16px',
-};
-
-const buttonStyle = {
-  backgroundColor: '#000',
-  color: 'white',
-  padding: '10px',
-  border: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s',
-  fontSize: '16px',
 };
 
 export default ProfileEdit;

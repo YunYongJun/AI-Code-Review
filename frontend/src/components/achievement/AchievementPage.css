@@ -1,0 +1,23 @@
+/* src/AchievementPage.css */
+.achievement-page {
+  margin: 20px;
+}
+
+.achievement-user-profile {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 10px;
+}
+
+.achievement-list {
+  margin-top: 20px;
+}
+
+.achievement-item {
+  padding: 15px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}

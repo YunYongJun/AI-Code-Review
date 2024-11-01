@@ -1,6 +1,5 @@
-import './App.css';
 import AppRouter from './Router';
-import MenuBar from './components/MenuBar';
+import MenuBar from './components/navigation/MenuBar';
 
 function App() {
   return (

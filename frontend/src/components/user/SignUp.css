@@ -1,0 +1,63 @@
+/* 배경 스타일 */
+.signup-background {
+    background-image: url('https://example.com/your-background-image.jpg');
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 폼 스타일 */
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 입력 컨테이너 스타일 */
+.signup-input-container {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 입력 필드 스타일 */
+.signup-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    transition: border 0.3s ease;
+}
+
+/* 버튼 스타일 */
+.signup-button {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* 메시지 스타일 */
+.signup-message {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* 링크 스타일 */
+.signup-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
