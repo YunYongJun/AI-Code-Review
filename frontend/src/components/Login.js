@@ -25,28 +25,28 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // formData를 JSON 문자열로 변환
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         let errorMessage;
         try {
-          const errorData = await response.json(); // JSON 형식일 경우
+          const errorData = await response.json();
           errorMessage = errorData.message || "An error occurred";
         } catch {
-          errorMessage = await response.text(); // 텍스트 형식일 경우
+          errorMessage = await response.text();
         }
         throw new Error(errorMessage);
       }
 
-      const result = await response.json(); // 성공 시 JSON으로 변환
-      console.log(result); // 결과 출력
+      const result = await response.json();
+      console.log(result);
 
-      alert('로그인 성공!'); // 로그인 성공 알림
-      window.location.href = '/main'; // 메인 페이지로 이동
+      alert('로그인 성공!');
+      window.location.href = '/main';
     } catch (error) {
       console.error('Error:', error);
-      alert('로그인 중 오류가 발생했습니다: ' + error.message); // 오류 메시지 출력
+      alert('로그인 중 오류가 발생했습니다: ' + error.message);
     }
   };
 
@@ -54,11 +54,15 @@ const Login = () => {
     <div style={containerStyle}>
       <form onSubmit={handleSubmit} style={formStyle}>
         <h2 style={titleStyle}>로그인</h2>
+        <p style={descriptionStyle}>
+          로그인 아이디와 비밀번호를 입력하신 후<br />
+          <strong>로그인</strong> 버튼을 클릭하세요.
+        </p>
         <div style={inputContainerStyle}>
-          <label>사용자 이름</label>
           <input
             type="text"
             name="username"
+            placeholder="아이디를 입력하세요"
             value={formData.username}
             onChange={handleChange}
             required
@@ -66,10 +70,10 @@ const Login = () => {
           />
         </div>
         <div style={inputContainerStyle}>
-          <label>비밀번호</label>
           <input
             type="password"
             name="password"
+            placeholder="비밀번호를 입력하세요"
             value={formData.password}
             onChange={handleChange}
             required
@@ -77,8 +81,23 @@ const Login = () => {
           />
         </div>
         <button type="submit" style={buttonStyle}>로그인</button>
-        <p style={footerStyle}>회원 가입은 <a href="/signup">여기</a>에서 할 수 있습니다.</p>
+        <div style={linkContainerStyle}>
+
+          <a href="/find-username" style={linkStyle}>아이디 찾기</a>
+          <span> | </span>
+          <a href="/find-password" style={linkStyle}>비밀번호 찾기</a>
+          <span> | </span>
+          <a href="/signup" style={linkStyle}>회원가입</a>
+
+        </div>
       </form>
+      <footer style={footerStyle}>
+        <p>Code Review</p>
+        <address style={addressStyle}>
+          주소: 서울시 금천구 가산디지털1로 142, 821호<br />
+          Tel: 02-851-3093 | Fax: 02-2067-3093 | Email: damdainterior@naver.com
+        </address>
+      </footer>
     </div>
   );
 };
@@ -86,54 +105,90 @@ const Login = () => {
 // Styles for the components
 const containerStyle = {
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   height: '100vh',
-  background: 'url("your-background-image-url") no-repeat center center fixed',
-  backgroundSize: 'cover',
+  backgroundColor: '#f4f4f9',
+  fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
 };
 
 const formStyle = {
   display: 'flex',
   flexDirection: 'column',
-  width: '300px',
-  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-  padding: '20px',
+  alignItems: 'center',
+  width: '350px',
+  backgroundColor: 'white',
+  padding: '30px',
   borderRadius: '8px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
 };
 
 const titleStyle = {
-  textAlign: 'center',
-  marginBottom: '20px',
-};
-
-const inputContainerStyle = {
+  fontSize: '24px',
+  fontWeight: 'bold',
   marginBottom: '10px',
 };
 
-const inputStyle = {
-  padding: '10px',
-  borderRadius: '4px',
-  border: '1px solid #ccc',
+const descriptionStyle = {
+  fontSize: '14px',
+  color: '#666',
+  marginBottom: '20px',
+  textAlign: 'center',
+};
+
+const inputContainerStyle = {
   width: '100%',
+  marginBottom: '15px',
+};
+
+const inputStyle = {
+  width: '100%',
+  padding: '10px',
+  borderRadius: '5px',
+  border: '1px solid #ddd',
   boxSizing: 'border-box',
-  transition: 'border-color 0.3s',
+  fontSize: '14px',
 };
 
 const buttonStyle = {
-  backgroundColor: 'black',
+  width: '100%',
+  padding: '12px',
+  backgroundColor: '#2c3e50',
   color: 'white',
-  padding: '10px',
+  fontSize: '16px',
   border: 'none',
-  borderRadius: '4px',
+  borderRadius: '5px',
   cursor: 'pointer',
+  marginTop: '10px',
   transition: 'background-color 0.3s',
 };
 
+const linkContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: '15px',
+  fontSize: '14px',
+};
+
+const linkStyle = {
+  color: '#3498db',
+  textDecoration: 'none',
+  marginRight: '10px',
+};
+
 const footerStyle = {
+  marginTop: '30px',
+  fontSize: '14px',
+  color: '#888',
   textAlign: 'center',
-  marginTop: '20px',
+};
+
+const addressStyle = {
+  fontSize: '12px',
+  lineHeight: '1.5',
+  marginTop: '5px',
 };
 
 export default Login;
