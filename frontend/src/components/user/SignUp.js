@@ -52,24 +52,15 @@ const SignUp = () => {
   return (
     <div className="signup-background">
       <form onSubmit={handleSubmit} className="signup-form">
-        <div className="signup-message">
-          <h2>회원가입</h2>
-          <p>계정이 이미 있는 경우에는 <strong>로그인해주세요.</strong></p>
-          <p>
-            가입을 하면 AI 코드잼
-            <button type="button" onClick={() => alert('이용약관에 대한 내용입니다.')} className="signup-link">이용약관</button>,
-            <button type="button" onClick={() => alert('개인정보취급방침에 대한 내용입니다.')} className="signup-link">개인정보취급방침</button> 및
-            <button type="button" onClick={() => alert('개인정보 3자 제공에 대한 내용입니다.')} className="signup-link">개인정보 3자 제공</button>에 동의하게 됩니다.
-          </p>
-          <p>가입 후 아이디는 변경할 수 없습니다.</p>
-        </div>
+        <h2 className="signup-title">회원가입</h2>
 
         {/* 사용자 이름 입력 필드 */}
-        <div className="signup-input-container">
+        <div className="login-input-container">
           <label>사용자 이름</label>
           <input
             type="text"
             name="username"
+            placeholder="아이디를 입력하세요"
             value={formData.username}
             onChange={handleChange}
             required
@@ -78,11 +69,12 @@ const SignUp = () => {
         </div>
 
         {/* 이메일 입력 필드 */}
-        <div className="signup-input-container">
+        <div className="login-input-container">
           <label>이메일</label>
           <input
             type="email"
             name="email"
+            placeholder="이메일을 입력하세요"
             value={formData.email}
             onChange={handleChange}
             required
@@ -91,11 +83,12 @@ const SignUp = () => {
         </div>
 
         {/* 비밀번호 입력 필드 */}
-        <div className="signup-input-container">
+        <div className="login-input-container">
           <label>비밀번호</label>
           <input
             type="password"
             name="password"
+            placeholder="비밀번호를 입력하세요"
             value={formData.password}
             onChange={handleChange}
             required
@@ -104,11 +97,12 @@ const SignUp = () => {
         </div>
 
         {/* 전화번호 입력 필드 */}
-        <div className="signup-input-container">
+        <div className="login-input-container">
           <label>전화번호</label>
           <input
             type="text"
             name="phoneNum"
+            placeholder="전화번호를 입력하세요"
             value={formData.phoneNum}
             onChange={handleChange}
             required
@@ -116,8 +110,15 @@ const SignUp = () => {
           />
         </div>
 
-        {/* 제출 버튼 */}
-        <button type="submit" className="signup-button">회원가입</button>
+        {/* 버튼 컨테이너 */}
+        <div className="button-container">
+          <button type="button" className="cancel-button" onClick={() => (window.location.href = '/')}>
+            취소
+          </button>
+          <button type="submit" className="confirm-button">
+            확인
+          </button>
+        </div>
       </form>
     </div>
   );
