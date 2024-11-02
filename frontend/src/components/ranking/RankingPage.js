@@ -14,7 +14,17 @@ const RankingPage = () => {
           throw new Error('네트워크 응답이 좋지 않습니다.');
         }
         const data = await response.json();
-        setRankings(data);
+
+        // Total Score 기준으로 내림차순 정렬 후 Rank 설정
+        const sortedData = data
+          .sort((a, b) => b.totalScore - a.totalScore) // Total Score로 정렬
+          .map((item, index) => ({
+            ...item,
+            userRank: index + 1, // Rank 설정
+            userId: String(item.userId), // userId를 문자열로 변환
+          }));
+
+        setRankings(sortedData);
       } catch (error) {
         setError(error.message);
       } finally {
