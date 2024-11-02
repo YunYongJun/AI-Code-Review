@@ -1,0 +1,7 @@
+.app-container {
+    max-width: 1200px;
+    /* 최대 너비 설정 (원하는 너비로 조정 가능) */
+    margin: 0 auto;
+    /* 자동으로 양옆 여백 추가 */
+    padding-bottom: 500px;
+}

@@ -1,6 +1,7 @@
 .ranking-page {
   font-family: Arial, sans-serif;
   margin: 20px;
+  background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
 }
 
 /* Ranking Table */

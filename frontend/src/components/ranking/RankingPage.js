@@ -44,27 +44,29 @@ const RankingPage = () => {
   }
 
   return (
-    <div className="ranking-page">
-      {/* Ranking Table */}
-      <div className="ranking-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>User Id</th>
-              <th>Total Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rankings.map((ranking, index) => (
-              <tr key={index}>
-                <td className={`ranking-${ranking.userRank}`}>{ranking.userRank}</td>
-                <td>{ranking.userId}</td>
-                <td>{ranking.totalScore}</td>
+    <div className="app-container">
+      <div className="ranking-page">
+        {/* Ranking Table */}
+        <div className="ranking-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User Id</th>
+                <th>Total Score</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rankings.map((ranking, index) => (
+                <tr key={index}>
+                  <td className={`ranking-${ranking.userRank}`}>{ranking.userRank}</td>
+                  <td>{ranking.userId}</td>
+                  <td>{ranking.totalScore}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

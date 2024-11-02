@@ -56,57 +56,59 @@ function SubmitCodePage() {
   };
 
   return (
-    <div className="scp-submit-code-page">
-      <header className="scp-header">
-        <h1 className="scp-title">코드 제출</h1>
-      </header>
+    <div className="app-container">
+      <div className="scp-submit-code-page">
+        <header className="scp-header">
+          <h1 className="scp-title">코드 제출</h1>
+        </header>
 
 
-      <div className="scp-form-container">
-        <div className="scp-form-group">
-          <label htmlFor="title-input">제목</label>
-          <input
-            id="title-input"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="scp-input"
-          />
-        </div>
+        <div className="scp-form-container">
+          <div className="scp-form-group">
+            <label htmlFor="title-input">제목</label>
+            <input
+              id="title-input"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="scp-input"
+            />
+          </div>
 
-        <div className="scp-form-group">
-          <label htmlFor="language-select">언어</label>
-          <select
-            id="language-select"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="scp-select-input"
-          >
-            <option value="Java 11">Java 11</option>
-            <option value="Python 3">Python 3</option>
-            <option value="C++">C++</option>
-          </select>
-        </div>
+          <div className="scp-form-group">
+            <label htmlFor="language-select">언어</label>
+            <select
+              id="language-select"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="scp-select-input"
+            >
+              <option value="Java 11">Java 11</option>
+              <option value="Python 3">Python 3</option>
+              <option value="C++">C++</option>
+            </select>
+          </div>
 
 
-        <div className="scp-form-group">
-          <label htmlFor="source-code">소스 코드</label>
-          <textarea
-            id="source-code"
-            value={sourceCode}
-            onChange={(e) => setSourceCode(e.target.value)}
-            className="scp-code-input"
-            rows="10"
-          />
-        </div>
+          <div className="scp-form-group">
+            <label htmlFor="source-code">소스 코드</label>
+            <textarea
+              id="source-code"
+              value={sourceCode}
+              onChange={(e) => setSourceCode(e.target.value)}
+              className="scp-code-input"
+              rows="10"
+            />
+          </div>
 
-        <div className="scp-submit-button-container">
-          <button className="scp-submit-button" onClick={handleListClick}>
-            목록
-          </button>
-          <button className="scp-submit-button" onClick={handleSubmit}>
-            제출
-          </button>
+          <div className="scp-submit-button-container">
+            <button className="scp-submit-button" onClick={handleListClick}>
+              목록
+            </button>
+            <button className="scp-submit-button" onClick={handleSubmit}>
+              제출
+            </button>
+          </div>
         </div>
       </div>
     </div>
