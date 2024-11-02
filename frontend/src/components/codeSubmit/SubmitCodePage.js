@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './SubmitCodePage.css';
 
 function SubmitCodePage() {
-  const [language, setLanguage] = useState('Java 11');
-  const [sourceCode, setSourceCode] = useState('');
+  // 상태 변수 정의
+  const [language, setLanguage] = useState('Java 11'); // 선택된 프로그래밍 언어
+  const [sourceCode, setSourceCode] = useState(''); // 소스 코드 입력
   const [title, setTitle] = useState(''); // 제목 상태 추가
 
+  // 제출 핸들러
   const handleSubmit = async () => {
-    // 제출 처리 로직
     console.log('제출된 제목:', title);
     console.log('제출된 소스 코드:', sourceCode);
 
@@ -36,7 +37,7 @@ function SubmitCodePage() {
         throw new Error('제출 실패'); // 오류 발생 시 예외 처리
       }
 
-      // 성공 시 처리 로직 (예: 제출 완료 메시지, 리디렉션 등)
+      // 성공 시 처리 로직
       window.location.href = '/grading'; // 제출 버튼 클릭 시 grading으로 이동
     } catch (error) {
       console.error('Error:', error);
@@ -44,6 +45,7 @@ function SubmitCodePage() {
     }
   };
 
+  // 목록 페이지로 이동하는 핸들러
   const handleListClick = () => {
     const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
     if (!token) {
@@ -62,8 +64,8 @@ function SubmitCodePage() {
           <h1 className="scp-title">코드 제출</h1>
         </header>
 
-
         <div className="scp-form-container">
+          {/* 제목 입력 */}
           <div className="scp-form-group">
             <label htmlFor="title-input">제목</label>
             <input
@@ -72,9 +74,11 @@ function SubmitCodePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="scp-input"
+              placeholder="제목을 입력하세요" // 플레이스홀더 추가
             />
           </div>
 
+          {/* 언어 선택 */}
           <div className="scp-form-group">
             <label htmlFor="language-select">언어</label>
             <select
@@ -89,7 +93,7 @@ function SubmitCodePage() {
             </select>
           </div>
 
-
+          {/* 소스 코드 입력 */}
           <div className="scp-form-group">
             <label htmlFor="source-code">소스 코드</label>
             <textarea
@@ -98,9 +102,11 @@ function SubmitCodePage() {
               onChange={(e) => setSourceCode(e.target.value)}
               className="scp-code-input"
               rows="10"
+              placeholder="소스 코드를 입력하세요" // 플레이스홀더 추가
             />
           </div>
 
+          {/* 버튼들 */}
           <div className="scp-submit-button-container">
             <button className="scp-submit-button" onClick={handleListClick}>
               목록

@@ -17,11 +17,11 @@ const RankingPage = () => {
 
         // Total Score 기준으로 내림차순 정렬 후 Rank 설정
         const sortedData = data
-          .sort((a, b) => b.totalScore - a.totalScore) // Total Score로 정렬
+          .sort((a, b) => b.totalScore - a.totalScore)
           .map((item, index) => ({
             ...item,
-            userRank: index + 1, // Rank 설정
-            userId: String(item.userId), // userId를 문자열로 변환
+            userRank: index + 1,
+            userId: String(item.userId),
           }));
 
         setRankings(sortedData);
@@ -35,6 +35,18 @@ const RankingPage = () => {
     fetchRankings();
   }, []);
 
+  // 점수에 따른 등급을 반환하는 함수
+  const getRankLabel = (score) => {
+    if (score > 2000) {
+      return 'gold'; // 클래스 이름
+    } else if (score > 1000) {
+      return 'silver'; // 클래스 이름
+    } else if (score > 500) {
+      return 'bronze'; // 클래스 이름
+    }
+    return 'newbie'; // 클래스 이름
+  };
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -46,6 +58,16 @@ const RankingPage = () => {
   return (
     <div className="app-container">
       <div className="ranking-page">
+        {/* 설명문 추가 */}
+        <div className="ranking-description">
+          <h3>점수에 따른 등급</h3>
+          <ul>
+            <li>0: <span className="ranking-newbie">Newbie </span>
+              | 500: <span className="ranking-bronze">Bronze </span>
+              | 1000: <span className="ranking-silver">Silver </span>
+              | 2000: <span className="ranking-gold">Gold</span></li>
+          </ul>
+        </div>
         {/* Ranking Table */}
         <div className="ranking-table">
           <table>
@@ -54,14 +76,16 @@ const RankingPage = () => {
                 <th>Rank</th>
                 <th>User Id</th>
                 <th>Total Score</th>
+                <th>등급</th> {/* 등급 열 추가 */}
               </tr>
             </thead>
             <tbody>
               {rankings.map((ranking, index) => (
                 <tr key={index}>
-                  <td className={`ranking-${ranking.userRank}`}>{ranking.userRank}</td>
+                  <td>{ranking.userRank}</td>
                   <td>{ranking.userId}</td>
                   <td>{ranking.totalScore}</td>
+                  <td className={getRankLabel(ranking.totalScore)}>{getRankLabel(ranking.totalScore)}</td> {/* 등급 표시 */}
                 </tr>
               ))}
             </tbody>

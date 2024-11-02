@@ -16,11 +16,13 @@
 }
 
 .scp-form-container {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 5px;
+  background: linear-gradient(135deg, #f9f9f9, #f1f1f1);
+  /* 그라데이션 배경 */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 
 .scp-form-group {
   margin-bottom: 20px;
@@ -65,7 +67,7 @@
 }
 
 .scp-submit-button {
-  background-color: #4CAF50;
+  background-color: #004080;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -75,5 +77,5 @@
 }
 
 .scp-submit-button:hover {
-  background-color: #45a049;
+  background-color: #004080;
 }

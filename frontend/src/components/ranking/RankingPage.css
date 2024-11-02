@@ -36,16 +36,46 @@
 }
 
 .ranking-gold {
-  color: gold;
+  color: rgb(209, 209, 78);
+  /* Gold: 노란색 */
   font-weight: bold;
 }
 
 .ranking-silver {
-  color: silver;
+  color: gray;
+  /* Silver: 회색 */
   font-weight: bold;
 }
 
 .ranking-bronze {
-  color: #cd7f32;
+  color: brown;
+  /* Bronze: 갈색 */
   font-weight: bold;
+}
+
+.ranking-newbie {
+  color: black;
+  /* Newbie: 검은색 */
+  font-weight: bold;
+}
+
+.ranking-description {
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-description h3 {
+  margin: 0;
+}
+
+.ranking-description ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ranking-description li {
+  margin: 5px 0;
 }
