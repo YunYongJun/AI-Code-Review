@@ -45,6 +45,7 @@ const RankingPage = () => {
               <th>Total Score</th>
             </tr>
           </thead>
+
           <tbody>
             {rankings.map((ranking, index) => (
               <tr key={index}>

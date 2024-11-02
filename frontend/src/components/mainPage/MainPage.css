@@ -1,126 +1,187 @@
-  .mainPage-App {
-    font-family: Arial, sans-serif;
-  }
+.box-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+}
 
-  .mainPage-header {
-    background-image: linear-gradient(to right, #062950, #5d7db9);
-    /* 왼쪽에서 오른쪽으로 그라데이션 */
-    color: white;
-    padding: 40px;
-    text-align: center;
-    position: relative;
-  }
+.box {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* 투명한 하얀색 */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  width: 160px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin: 0 10px;
+  /* 좌우 간격 추가 */
+}
 
-  .mainPage-header-content {
-    max-width: 700px;
-    margin: auto;
-  }
+.box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-  .mainPage-spring-label {
-    padding: 5px 10px;
-    display: inline-block;
-    border-radius: 15px;
-    font-weight: bold;
-  }
+.box-icon {
+  font-size: 36px;
+  margin-bottom: 15px;
+}
 
-  .mainPage-signup-button {
-    background-image: linear-gradient(to right, #2f0e6ba6, #aa97ca);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.box-title {
+  font-size: 28px;
+  /* 글씨 크기를 기존보다 키움 */
+  font-weight: bold;
+  margin-bottom: 10px;
+  /* 제목과 아이콘/내용 사이 간격 */
+}
 
-  .mainPage-code-review-section {
-    text-align: center;
-    padding: 100px;
-  }
 
-  .mainPage-code-review-section h2 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-  }
 
-  .mainPage-code-review-section .underline {
-    width: 50px;
-    height: 2px;
-    background-color: #333;
-    margin: 10px auto;
-  }
+.mainPage-App {
+  font-family: Arial, sans-serif;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  transition: background-image 1s ease-in-out;
+}
 
-  .mainPage-code-review-section p {
-    font-size: 16px;
-    color: #555;
-    margin-top: 0;
-  }
+.mainPage-header {
+  background-color: rgba(128, 128, 128, 0.5);
+  /* 투명한 회색 */
+  color: white;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
 
-  .mainPage-footer {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
+.mainPage-header-content p {
+  font-size: 16px;
+  color: #fff;
+  /* 글씨 색상 변경 */
+  margin-top: 20px;
+  /* 위쪽 간격 */
+  margin-bottom: 30px;
+  /* 아래쪽 간격 */
+}
 
-  .mainPage-footer-content {
-    max-width: 800px;
-    margin: auto;
-  }
+.mainPage-header-content {
+  max-width: 700px;
+  margin: auto;
+}
 
-  .mainPage-multi-column-section {
-    background-color: #212121;
-    color: #ddd;
-    padding: 40px 0;
-  }
+.mainPage-spring-label {
+  padding: 5px 10px;
+  display: inline-block;
+  border-radius: 15px;
+  font-weight: bold;
+}
 
+.mainPage-signup-button {
+  background-image: linear-gradient(to right, #000000, #000000);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.mainPage-code-review-section {
+  background-color: rgba(128, 128, 128, 0.5);
+  text-align: center;
+  padding: 100px;
+  margin-top: 20px;
+  /* 필요시 여백 조정 */
+}
+
+.mainPage-code-review-section h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  /* 글씨 색상 변경 */
+  margin-bottom: 10px;
+}
+
+.mainPage-code-review-section .underline {
+  width: 50px;
+  height: 2px;
+  background-color: #fff;
+  /* 변경된 색상 */
+  margin: 10px auto;
+}
+
+.mainPage-code-review-section p {
+  font-size: 16px;
+  color: #fff;
+  /* 글씨 색상 변경 */
+  margin-top: 0;
+}
+
+.mainPage-footer {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.mainPage-footer-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.mainPage-multi-column-section {
+  background-color: #212121;
+  color: #ddd;
+  padding: 40px 0;
+}
+
+.mainPage-multi-column-container {
+  display: flex;
+  justify-content: space-around;
+  max-width: 1200px;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
+.mainPage-column {
+  flex: 1;
+  margin: 20px;
+  min-width: 200px;
+}
+
+.mainPage-column h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.mainPage-column ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.mainPage-column ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.mainPage-column ul li:hover {
+  color: #1abc9c;
+  /* 마우스를 올리면 글씨 색상 변경 */
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
   .mainPage-multi-column-container {
-    display: flex;
-    justify-content: space-around;
-    max-width: 1200px;
-    margin: auto;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
   }
 
   .mainPage-column {
-    flex: 1;
-    margin: 20px;
-    min-width: 200px;
+    margin-bottom: 30px;
   }
-
-  .mainPage-column h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #ffffff;
-  }
-
-  .mainPage-column ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .mainPage-column ul li {
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #ccc;
-  }
-
-  .mainPage-column ul li:hover {
-    color: #1abc9c;
-    /* 마우스를 올리면 글씨 색상이 바뀌게 설정 */
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    .mainPage-multi-column-container {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .mainPage-column {
-      margin-bottom: 30px;
-    }
-  }
+}
