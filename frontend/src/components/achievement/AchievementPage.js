@@ -8,7 +8,6 @@ const AchievementPage = () => {
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
 
-  console.log(userId)
   useEffect(() => {
     // JWT 토큰에서 사용자 ID 추출
     const token = localStorage.getItem('token');
@@ -32,13 +31,11 @@ const AchievementPage = () => {
             'Authorization': `Bearer ${token}`, // JWT를 헤더에 포함
           },
         });
-        console.log(response)
         if (!response.ok) {
           throw new Error('업적을 가져오는 데 실패했습니다.'); // 오류 처리
         }
 
         const data = await response.json();
-        console.log('가져온 데이터:', data); // 가져온 데이터 확인
         setAchievements(data); // 업적 상태 설정
       } catch (error) {
         setError(error.message); // 오류 메시지 설정
@@ -60,12 +57,16 @@ const AchievementPage = () => {
 
   return (
     <div className="app-container">
-      <div className="achievement-page">
-        <div className="achievement-description">
+      <div className="achievement-page"> {/* 랭킹 페이지 스타일 클래스 적용 */}
+        <div className="achievement-description"> {/* 업적 설명 섹션 */}
           <h3>사용자 업적 리스트</h3>
+          <ul>
+            <li>업적을 달성하여 보상을 받으세요!</li>
+            <li>각 업적에 대한 설명과 달성 날짜를 확인하세요.</li>
+          </ul>
         </div>
         {/* 업적 테이블 */}
-        <div className="achievement-table">
+        <div className="achievement-table"> {/* 랭킹 테이블 스타일 클래스 적용 */}
           <table>
             <thead>
               <tr>
@@ -77,7 +78,9 @@ const AchievementPage = () => {
             <tbody>
               {achievements.map((achievement) => (
                 <tr key={achievement.id}>
-                  <td>{achievement.achievementName}</td>
+                  <td style={{ fontWeight: 'bold' }}>
+                    {achievement.achievementName}
+                  </td>
                   <td>{achievement.achievementDesc}</td>
                   <td>{achievement.dateAchieved}</td>
                 </tr>
