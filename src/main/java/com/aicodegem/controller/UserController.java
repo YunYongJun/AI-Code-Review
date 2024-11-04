@@ -47,4 +47,17 @@ public class UserController {
         response.put("token", jwtToken);
         return ResponseEntity.ok(response);
     }
+
+    // 사용자 정보 수정 엔드포인트
+    @PutMapping("/{userId}/update")
+    public ResponseEntity<String> updateUser(
+            @PathVariable Long userId,
+            @RequestParam String email,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String phoneNum) {
+
+        String result = userService.updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
+        return ResponseEntity.ok(result);
+    }
 }

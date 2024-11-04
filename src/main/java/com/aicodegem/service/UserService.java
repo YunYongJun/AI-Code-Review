@@ -54,4 +54,26 @@ public class UserService implements UserDetailsService {
                 .headers(headers)
                 .body("{\"message\": \"User registered successfully.\"}");
     }
+
+    public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
+            String phoneNum) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            return "사용자를 찾을 수 없습니다.";
+        }
+
+        // 현재 비밀번호 확인 (비밀번호 인코딩을 고려한 비교)
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return "현재 비밀번호가 잘못 되었습니다.";
+        }
+
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword)); // 새 비밀번호를 인코딩하여 저장
+        user.setPhoneNum(phoneNum);
+        userRepository.save(user);
+
+        return "사용자 정보가 성공적으로 변경 되었습니다.";
+    }
+
 }
