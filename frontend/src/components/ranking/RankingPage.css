@@ -1,0 +1,81 @@
+.ranking-page {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
+}
+
+/* Ranking Table */
+.ranking-table {
+  margin-top: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.ranking-table th {
+  background-color: #f7f7f7;
+  color: #666;
+  font-weight: bold;
+}
+
+.ranking-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.ranking-gold {
+  color: rgb(209, 209, 78);
+  /* Gold: 노란색 */
+  font-weight: bold;
+}
+
+.ranking-silver {
+  color: gray;
+  /* Silver: 회색 */
+  font-weight: bold;
+}
+
+.ranking-bronze {
+  color: brown;
+  /* Bronze: 갈색 */
+  font-weight: bold;
+}
+
+.ranking-newbie {
+  color: black;
+  /* Newbie: 검은색 */
+  font-weight: bold;
+}
+
+.ranking-description {
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-description h3 {
+  margin: 0;
+}
+
+.ranking-description ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ranking-description li {
+  margin: 5px 0;
+}
