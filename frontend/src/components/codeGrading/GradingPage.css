@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+/* 전체 컨테이너 */
+.gpg-grading-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* 상단 섹션: 제출 정보 및 점수 */
+.gpg-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 메인 글자 */
+.gpg-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 팁 섹션 */
+.gpg-tip-section {
+    margin-top: 200px;
+    margin-bottom: 400px;
+}
+
+/* 팁 글자 */
+.gpg-tip {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+    padding: 0 20px;
+}
+
+/* 로딩 스피너 스타일 */
+.gpg-loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+/* 스피너 회전 애니메이션 */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

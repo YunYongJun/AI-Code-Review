@@ -1,0 +1,100 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.aicodegem'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17) // Java 버전 17 사용
+    }
+}
+
+bootJar {
+    mainClass.set('com.aicodegem.AiCodeGemApplication') // 메인 클래스 설정
+}
+
+repositories {
+    mavenCentral() // Maven 중앙 저장소 사용
+}
+
+dependencies {
+
+    // implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // MongoDB와의 상호작용을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    
+    // 웹 애플리케이션 및 REST API 개발을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Spring Security 의존성 (인증 및 권한 관리)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // JWT (JSON Web Token) 처리 관련 의존성
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+    // MySQL 데이터베이스 연결을 위한 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 지원
+    implementation 'mysql:mysql-connector-java:8.0.33' // MySQL 드라이버
+
+    // Lombok 의존성 (코드 축약을 위한 도구)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Spring Boot 개발 편의를 위한 DevTools
+    //developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // 테스트 의존성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // JUnit Platform 런처 (테스트 실행 관련)
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // // Spring Boot 테스트 의존성
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // // MockMvc 테스트를 위한 의존성
+    // testImplementation 'org.springframework:spring-test'
+
+    // // JsonPath를 사용할 경우 필요한 의존성
+    // testImplementation 'com.jayway.jsonpath:json-path'
+}
+
+tasks.named('test') {
+    useJUnitPlatform() // JUnit 플랫폼 사용
+}
+
+// bootRun 및 bootJar의 mainClass 설정
+tasks.named('bootRun') {
+    mainClass.set('com.aicodegem.AiCodeGemApplication') // bootRun 메인 클래스 설정
+}
+
+tasks.named('bootJar') {
+    mainClass.set('com.aicodegem.AiCodeGemApplication') // bootJar 메인 클래스 설정
+}
+
+// 소스셋 지정
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java'] // 메인 소스 디렉토리 설정
+        }
+        resources {
+            srcDirs = ['src/main/resources'] // 리소스 디렉토리 설정
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java'] // 테스트 소스 디렉토리 설정
+        }
+        resources {
+            srcDirs = ['src/test/resources'] // 테스트 리소스 디렉토리 설정
+        }
+    }
+}
