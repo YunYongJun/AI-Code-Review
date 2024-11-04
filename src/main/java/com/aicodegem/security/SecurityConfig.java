@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/rankings", "/api/auth/**", "/api/**")
                         .permitAll() // 로그인,
-                        .requestMatchers("/api/code/submit").authenticated()
+                        .requestMatchers("/api/code/submit", "api/**").authenticated()
                         // 회원가입
                         // 경로 허용
                         .anyRequest().authenticated()) // 나머지 경로는 인증 필요

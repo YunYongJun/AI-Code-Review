@@ -35,7 +35,7 @@ const ProfileEdit = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              placeholder="yourname@example.com"
+              placeholder="새 이메일 입력"
               className="profileEdit-input"
             />
           </div>
@@ -71,7 +71,7 @@ const ProfileEdit = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              placeholder="전화번호 입력"
+              placeholder="새 전화번호 입력"
               className="profileEdit-input"
             />
           </div>
