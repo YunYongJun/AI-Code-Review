@@ -24,7 +24,7 @@ function SubmitCodePage() {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/code/submit', {
+      const response = await fetch('http://192.168.34.16:8888/api/code/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

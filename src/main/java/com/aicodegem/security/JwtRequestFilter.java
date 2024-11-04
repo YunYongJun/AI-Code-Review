@@ -4,8 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Lazy;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final UserService userService; // UserService로 변경
+    private final UserService userService;
     private final JwtUtil jwtUtil;
 
     public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) { // @Lazy 추가
