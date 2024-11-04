@@ -60,4 +60,12 @@ public class UserController {
         String result = userService.updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
         return ResponseEntity.ok(result);
     }
+
+    // user_id로 user_name을 가져오는 엔드포인트
+    @GetMapping("/{userId}/name")
+    public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
+        return userService.getUsernameById(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
