@@ -10,6 +10,7 @@ const MenuBar = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    
     if (token) {
       setIsLoggedIn(true);
       const decodedToken = jwtDecode(token);

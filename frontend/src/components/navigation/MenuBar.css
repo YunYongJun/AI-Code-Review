@@ -12,11 +12,18 @@
   /* 아래쪽 그림자 추가 */
 }
 
+.menuBar-icon {
+  margin-right: 8px;
+  /* 아이콘과 텍스트 사이의 간격 설정 */
+}
+
 .menuBar-logo {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
+
 
 .menuBar-logo-link {
   font-size: 22px;
@@ -34,9 +41,17 @@
 }
 
 .menuBar-logo-subtext {
-  font-size: 13px;
-  color: #888;
+  font-size: 12px;
+  color: #998e8e;
+  font-weight: bold;
+  /* 글씨체를 굵게 만듦 */
 }
+
+.menuBar-logo-highlight {
+  color: #1abc9c;
+}
+
+
 
 .menuBar-items {
   display: flex;

@@ -8,14 +8,13 @@
 .box {
   background-color: rgba(255, 255, 255, 0.8);
   /* 투명한 하얀색 */
-  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
   width: 160px;
   transition: transform 0.3s, box-shadow 0.3s;
   margin: 0 10px;
-  /* 좌우 간격 추가 */
+  will-change: transform, box-shadow;
 }
 
 .box:hover {
@@ -23,18 +22,44 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.box-icon {
-  font-size: 36px;
+.box-icon1 {
+  width: 50px;
+  /* 아이콘의 너비 */
+  height: auto;
+  /* 자동 높이 조정 */
   margin-bottom: 15px;
+  /* 아이콘과 텍스트 사이의 간격 */
 }
 
+.box-icon2 {
+  width: 50px;
+  /* 아이콘의 너비 */
+  height: auto;
+  /* 자동 높이 조정 */
+  margin-bottom: 15px;
+  /* 아이콘과 텍스트 사이의 간격 */
+}
+
+.box-icon3 {
+  width: 50px;
+  height: auto;
+  margin-bottom: 15px;
+
+}
+
+.review {
+  color: #1abc9c;
+}
+
+
 .box-title {
-  font-size: 28px;
+  font-size: 22px;
   /* 글씨 크기를 기존보다 키움 */
   font-weight: bold;
   margin-bottom: 10px;
   /* 제목과 아이콘/내용 사이 간격 */
 }
+
 
 
 
@@ -47,6 +72,7 @@
   transition: background-image 1s ease-in-out;
 }
 
+
 .mainPage-header {
   background-color: rgba(128, 128, 128, 0.5);
   /* 투명한 회색 */
@@ -55,6 +81,7 @@
   text-align: center;
   position: relative;
 }
+
 
 .mainPage-header-content p {
   font-size: 16px;
