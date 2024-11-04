@@ -10,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.aicodegem.model.User;
 import com.aicodegem.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import com.aicodegem.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -58,7 +61,8 @@ public class UserService implements UserDetailsService {
 
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
             String phoneNum) {
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
         if (user == null) {
             return "사용자를 찾을 수 없습니다.";

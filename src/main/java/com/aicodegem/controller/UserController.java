@@ -49,7 +49,7 @@ public class UserController {
     }
 
     // 사용자 정보 수정 엔드포인트
-    @PutMapping("/{userId}/update")
+    @PutMapping("/update/{userId}")
     public ResponseEntity<String> updateUser(
             @PathVariable Long userId,
             @RequestParam String email,
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     // user_id로 user_name을 가져오는 엔드포인트
-    @GetMapping("/{userId}/name")
+    @GetMapping("/name/{userId}")
     public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
         return userService.getUsernameById(userId)
                 .map(ResponseEntity::ok)

@@ -44,8 +44,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/{userId}/name").permitAll() // 로그인,
-                                                                                                                       // 회원가입
+                        .requestMatchers("/api/auth/**")
+                        .permitAll() // 로그인,
+                        // 회원가입
                         // 경로 허용
                         .anyRequest().authenticated()) // 나머지 경로는 인증 필요
                 .sessionManagement(session -> session
