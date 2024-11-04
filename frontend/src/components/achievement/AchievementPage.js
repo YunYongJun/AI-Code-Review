@@ -8,12 +8,13 @@ const AchievementPage = () => {
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
 
+  console.log(userId)
   useEffect(() => {
     // JWT 토큰에서 사용자 ID 추출
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      setUserId(decodedToken.sub); // 사용자 ID 설정
+      setUserId(decodedToken.userId); // 사용자 ID 설정
     }
   }, []);
 
@@ -28,10 +29,10 @@ const AchievementPage = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // JWT를 헤더에 포함
+            'Authorization': `Bearer ${token}`, // JWT를 헤더에 포함
           },
         });
-
+        console.log(response)
         if (!response.ok) {
           throw new Error('업적을 가져오는 데 실패했습니다.'); // 오류 처리
         }

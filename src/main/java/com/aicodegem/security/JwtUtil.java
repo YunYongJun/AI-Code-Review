@@ -50,8 +50,9 @@ public class JwtUtil {
     }
 
     // 토큰 생성 (username과 role 포함)
-    public String generateToken(UserDetails userDetails, String role) {
+    public String generateToken(UserDetails userDetails, String role, String userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         claims.put("role", role); // 역할 정보 추가
         return createToken(claims, userDetails.getUsername());
     }
