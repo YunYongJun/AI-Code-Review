@@ -44,9 +44,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/auth/login", "/api/auth/signup", "/home", "/about", "/contact")
-                        .permitAll() // 홈 및 정보 페이지 모두 허용
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/api/rankings", "/api/auth/**")
+                        .permitAll() // 로그인,
+                        // 회원가입
+                        // 경로 허용
                         .anyRequest().authenticated()) // 나머지 경로는 인증 필요
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션 관리 정책
