@@ -5,6 +5,7 @@ public class UserDTO {
     private String password;
     private String email;
     private String phoneNum;
+    // private String role;
 
     // Constructor, Getters and Setters
     public UserDTO() {
@@ -14,7 +15,9 @@ public class UserDTO {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.phoneNum = phoneNum; // 수정된 부분
+        this.phoneNum = phoneNum;
+        // this.role = role;
+
     }
 
     public String getUsername() {
@@ -48,4 +51,12 @@ public class UserDTO {
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
+
+    // public String getRole() {
+    // return role;
+    // }
+
+    // public void setRole(String role) {
+    // this.role = role;
+    // }
 }

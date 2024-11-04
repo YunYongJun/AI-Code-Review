@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+    public SecurityConfig(@Lazy JwtRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
@@ -43,11 +44,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 활성화
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/rankings",
-                                "/api/auth/{userId}/name")
-                        .permitAll()
-                        .requestMatchers("/api/code/submit").authenticated() // 제출 API는 인증 필요
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/api/auth/login", "/api/auth/signup", "/home", "/about", "/contact")
+                        .permitAll() // 홈 및 정보 페이지 모두 허용
                         .anyRequest().authenticated()) // 나머지 경로는 인증 필요
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션 관리 정책

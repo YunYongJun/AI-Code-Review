@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import com.aicodegem.service.UserService;
 import org.springframework.context.annotation.Lazy;
 
 @Component
@@ -20,8 +21,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    public JwtRequestFilter(@Lazy UserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
+    public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) { // @Lazy 추가
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
