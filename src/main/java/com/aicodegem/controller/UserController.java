@@ -1,5 +1,8 @@
 package com.aicodegem.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +17,12 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    private final PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder; // 생성자에서 주입
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/signup")
@@ -28,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO) throws Exception {
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserDTO userDTO) throws Exception {
         // 유저를 로드
         final UserDetails userDetails = userService.loadUserByUsername(userDTO.getUsername());
 
@@ -40,36 +43,13 @@ public class UserController {
         // 사용자 역할 가져오기
         String role = userService.getUserRole(userDTO.getUsername());
 
-        // JWT 생성 및 반환
+        // JWT 생성
         final String jwtToken = jwtUtil.generateToken(userDetails, role);
 
-        // 토큰을 생성반환을 안하는거해결 json형식
-        // {
-        // "token":
-        // "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInN1YiI6InVzZXIwMSIsImlhdCI6MTczMDcwMzM4NiwiZXhwIjoxNzMwNzM5Mzg2fQ.LC_Ub_haZVozdYmtV6csp8k7XVjuc6Eo7-BsOYbxUEA"
-        // }
+        // JSON 형식으로 반환
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtToken);
 
-        return jwtToken; // 클라이언트에 JWT 반환
-    }
-
-    // 사용자 정보 수정 엔드포인트
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUser(
-            @PathVariable Long userId,
-            @RequestParam String email,
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword,
-            @RequestParam String phoneNum) {
-
-        String result = userService.updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
-        return ResponseEntity.ok(result);
-    }
-
-    // user_id로 user_name을 가져오는 엔드포인트
-    @GetMapping("/name/{userId}")
-    public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
-        return userService.getUsernameById(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(response); // JSON 형식으로 응답
     }
 }
