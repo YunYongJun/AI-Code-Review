@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './MainPage.css';
 
 const images = [
-  "/background1.png",
-  "/background2.png",
-  "/background3.png",
+  "/background1.jpg",
+  "/background2.jpg",
+  "/background3.jpg",
   "/background4.jpg",
   "/background5.jpg"
 ];
