@@ -14,7 +14,7 @@ public class RankingServiceImpl implements RankingService {
     private RankingRepository rankingRepository; // RankingRepository 의존성 주입
 
     @Override
-    public Ranking getRankingByUserId(int userId) {
+    public Ranking getRankingByUserId(Long userId) {
         return rankingRepository.findByUserId(userId); // 사용자 ID로 순위 조회
     }
 
