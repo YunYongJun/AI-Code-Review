@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-    }
+    } // 안녕
 
     @PostMapping("/signup")
     public String registerUser(@RequestBody UserDTO userDTO) {
