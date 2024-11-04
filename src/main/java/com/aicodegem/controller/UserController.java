@@ -44,4 +44,25 @@ public class UserController {
 
         return jwtToken; // 클라이언트에 JWT 반환
     }
+
+    // 사용자 정보 수정 엔드포인트
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateUser(
+            @PathVariable Long userId,
+            @RequestParam String email,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String phoneNum) {
+
+        String result = userService.updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
+        return ResponseEntity.ok(result);
+    }
+
+    // user_id로 user_name을 가져오는 엔드포인트
+    @GetMapping("/name/{userId}")
+    public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
+        return userService.getUsernameById(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
