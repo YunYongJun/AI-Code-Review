@@ -13,18 +13,19 @@ public class User {
     private String password;
     private String email;
     private String phoneNum;
+    private String role; // 사용자의 역할 필드 추가 (예: "user", "admin")
 
-    // 기본 생성자 (No-args constructor)
+    // 기본 생성자
     public User() {
     }
 
-    // 모든 필드를 받는 생성자
-    public User(String id, String username, String password, String email) {
-        this.id = id; // 몽고디비에서 자동으로 설정됨
-        this.username = username; // 로그인아이디 (중복체크함)
+    // 모든 필드를 받는 생성자 (id는 MongoDB에서 자동으로 설정)
+    public User(String username, String password, String email, String phoneNum, String role) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -68,6 +69,14 @@ public class User {
         this.phoneNum = phoneNum;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     // Optional: toString() method for debugging
     @Override
     public String toString() {
@@ -77,6 +86,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

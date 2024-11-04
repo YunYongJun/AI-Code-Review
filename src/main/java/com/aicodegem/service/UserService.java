@@ -1,4 +1,3 @@
-
 package com.aicodegem.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +8,7 @@ import com.aicodegem.model.User;
 import com.aicodegem.repository.UserRepository;
 import com.aicodegem.dto.UserDTO;
 import java.util.ArrayList;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -31,6 +31,12 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
+    // 사용자 역할을 가져오는 메서드
+    public String getUserRole(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(User::getRole).orElse("user"); // 기본 역할을 "user"로 설정
+    }
+
     // 유저 등록 로직
     public String registerUser(UserDTO userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
@@ -43,6 +49,7 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(encodedPassword);
         newUser.setEmail(userDTO.getEmail());
         newUser.setPhoneNum(userDTO.getPhoneNum());
+        newUser.setRole("user"); // 기본 역할을 "user"로 설정
 
         userRepository.save(newUser);
         return "User registered successfully";
