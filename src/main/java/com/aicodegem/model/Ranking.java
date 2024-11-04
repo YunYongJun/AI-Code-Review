@@ -17,8 +17,9 @@ public class Ranking {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 방식의 기본 키 생성 전략
     private int id; // 기본 키 필드
 
-    @Column(nullable = false) // NOT NULL 제약 조건을 설정
-    private int userId; // 사용자 ID 필드
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false) // 외래 키 설정
+    private User user;
 
     @Column(nullable = false) // NOT NULL 제약 조건을 설정
     private int userRank; // 순위 필드
