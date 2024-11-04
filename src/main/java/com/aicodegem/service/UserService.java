@@ -1,19 +1,16 @@
 package com.aicodegem.service;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import com.aicodegem.model.User;
+import com.aicodegem.repository.UserRepository;
+import com.aicodegem.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.aicodegem.model.User;
-import com.aicodegem.repository.UserRepository;
-import com.aicodegem.dto.UserDTO;
+
 import java.util.ArrayList;
 import java.util.Optional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService implements UserDetailsService {

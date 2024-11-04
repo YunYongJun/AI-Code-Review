@@ -1,8 +1,5 @@
 package com.aicodegem.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.aicodegem.service.UserService;
@@ -24,19 +21,17 @@ public class UserController {
         this.passwordEncoder = passwordEncoder; // 생성자에서 주입
     }
 
-    // 회원가입 API
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
-        return userService.registerUser(userDTO); // ResponseEntity로 반환
+    public String registerUser(@RequestBody UserDTO userDTO) {
+        return userService.registerUser(userDTO);
     }
 
-    // 로그인 API
     @PostMapping("/login")
     public String login(@RequestBody UserDTO userDTO) throws Exception {
         // 유저를 로드
         final UserDetails userDetails = userService.loadUserByUsername(userDTO.getUsername());
 
-        // 비밀번호 확인
+        // 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(userDTO.getPassword(), userDetails.getPassword())) {
             throw new Exception("Invalid credentials");
         }
@@ -47,6 +42,6 @@ public class UserController {
         // JWT 생성 및 반환
         final String jwtToken = jwtUtil.generateToken(userDetails, role);
 
-        return jwtToken;
+        return jwtToken; // 클라이언트에 JWT 반환
     }
 }

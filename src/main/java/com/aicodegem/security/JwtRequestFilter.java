@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Lazy;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
+    private final UserService userService; // UserService로 변경
     private final JwtUtil jwtUtil;
 
     public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) { // @Lazy 추가
@@ -40,7 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = jwtUtil.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
