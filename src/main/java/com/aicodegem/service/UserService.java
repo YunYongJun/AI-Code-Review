@@ -15,7 +15,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 import com.aicodegem.dto.UserDTO;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -79,11 +78,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return "사용자 정보가 성공적으로 변경 되었습니다.";
-    }
-
-    // user_id로 user_name 가져오기
-    public Optional<String> getUsernameById(Long userId) {
-        return userRepository.findUsernameById(userId);
     }
 
 }

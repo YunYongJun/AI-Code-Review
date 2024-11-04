@@ -23,7 +23,7 @@ public class RankingController {
 
     // 사용자 ID로 순위를 조회하는 GET 요청 처리
     @GetMapping("/{userId}")
-    public ResponseEntity<Ranking> getRanking(@PathVariable int userId) {
+    public ResponseEntity<Ranking> getRanking(@PathVariable Long userId) {
         Ranking ranking = rankingService.getRankingByUserId(userId); // 순위 조회
         return ResponseEntity.ok(ranking); // 성공 응답 반환
     }
