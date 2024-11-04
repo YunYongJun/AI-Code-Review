@@ -37,7 +37,7 @@ const Login = () => {
         throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      const result = await response.text();
       localStorage.setItem('token', result.token);
       alert('로그인 성공!');
       window.location.href = '/main';

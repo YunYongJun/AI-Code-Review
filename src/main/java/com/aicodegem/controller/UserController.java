@@ -1,5 +1,6 @@
 package com.aicodegem.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.aicodegem.service.UserService;
@@ -41,6 +42,12 @@ public class UserController {
 
         // JWT 생성 및 반환
         final String jwtToken = jwtUtil.generateToken(userDetails, role);
+
+        // 토큰을 생성반환을 안하는거해결 json형식
+        // {
+        // "token":
+        // "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInN1YiI6InVzZXIwMSIsImlhdCI6MTczMDcwMzM4NiwiZXhwIjoxNzMwNzM5Mzg2fQ.LC_Ub_haZVozdYmtV6csp8k7XVjuc6Eo7-BsOYbxUEA"
+        // }
 
         return jwtToken; // 클라이언트에 JWT 반환
     }
