@@ -15,7 +15,6 @@ const RankingPage = () => {
         }
 
         const data = await response.json();
-        console.log(data);
         // Total Score 기준으로 내림차순 정렬 후 Rank 설정
         const sortedData = data
           .sort((a, b) => b.totalScore - a.totalScore)
