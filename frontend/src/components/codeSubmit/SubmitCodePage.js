@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import './SubmitCodePage.css';
 
 function SubmitCodePage() {
-  // 상태 변수 정의
   const [language, setLanguage] = useState('Java 11'); // 선택된 프로그래밍 언어
   const [sourceCode, setSourceCode] = useState(''); // 소스 코드 입력
   const [title, setTitle] = useState(''); // 제목 상태 추가
+  const [userId, setUserId] = useState(''); // 사용자 ID 상태 추가
+
+  // JWT 토큰에서 사용자 ID 추출
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId); // 사용자 ID 설정
+    }
+  }, []);
 
   // 제출 핸들러
   const handleSubmit = async () => {
     console.log('제출된 제목:', title);
     console.log('제출된 소스 코드:', sourceCode);
+    console.log('제출된 사용자 ID:', userId);
 
-    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -20,41 +31,39 @@ function SubmitCodePage() {
 
     const submissionData = {
       submittedCode: sourceCode,
-      submissionDate: new Date().toISOString().split('T')[0], // 현재 날짜를 ISO 포맷으로 변환
+      submissionDate: new Date().toISOString().split('T')[0], // 현재 날짜
+      userId: userId, // 사용자 ID 추가
     };
 
     try {
-      const response = await fetch('http://192.168.34.16:8888/api/code/submit', {
+      const response = await fetch('http://localhost:8080/api/code/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // JWT 토큰 포함
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
-        throw new Error('제출 실패'); // 오류 발생 시 예외 처리
+        throw new Error('제출 실패');
       }
 
-      // 성공 시 처리 로직
-      window.location.href = '/grading'; // 제출 버튼 클릭 시 grading으로 이동
+      window.location.href = '/grading';
     } catch (error) {
       console.error('Error:', error);
       alert('제출 중 오류가 발생했습니다.');
     }
   };
 
-  // 목록 페이지로 이동하는 핸들러
   const handleListClick = () => {
-    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
 
-    // 목록 페이지로 이동
-    window.location.href = '/submitted-codes'; // 목록 버튼 클릭 시 submitted-codes로 이동
+    window.location.href = '/submitted-codes';
   };
 
   return (
@@ -74,7 +83,7 @@ function SubmitCodePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="scp-input"
-              placeholder="제목을 입력하세요" // 플레이스홀더 추가
+              placeholder="제목을 입력하세요"
             />
           </div>
 
@@ -102,7 +111,7 @@ function SubmitCodePage() {
               onChange={(e) => setSourceCode(e.target.value)}
               className="scp-code-input"
               rows="10"
-              placeholder="소스 코드를 입력하세요" // 플레이스홀더 추가
+              placeholder="소스 코드를 입력하세요"
             />
           </div>
 
