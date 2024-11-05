@@ -7,7 +7,8 @@ const images = [
   "/background2.jpg",
   "/background3.jpg",
   "/background4.jpg",
-  "/background5.jpg"
+  "/background5.jpg",
+  "/대상혁.png"
 ];
 
 function MainPage() {
