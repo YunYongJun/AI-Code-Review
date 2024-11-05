@@ -9,7 +9,6 @@ const submittedCodes = [
     submissionTime: '2024-10-21 10:30',
     detail: 'console.log("Hello World") // 세미콜론이 없습니다. \nint n = true; // 형식이 맞지 않습니다. \n\n\n\n',
   },
-
   {
     id: 2,
     title: '회원가입',
@@ -17,40 +16,55 @@ const submittedCodes = [
     submissionTime: '2024-10-21 11:00',
     detail: 'function nextNum(n) { return n + 1; }\n\n\n\n',
   },
-
-  {
-    id: 3,
-    title: '로그인',
-    status: '2.2',
-    submissionTime: '2024-10-21 11:30',
-    detail: 'function sumOfConsecutiveNumbers(arr) { return arr.reduce((a, b) => a + b); }\n\n\n\n',
-  },
-  {
-    id: 4,
-    title: '게시판 기능 구현',
-    status: '1.0',
-    submissionTime: '2024-10-21 12:00',
-    detail: 'function cutPaper(m, n) { return m * n - 1; }\n\n\n\n',
-  },
+  // 다른 코드들...
 ];
 
 function SubmittedCodes() {
   const [selectedCode, setSelectedCode] = useState(null);
-  const [editedDetail, setEditedDetail] = useState(''); // 수정된 내용 상태
+  const [editedDetail, setEditedDetail] = useState('');
 
+  // 코드 선택 핸들러
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    setEditedDetail(code.detail); // 선택된 코드의 detail로 초기화
+    setEditedDetail(code.detail);
   };
 
-  const handleSave = () => {
-    if (selectedCode) {
-      // 수정된 내용을 적용
-      const updatedCode = { ...selectedCode, detail: editedDetail };
-      setSelectedCode(updatedCode);
+  // 수정된 코드 제출 핸들러
+  const resubmitCode = async () => {
+    if (!selectedCode) {
+      alert('수정할 코드를 선택해 주세요.');
+      return;
+    }
 
-      // 실제 데이터베이스 업데이트 로직이 필요할 경우 여기에 추가합니다.
-      alert('코드가 저장되었습니다.');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    const submissionData = {
+      revisedCode: editedDetail, // 수정된 코드 내용
+    };
+
+    try {
+      const response = await fetch('http://192.168.34.16:8888/api/code/resubmit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        throw new Error('수정된 코드 제출 실패');
+      }
+
+      alert('수정된 코드가 제출되었습니다.');
+      // 필요시 추가적인 후속 처리 가능
+    } catch (error) {
+      console.error('Error:', error);
+      alert('코드 제출 중 오류가 발생했습니다.');
     }
   };
 
@@ -66,19 +80,20 @@ function SubmittedCodes() {
           ))}
         </ul>
       </div>
+
       <div className="sc-code-details">
         {selectedCode ? (
           <>
             <h4>{selectedCode.title}</h4>
             <textarea
-              className="sc-input" // Add the input class for consistent styling
+              className="sc-input"
               value={editedDetail}
               onChange={(e) => setEditedDetail(e.target.value)}
               style={{ whiteSpace: 'pre-wrap', width: '100%', height: '200px' }}
             />
             <p>점수: {selectedCode.status}</p>
             <p>제출 시간: {selectedCode.submissionTime}</p>
-            <button onClick={handleSave}>재채점</button>
+            <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
         ) : (
           <p>코드를 선택해 주세요.</p>

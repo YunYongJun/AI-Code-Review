@@ -27,6 +27,7 @@ const SignUp = () => {
         },
         body: JSON.stringify(formData),
       });
+      console.log(formData)
 
       if (!response.ok) {
         let errorMessage;
@@ -39,7 +40,7 @@ const SignUp = () => {
         throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      const result = await response.text();
       console.log(result);
 
       window.location.href = '/main';

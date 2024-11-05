@@ -13,8 +13,9 @@ const RankingPage = () => {
         if (!response.ok) {
           throw new Error('네트워크 응답이 좋지 않습니다.');
         }
-        const data = await response.json();
 
+        const data = await response.json();
+        console.log(data);
         // Total Score 기준으로 내림차순 정렬 후 Rank 설정
         const sortedData = data
           .sort((a, b) => b.totalScore - a.totalScore)
@@ -83,7 +84,7 @@ const RankingPage = () => {
               {rankings.map((ranking, index) => (
                 <tr key={index}>
                   <td>{ranking.userRank}</td>
-                  <td>{ranking.userId}</td>
+                  <td>{ranking.user.username}</td>
                   <td>{ranking.totalScore}</td>
                   <td className={getRankLabel(ranking.totalScore)}>{getRankLabel(ranking.totalScore)}</td> {/* 등급 표시 */}
                 </tr>

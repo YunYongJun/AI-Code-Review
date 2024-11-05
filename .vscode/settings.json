@@ -8,5 +8,10 @@
     "**/.vscode": true
   },
   "java.configuration.updateBuildConfiguration": "automatic",
+<<<<<<< Updated upstream
   "java.compile.nullAnalysis.mode": "automatic"
+=======
+  "git.ignoreLimitWarning": true,
+  "java.compile.nullAnalysis.mode": "disabled"
+>>>>>>> Stashed changes
 }

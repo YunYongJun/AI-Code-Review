@@ -33,10 +33,4 @@ public class RankingServiceImpl implements RankingService {
         return rankingRepository.findAll(); // 모든 랭킹 정보 조회
     }
 
-    // userId로 username 조회
-    public String getUsernameByUserId(Long userId) {
-        return userRepository.findById(userId)
-                .map(user -> user.getUsername())
-                .orElse(null);
-    }
 }

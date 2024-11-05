@@ -43,10 +43,4 @@ public class RankingController {
         return ResponseEntity.ok(rankings); // 성공 응답 반환
     }
 
-    // 사용자 ID로 username을 조회하는 GET 요청 처리
-    @GetMapping("/username/{userId}")
-    public ResponseEntity<String> getUsernameByUserId(@PathVariable Long userId) {
-        String username = ((RankingServiceImpl) rankingService).getUsernameByUserId(userId);
-        return username != null ? ResponseEntity.ok(username) : ResponseEntity.notFound().build();
-    }
 }

@@ -1,8 +1,5 @@
 package com.aicodegem.service;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import com.aicodegem.dto.UserDTO;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,26 +34,33 @@ public class UserService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public ResponseEntity<String> registerUser(UserDTO userDTO) {
-        // 유저가 이미 존재하는지 확인
+    // 사용자 역할을 가져오는 메서드
+    public String getUserRole(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(User::getRole).orElse("user"); // 기본 역할을 "user"로 설정
+    }
+
+    public String getUserId(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.map(user -> String.valueOf(user.getId())).orElse(null);
+    }
+
+    // 유저 등록 로직
+    public String registerUser(UserDTO userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON); // Content-Type 명시
-            return ResponseEntity.badRequest()
-                    .headers(headers)
-                    .body("{\"message\": \"User with this username already exists.\"}");
+            throw new IllegalStateException("Username already taken.");
         }
 
-        // 비밀번호를 해싱하여 User 객체 생성 및 저장
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-        User user = new User(userDTO.getUsername(), encodedPassword, userDTO.getEmail(), userDTO.getPhoneNum());
-        userRepository.save(user);
+        User newUser = new User();
+        newUser.setUsername(userDTO.getUsername());
+        newUser.setPassword(encodedPassword);
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setPhoneNum(userDTO.getPhoneNum());
+        newUser.setRole("user"); // 기본 역할을 "user"로 설정
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON); // Content-Type 명시
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body("{\"message\": \"User registered successfully.\"}");
+        userRepository.save(newUser);
+        return "User registered successfully";
     }
 
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
