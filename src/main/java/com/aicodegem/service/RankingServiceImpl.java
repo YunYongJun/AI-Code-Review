@@ -2,6 +2,7 @@ package com.aicodegem.service;
 
 import com.aicodegem.model.Ranking;
 import com.aicodegem.repository.RankingRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,8 +15,8 @@ public class RankingServiceImpl implements RankingService {
     private RankingRepository rankingRepository; // RankingRepository 의존성 주입
 
     @Override
-    public Ranking getRankingByUserId(int userId) {
-        return rankingRepository.findByUserId(userId); // 사용자 ID로 순위 조회
+    public Ranking getRankingByUserId(Long userId) {
+        return rankingRepository.findByUserId(userId).orElse(null); // 사용자 ID로 순위 조회
     }
 
     @Override
@@ -27,4 +28,5 @@ public class RankingServiceImpl implements RankingService {
     public List<Ranking> getAllRankings() {
         return rankingRepository.findAll(); // 모든 랭킹 정보 조회
     }
+
 }

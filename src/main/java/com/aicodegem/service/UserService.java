@@ -85,9 +85,4 @@ public class UserService implements UserDetailsService {
         return "사용자 정보가 성공적으로 변경 되었습니다.";
     }
 
-    // user_id로 user_name 가져오기
-    public Optional<String> getUsernameById(Long userId) {
-        return userRepository.findUsernameById(userId);
-    }
-
 }
