@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.aicodegem.model.Ranking;
 import com.aicodegem.service.RankingService;
-import com.aicodegem.service.RankingServiceImpl;
 
 // Ranking API를 제공하는 컨트롤러 클래스
 @RestController
