@@ -3,6 +3,9 @@ package com.aicodegem.service;
 import com.aicodegem.dto.CodeSubmissionRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,10 @@ public class CodeSubmissionService {
     // 수정된 코드 제출 처리
     public CodeSubmission resubmitCode(String userId, String revisedCode) {
         CodeSubmission submission = codeRepository.findByUserId(userId);
+        if (submission == null) {
+            throw new IllegalArgumentException("해당 사용자 ID에 대한 제출 코드가 없습니다.");
+        }
+
         int revisedScore = aiAnalysisService.analyzeCode(revisedCode);
         String revisedFeedback = aiAnalysisService.generateFeedback(revisedCode);
 
@@ -38,5 +45,15 @@ public class CodeSubmissionService {
         submission.setFeedback(revisedFeedback);
 
         return codeRepository.save(submission);
+    }
+
+    // 특정 사용자 ID의 모든 제출 기록 조회
+    public List<CodeSubmission> getAllSubmissionsByUserId(String userId) {
+        return codeRepository.findAllByUserId(userId);
+    }
+
+    // 특정 submissionId로 제출 코드 조회
+    public CodeSubmission getSubmissionById(String submissionId) {
+        return codeRepository.findById(submissionId).orElse(null);
     }
 }
