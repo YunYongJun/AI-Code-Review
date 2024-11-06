@@ -49,7 +49,20 @@ public class UserController {
         // JSON 형식으로 반환
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtToken);
-
         return ResponseEntity.ok(response); // JSON 형식으로 응답
     }
+
+    // 사용자 정보 수정 엔드포인트
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateUser(
+            @PathVariable Long userId,
+            @RequestParam String email,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String phoneNum) {
+
+        String result = userService.updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
+        return ResponseEntity.ok(result);
+    }
+
 }
