@@ -1,50 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { java } from '@codemirror/lang-java';
 import { python } from '@codemirror/lang-python';
 import { cpp } from '@codemirror/lang-cpp';
+import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
-const submittedCodes = [
-  {
-    id: 1,
-    title: '테스트',
-    status: '0',
-    submissionTime: '2024-10-21 10:30',
-    detail: 'console.log("Hello World") // 세미콜론이 없습니다. \nint n = true; // 형식이 맞지 않습니다. \n\n\n\n',
-    language: 'java',
-  },
-  {
-    id: 2,
-    title: '회원가입',
-    status: '2.3',
-    submissionTime: '2024-10-21 11:00',
-    detail: 'function nextNum(n) { return n + 1; }\n\n\n\n',
-    language: 'python',
-  },
-  // 다른 코드들...
-];
-
 function SubmittedCodes() {
+  const [submittedCodes, setSubmittedCodes] = useState([]); // API에서 가져온 코드 제출 목록을 저장
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
-  const [language, setLanguage] = useState('java'); // 언어 상태 추가
+  const [language, setLanguage] = useState('java');
+  const [userId, setUserId] = useState(null); // 사용자 ID 상태 추가
 
-  // 언어별 확장 모드 매핑
   const languageExtensions = {
     java: java(),
     python: python(),
     cpp: cpp(),
   };
 
-  // 코드 선택 핸들러
+  // 컴포넌트 마운트 시 사용자 ID 설정 및 API 호출
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId); // 사용자 ID 설정
+
+      // 사용자 코드 제출 목록 가져오기
+      fetch('http://localhost:8080/api/code/submissions', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
+          return response.json();
+        })
+        .then((data) => setSubmittedCodes(data))
+        .catch((error) => console.error('Error:', error));
+    }
+  }, []);
+
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    setEditedDetail(code.detail);
-    setLanguage(code.language || 'java'); // 선택한 코드의 언어로 초기화
+    setEditedDetail(code.feedback || ''); // 선택한 코드의 피드백 내용을 코드 에디터에 표시
+    setLanguage(code.language || 'java');
   };
 
-  // 수정된 코드 제출 핸들러
   const resubmitCode = async () => {
     if (!selectedCode) {
       alert('수정할 코드를 선택해 주세요.');
@@ -59,7 +63,7 @@ function SubmittedCodes() {
 
     const submissionData = {
       revisedCode: editedDetail,
-      language, // 언어도 함께 전송
+      language,
     };
 
     try {
@@ -72,10 +76,7 @@ function SubmittedCodes() {
         body: JSON.stringify(submissionData),
       });
 
-      if (!response.ok) {
-        throw new Error('수정된 코드 제출 실패');
-      }
-
+      if (!response.ok) throw new Error('수정된 코드 제출 실패');
       alert('수정된 코드가 제출되었습니다.');
     } catch (error) {
       console.error('Error:', error);
@@ -88,9 +89,9 @@ function SubmittedCodes() {
       <div className="sc-code-list">
         <h3>제출 코드 목록</h3>
         <ul>
-          {submittedCodes.map((code) => (
-            <li key={code.id} onClick={() => handleCodeSelect(code)}>
-              {code.title}
+          {submittedCodes.map((code, index) => (
+            <li key={index} onClick={() => handleCodeSelect(code)}>
+              {index + 1}
             </li>
           ))}
         </ul>
@@ -99,9 +100,7 @@ function SubmittedCodes() {
       <div className="sc-code-details">
         {selectedCode ? (
           <>
-            <h4>{selectedCode.title}</h4>
-
-            {/* 언어 선택 */}
+            <h4>{`제출 코드 ${submittedCodes.indexOf(selectedCode) + 1}`}</h4>
             <div className="scp-form-group">
               <label htmlFor="language-select">언어</label>
               <select
@@ -116,17 +115,16 @@ function SubmittedCodes() {
               </select>
             </div>
 
-            {/* CodeMirror 에디터 */}
             <CodeMirror
               value={editedDetail}
-              extensions={[languageExtensions[language] || java()]} // 언어가 정의되지 않은 경우 기본값으로 Java 확장을 사용
+              extensions={[languageExtensions[language] || java()]}
               onChange={(value) => setEditedDetail(value)}
               height="200px"
               className="sc-code-input"
             />
 
-            <p>점수: {selectedCode.status}</p>
-            <p>제출 시간: {selectedCode.submissionTime}</p>
+            <p>초기 점수: {selectedCode.initialScore}</p>
+            <p>수정 후 점수: {selectedCode.revisedScore}</p>
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
         ) : (
