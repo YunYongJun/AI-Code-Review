@@ -1,27 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SubmittedCodes.css';
 
-const submittedCodes = [
-  {
-    id: 1,
-    title: '테스트',
-    status: '0',
-    submissionTime: '2024-10-21 10:30',
-    detail: 'console.log("Hello World") // 세미콜론이 없습니다. \nint n = true; // 형식이 맞지 않습니다. \n\n\n\n',
-  },
-  {
-    id: 2,
-    title: '회원가입',
-    status: '2.3',
-    submissionTime: '2024-10-21 11:00',
-    detail: 'function nextNum(n) { return n + 1; }\n\n\n\n',
-  },
-  // 다른 코드들...
-];
-
 function SubmittedCodes() {
+  const [submittedCodes, setSubmittedCodes] = useState([]);
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
+
+  // 페이지 로드 시 제출된 코드 목록을 가져옵니다.
+  useEffect(() => {
+    const fetchSubmittedCodes = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:8080/api/code/submitted', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setSubmittedCodes(data); // 제출된 코드 목록을 상태에 설정
+        } else {
+          throw new Error('제출된 코드 목록을 가져오는 데 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('코드 목록을 가져오는 중 오류가 발생했습니다.');
+      }
+    };
+
+    fetchSubmittedCodes();
+  }, []); // 컴포넌트 마운트 시에만 실행됩니다.
 
   // 코드 선택 핸들러
   const handleCodeSelect = (code) => {
@@ -47,7 +62,7 @@ function SubmittedCodes() {
     };
 
     try {
-      const response = await fetch('http://192.168.34.16:8888/api/code/resubmit', {
+      const response = await fetch('http://localhost:8080/api/code/resubmit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +76,14 @@ function SubmittedCodes() {
       }
 
       alert('수정된 코드가 제출되었습니다.');
-      // 필요시 추가적인 후속 처리 가능
+
+      // 성공적으로 제출된 후, 새로 제출된 코드를 목록에 추가
+      const newCode = await response.json(); // 응답에서 새로 제출된 코드 데이터 받기
+      setSubmittedCodes((prevCodes) => [newCode, ...prevCodes]); // 새로운 코드를 목록의 앞에 추가
+
+      // 수정된 코드 선택을 해제
+      setSelectedCode(null);
+      setEditedDetail('');
     } catch (error) {
       console.error('Error:', error);
       alert('코드 제출 중 오류가 발생했습니다.');

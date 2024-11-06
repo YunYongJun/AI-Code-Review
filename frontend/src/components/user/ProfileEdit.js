@@ -39,18 +39,32 @@ const ProfileEdit = () => {
     }
 
     try {
+      const formBody = new URLSearchParams();
+      formBody.append("email", formData.email);
+      formBody.append("currentPassword", formData.currentPassword);
+      formBody.append("newPassword", formData.newPassword);
+      formBody.append("phoneNum", formData.phoneNum);
+
       const response = await fetch(`http://localhost:8080/api/auth/update/${userId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // JWT 토큰 추가
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: formBody.toString(),
       });
 
       if (response.ok) {
-        const result = await response.json();
-        alert(result.message || '사용자 정보가 성공적으로 변경되었습니다.');
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const result = await response.json();
+          alert(result.message || '사용자 정보가 성공적으로 변경되었습니다.');
+          window.location.href = '/main';
+        } else {
+          const resultText = await response.text();
+          alert(resultText || '사용자 정보가 성공적으로 변경되었습니다.');
+          window.location.href = '/main';
+        }
       } else {
         alert('사용자 정보를 업데이트하는 중 오류가 발생했습니다.');
       }
@@ -59,6 +73,8 @@ const ProfileEdit = () => {
       alert('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
+
+
 
   return (
     <div className="app-container">

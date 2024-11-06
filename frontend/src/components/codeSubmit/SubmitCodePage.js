@@ -30,9 +30,9 @@ function SubmitCodePage() {
     }
 
     const submissionData = {
-      submittedCode: sourceCode,
+      prompt: sourceCode, // 'prompt' 필드로 수정
       submissionDate: new Date().toISOString().split('T')[0], // 현재 날짜
-      userId: userId, // 사용자 ID 추가
+      //userId: userId, // 사용자 ID 추가
     };
 
     try {
