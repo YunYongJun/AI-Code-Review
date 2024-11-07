@@ -1,0 +1,77 @@
+/* 프로필 편집 컨테이너 */
+.profileEdit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    /* 여백을 늘려서 공간을 더 확보 */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 200px auto;
+    /* 수직 중앙 정렬을 위한 여백 */
+}
+
+/* 프로필 편집 제목 */
+.profileEdit-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+}
+
+/* 프로필 편집 폼 */
+.profileEdit-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* 입력 필드 컨테이너 */
+.profileEdit-input-container {
+    margin-bottom: 20px;
+    /* 아래쪽 여백을 약간 늘림 */
+}
+
+/* 프로필 편집 입력 필드 */
+.profileEdit-input {
+    padding: 12px;
+    /* 패딩을 약간 늘려서 입력하기 편하도록 */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 16px;
+}
+
+.profileEdit-input:focus {
+    border-color: #007BFF;
+    /* 포커스 시 색상 변경 */
+    outline: none;
+    /* 기본 테두리 제거 */
+}
+
+/* 프로필 편집 버튼 */
+.profileEdit-button {
+    background-color: #004080;
+    /* 버튼 색상 변경 */
+    color: white;
+    padding: 12px;
+    /* 버튼 패딩 조정 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+    /* 글자 두께 조정 */
+}
+
+.profileEdit-button:hover {
+    background-color: #003366;
+    /* 마우스 오버 시 색상 변경 */
+}

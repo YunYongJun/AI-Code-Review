@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
-import ProfileEdit from './components/ProfileEdit'; // 개인정보 수정 페이지 컴포넌트 추가
-import MainPage from './components/MainPage';
-import RankingPage from './components/RankingPage';
-import AchievementPage from './components/AchievementPage';
-import CodeEditor from './components/CodeEditor';
-
+import SignUp from './components/user/SignUp'
+import Login from './components/user/Login';
+import ProfileEdit from './components/user/ProfileEdit';
+import MainPage from './components/mainPage/MainPage';
+import RankingPage from './components/ranking/RankingPage';
+import AchievementPage from './components/achievement/AchievementPage';
+import SubmittedCodes from './components/codeModify/SubmittedCodes';
+import GradingPage from './components/codeGrading/GradingPage';
+import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 
 const AppRouter = () => {
+  const [submittedCodes, setSubmittedCodes] = useState([]);
+
   return (
     <Router>
       <Routes>
@@ -27,18 +31,22 @@ const AppRouter = () => {
         <Route path="/achievement" element={<AchievementPage />} />
 
         {/* 코드 제출 페이지 경로 */}
-        <Route path="/submissions" element={<CodeEditor />}/>
-        
+        <Route path="/submission" element={<SubmitCodePage />} />
+
+        {/* 제출 코드 목록 페이지 경로 */}
+        <Route path="/submitted-codes" element={<SubmittedCodes submittedCodes={submittedCodes} />} />
+
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
-        
-        {/* 기본 루트 경로를 로그인 페이지로 설정 */}
-        <Route path="/" element={<MainPage />} />
 
+        {/* 체점 페이지 경로 추가 */}
+        <Route path="/grading" element={<GradingPage />} />
+
+        {/* 기본 루트 경로를 메인 페이지로 설정 */}
+        <Route path="/" element={<MainPage />} />
       </Routes>
     </Router>
   );
 };
 
 export default AppRouter;
-

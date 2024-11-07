@@ -1,0 +1,99 @@
+/* Reset some basic styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+}
+
+/* Main container to center the form */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f8f8;
+}
+
+/* Login form styling */
+.login-form {
+    width: 400px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title styling */
+.login-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Description styling below the title */
+.login-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* Input container to add spacing */
+.login-input-container {
+    margin-bottom: 20px;
+}
+
+/* Input styling to match the design */
+.login-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.login-input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Button styling */
+.login-button {
+    width: 100%;
+    background-color: #004080;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: #003366;
+}
+
+/* Footer styling */
+.login-footer {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+.login-footer a {
+    color: #004080;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    color: #003366;
+    text-decoration: underline;
+}
