@@ -21,7 +21,7 @@ public class CodeAnalysisController {
     @PostMapping("/submit")
     public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request,
             Authentication authentication) {
-        String userId = authentication.getName(); // 인증된 사용자의 ID를 가져옴
+        Long userId = Long.parseLong(authentication.getName()); // 인증된 사용자의 ID를 가져옴
         request.setUserId(userId);
         CodeSubmission submission = codeSubmissionService.submitCode(request);
         return ResponseEntity.ok(submission);
@@ -31,7 +31,7 @@ public class CodeAnalysisController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/resubmit")
     public ResponseEntity<CodeSubmission> resubmitCode(@RequestBody String revisedCode, Authentication authentication) {
-        String userId = authentication.getName(); // 인증된 사용자 ID
+        Long userId = Long.parseLong(authentication.getName()); // 인증된 사용자 ID
         CodeSubmission submission = codeSubmissionService.resubmitCode(userId, revisedCode);
         return ResponseEntity.ok(submission);
     }

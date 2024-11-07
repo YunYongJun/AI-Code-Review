@@ -29,4 +29,19 @@ public class RankingServiceImpl implements RankingService {
         return rankingRepository.findAll(); // 모든 랭킹 정보 조회
     }
 
+    // 점수를 업데이트하는 메서드
+    @Override
+    public void updateTotalScore(Long userId, int newScore, int previousScore) {
+        Ranking ranking = rankingRepository.findByUserId(userId).orElse(null);
+
+        if (ranking != null) {
+            // 기존 점수를 빼고 새로운 점수를 추가하여 총점을 업데이트
+            int updatedScore = ranking.getTotalScore() - previousScore + newScore;
+            ranking.setTotalScore(updatedScore);
+            rankingRepository.save(ranking);
+        } else {
+            throw new RuntimeException("사용자를 찾을 수 없습니다: " + userId);
+        }
+    }
+
 }
