@@ -62,6 +62,11 @@ const SignUp = () => {
       console.error('회원가입 요청 중 오류 발생:', error);
       setErrorMessage('서버 요청 중 오류가 발생했습니다.');
     }
+
+  // 폼 제출 시 호출되는 함수
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+    console.log(formData); // 콘솔에 입력 데이터 출력 (추후 API 요청 등 추가 가능)
   };
 
   return (
