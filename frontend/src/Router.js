@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SignUp from './components/SignUp';
 import Login from './components/Login';
 import ProfileEdit from './components/ProfileEdit'; // 개인정보 수정 페이지 컴포넌트 추가
 import MainPage from './components/MainPage';
@@ -8,13 +7,13 @@ import RankingPage from './components/RankingPage';
 import AchievementPage from './components/AchievementPage';
 import CodeEditor from './components/CodeEditor';
 
+
 const AppRouter = () => {
   return (
     <Router>
       <Routes>
         {/* 회원가입 페이지 경로 */}
         <Route path="/signup" element={<SignUp />} />
-        
         {/* 로그인 페이지 경로 */}
         <Route path="/login" element={<Login />} />
 
@@ -35,9 +34,11 @@ const AppRouter = () => {
         
         {/* 기본 루트 경로를 로그인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />
+
       </Routes>
     </Router>
   );
 };
 
 export default AppRouter;
+

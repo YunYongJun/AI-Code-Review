@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.aicodegem'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // MongoDB와의 상호작용을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    
+    // 웹 애플리케이션 및 REST API 개발을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Spring Security 의존성 (인증 및 권한 관리)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // JWT (JSON Web Token) 처리 관련 의존성
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+    // Lombok 의존성 (코드 축약을 위한 도구)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Spring Boot 개발 편의를 위한 DevTools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // 테스트 의존성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // JUnit Platform 런처 (테스트 실행 관련)
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// bootRun 및 bootJar의 mainClass 설정
+tasks.named('bootRun') {
+    mainClass.set('com.aicodegem.AiCodeGemApplication')
+}
+
+tasks.named('bootJar') {
+    mainClass.set('com.aicodegem.AiCodeGemApplication')
+}
+
+// 소스셋 지정
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
