@@ -40,9 +40,9 @@ public class UserService implements UserDetailsService {
         return user.map(User::getRole).orElse("user"); // 기본 역할을 "user"로 설정
     }
 
-    public String getUserId(String username) {
+    public Long getUserId(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        return userOptional.map(user -> String.valueOf(user.getId())).orElse(null);
+        return userOptional.map(user -> Long.valueOf(user.getId())).orElse(null);
     }
 
     // 유저 등록 로직

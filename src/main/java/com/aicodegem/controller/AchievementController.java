@@ -18,11 +18,10 @@ public class AchievementController {
 
     // 사용자 ID로 업적을 조회하는 GET 요청 처리
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Achievement>> getAchievements(@PathVariable String userId) {
-        int userIdInt = Integer.parseInt(userId);
+    public ResponseEntity<List<Achievement>> getAchievements(@PathVariable Long userId) {
 
         // 주어진 사용자 ID로 업적 조회
-        List<Achievement> achievements = achievementService.getAchievementsByUserId(userIdInt);
+        List<Achievement> achievements = achievementService.getAchievementsByUserId(userId);
         return ResponseEntity.ok(achievements); // 성공 응답 반환
     }
 

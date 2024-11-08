@@ -24,6 +24,10 @@ public class CodeSubmissionService {
         int score = aiAnalysisService.analyzeCode(code);
         String feedback = aiAnalysisService.generateFeedback(code);
 
+        System.out.println("코드: " + code);
+        System.out.println("점수: " + score);
+        System.out.println("피드백: " + feedback);
+
         // 제출된 코드와 결과를 저장
         CodeSubmission submission = new CodeSubmission(request.getUserId(), code, feedback, score);
 

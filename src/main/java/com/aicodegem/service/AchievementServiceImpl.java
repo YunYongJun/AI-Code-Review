@@ -15,7 +15,7 @@ public class AchievementServiceImpl implements AchievementService {
     private AchievementRepository achievementRepository; // AchievementRepository 의존성 주입
 
     @Override
-    public List<Achievement> getAchievementsByUserId(int userId) {
+    public List<Achievement> getAchievementsByUserId(Long userId) {
         return achievementRepository.findByUserId(userId); // 사용자 ID로 업적 조회
     }
 
