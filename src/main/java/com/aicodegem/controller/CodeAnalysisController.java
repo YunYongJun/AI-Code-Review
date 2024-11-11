@@ -3,13 +3,9 @@ package com.aicodegem.controller;
 import com.aicodegem.dto.CodeSubmissionRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
-import com.aicodegem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,40 +15,25 @@ public class CodeAnalysisController {
     @Autowired
     private CodeSubmissionService codeSubmissionService;
 
-    @Autowired
-    private UserService userService;
-
-    // 최초 코드 제출 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/submit")
-    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request,
-            Authentication authentication) {
-        String username = authentication.getName(); // 인증된 사용자의 이름을 가져옴
-        Long userId = userService.getUserId(username); // username을 통해 userId 조회
-        CodeSubmission submission = null;
-        try {
-            submission = codeSubmissionService.submitCode(String.valueOf(userId), request.getCode());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
-        return ResponseEntity.ok(submission);
-    }
-
-    // 특정 사용자의 모든 제출 코드 조회 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
+    // 특정 사용자의 모든 제출 코드 조회 API
     @GetMapping("/submissions")
-    public ResponseEntity<List<CodeSubmission>> getSubmissions(Authentication authentication) {
-        String username = authentication.getName(); // 인증된 사용자 ID
-        Long userId = userService.getUserId(username);
-        List<CodeSubmission> submissions = codeSubmissionService.getAllSubmissionsByUserId(userId);
-        return ResponseEntity.ok(submissions);
+    public List<CodeSubmission> getSubmissions(@RequestParam Long userId) {
+        return codeSubmissionService.getAllSubmissionsByUserId(userId);
     }
 
-    // 특정 제출 코드 조회 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
+    // 특정 제출 코드 조회 API
     @GetMapping("/submissions/{submissionId}")
-    public ResponseEntity<CodeSubmission> getSubmissionById(@PathVariable String submissionId) {
-        CodeSubmission submission = codeSubmissionService.getSubmissionById(submissionId);
-        return submission != null ? ResponseEntity.ok(submission) : ResponseEntity.notFound().build();
+    public CodeSubmission getSubmissionById(@PathVariable String submissionId) {
+        return codeSubmissionService.getSubmissionById(submissionId);
+    }
+
+    // 코드 제출 API - AI 분석 후 저장
+    @PostMapping("/submit")
+    public CodeSubmission submitCode(@RequestBody CodeSubmissionRequest request) {
+        try {
+            return codeSubmissionService.submitCode(request.getUserId().toString(), request.getCode());
+        } catch (IOException e) {
+            throw new RuntimeException("Error occurred while submitting the code: " + e.getMessage());
+        }
     }
 }
