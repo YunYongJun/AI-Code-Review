@@ -18,7 +18,7 @@ public class Achievement {
     private Long id;
 
     @Column(nullable = false) // null을 허용하지 않음
-    private int userId; // 사용자 ID
+    private Long userId; // 사용자 ID
 
     @Column(nullable = false) // null을 허용하지 않음
     private String achievementName; // 업적 이름

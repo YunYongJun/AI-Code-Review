@@ -44,10 +44,9 @@ public class UserController {
 
         // 사용자 역할과 ID 가져오기
         String role = userService.getUserRole(userDTO.getUsername());
-        String userId = userService.getUserId(userDTO.getUsername());
-
+        String username = userDTO.getUsername();
         // JWT 생성
-        final String jwtToken = jwtUtil.generateToken(userDetails, role, userId);
+        final String jwtToken = jwtUtil.generateToken(userDetails, role, username);
 
         // JSON 형식으로 반환
         Map<String, String> response = new HashMap<>();

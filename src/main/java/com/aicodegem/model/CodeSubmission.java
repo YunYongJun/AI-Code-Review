@@ -8,7 +8,7 @@ public class CodeSubmission {
 
     @Id
     private String id;
-    private String userId;
+    private Long userId;
     private String initialCode;
     private String revisedCode;
     private String feedback;
@@ -16,7 +16,7 @@ public class CodeSubmission {
     private int revisedScore;
 
     // 생성자
-    public CodeSubmission(String userId, String initialCode, String feedback, int initialScore) {
+    public CodeSubmission(Long userId, String initialCode, String feedback, int initialScore) {
         this.userId = userId;
         this.initialCode = initialCode;
         this.feedback = feedback;
@@ -24,7 +24,7 @@ public class CodeSubmission {
     }
 
     // Getters and Setters
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

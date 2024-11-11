@@ -18,24 +18,33 @@ public class CodeSubmissionService {
     @Autowired
     private AIAnalysisService aiAnalysisService;
 
+    @Autowired
+    private RankingService rankingService;
+
     // 최초 코드 제출 처리
     public CodeSubmission submitCode(CodeSubmissionRequest request) {
         String code = request.getCode();
         int score = aiAnalysisService.analyzeCode(code);
         String feedback = aiAnalysisService.generateFeedback(code);
 
+        System.out.println("코드: " + code);
+        System.out.println("점수: " + score);
+        System.out.println("피드백: " + feedback);
+
         // 제출된 코드와 결과를 저장
         CodeSubmission submission = new CodeSubmission(request.getUserId(), code, feedback, score);
+
+        // 처음 제출 시, ranking 테이블에 점수 추가
+        rankingService.updateTotalScore(request.getUserId(), score, 0);
+
         return codeRepository.save(submission);
     }
 
     // 수정된 코드 제출 처리
-    public CodeSubmission resubmitCode(String userId, String revisedCode) {
+    public CodeSubmission resubmitCode(Long userId, String revisedCode) {
         CodeSubmission submission = codeRepository.findByUserId(userId);
-        if (submission == null) {
-            throw new IllegalArgumentException("해당 사용자 ID에 대한 제출 코드가 없습니다.");
-        }
-
+        int previousScore = submission.getRevisedScore() != 0 ? submission.getRevisedScore()
+                : submission.getInitialScore();
         int revisedScore = aiAnalysisService.analyzeCode(revisedCode);
         String revisedFeedback = aiAnalysisService.generateFeedback(revisedCode);
 
@@ -44,11 +53,14 @@ public class CodeSubmissionService {
         submission.setRevisedScore(revisedScore);
         submission.setFeedback(revisedFeedback);
 
+        // 수정된 점수로 ranking 테이블 업데이트 (이전 점수는 빼고 새 점수는 더함)
+        rankingService.updateTotalScore(userId, revisedScore, previousScore);
+
         return codeRepository.save(submission);
     }
 
     // 특정 사용자 ID의 모든 제출 기록 조회
-    public List<CodeSubmission> getAllSubmissionsByUserId(String userId) {
+    public List<CodeSubmission> getAllSubmissionsByUserId(Long userId) {
         return codeRepository.findAllByUserId(userId);
     }
 
