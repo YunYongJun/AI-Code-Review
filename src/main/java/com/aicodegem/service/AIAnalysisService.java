@@ -28,19 +28,45 @@ public class AIAnalysisService {
         this.objectMapper = new ObjectMapper();
     }
 
-    // 간단한 코드 분석 메서드 (예제용)
-    public int analyzeCode(String code) {
-        // 실제 분석 로직을 구현하거나 AI 모델과 통신하는 부분을 작성합니다.
-        return (int) (Math.random() * 100); // 임의 점수 반환 예제
+    // AI 모델을 호출하여 코드 분석 점수 반환
+    public int analyzeCode(String code) throws IOException {
+        // AI 모델에 전달할 데이터 구성
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("code", code);
+
+        // AI 모델의 URL 설정
+        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
+
+        // AI 모델에 요청 보내기
+        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
+
+        // AI 모델의 응답을 JSON으로 파싱
+        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+
+        // 응답에서 점수 추출 (AI 모델이 반환한 "score" 필드에서 점수 값 가져오기)
+        return jsonResponse.path("score").asInt(); // 예시: 'score' 필드에서 점수 추출
     }
 
-    // 코드에 대한 피드백 생성 메서드 (예제용)
-    public String generateFeedback(String code) {
-        // 실제 피드백 로직을 구현하거나 AI 모델에서 반환된 피드백을 반환합니다.
-        return "코드의 성능을 개선할 수 있습니다."; // 예제 피드백
+    // AI 모델을 호출하여 코드에 대한 피드백 반환
+    public String generateFeedback(String code) throws IOException {
+        // AI 모델에 전달할 데이터 구성
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("code", code);
+
+        // AI 모델의 URL 설정
+        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
+
+        // AI 모델에 요청 보내기
+        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
+
+        // AI 모델의 응답을 JSON으로 파싱
+        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+
+        // 응답에서 피드백 추출 (AI 모델이 반환한 "feedback" 필드에서 피드백 내용 가져오기)
+        return jsonResponse.path("feedback").asText(); // 예시: 'feedback' 필드에서 피드백 추출
     }
 
-    // AI 모델과 상호작용하여 코드를 분석하는 메서드
+    // AI 모델과 상호작용하여 코드를 분석하고 저장하는 메서드
     public CodeSubmission analyzeAndStoreCode(String userId, String code) throws IOException {
         // 코드 정보를 JSON으로 변환하여 AI 모델에 전송할 데이터 생성
         Map<String, String> requestBody = new HashMap<>();
@@ -48,7 +74,7 @@ public class AIAnalysisService {
         requestBody.put("submittedCode", code);
 
         // AI 모델의 URL 설정
-        String aiModelUrl = "http://192.168.34.16:8888/predict";
+        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
 
         // AI 모델에 요청 보내기
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
@@ -85,7 +111,7 @@ public class AIAnalysisService {
         requestBody.put("revisedCode", revisedCode);
 
         // AI 모델의 URL 설정 (수정된 코드 분석)
-        String aiModelUrl = "http://192.168.34.16:8888/repredict";
+        String aiModelUrl = "http://192.168.34.16:8888/repredict"; // AI 모델 서버 URL
         // AI 모델에 요청 보내기
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
         // AI의 응답을 JSON으로 파싱
