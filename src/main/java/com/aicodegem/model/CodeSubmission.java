@@ -1,13 +1,12 @@
 package com.aicodegem.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
 @Document(collection = "codeSubmissions")
 public class CodeSubmission {
 
-    @Id
     private String id;
     private Long userId;
     private String initialCode;
@@ -19,17 +18,16 @@ public class CodeSubmission {
     private String feedbackId;
     private LocalDate feedbackDate;
 
-    
-
     // 생성자
     public CodeSubmission(Long userId, String initialCode, String feedback, int initialScore) {
         this.userId = userId;
         this.initialCode = initialCode;
         this.feedback = feedback;
         this.initialScore = initialScore;
+        this.submissionDate = LocalDate.now();
     }
 
-    // Getters and Setters
+    // Getter와 Setter
     public Long getUserId() {
         return userId;
     }
