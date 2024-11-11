@@ -18,7 +18,6 @@ const AppRouter = () => {
       <Routes>
         {/* 회원가입 페이지 경로 */}
         <Route path="/signup" element={<SignUp />} />
-
         {/* 로그인 페이지 경로 */}
         <Route path="/login" element={<Login />} />
 

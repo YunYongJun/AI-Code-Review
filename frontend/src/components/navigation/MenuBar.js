@@ -10,7 +10,7 @@ const MenuBar = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
+
     if (token) {
       setIsLoggedIn(true);
       const decodedToken = jwtDecode(token);
@@ -27,8 +27,8 @@ const MenuBar = () => {
   };
 
   const handleMenuClick = (url) => {
-    // 코드 제출 페이지는 로그인 여부에 관계없이 이동 가능
-    if (url === '/submission' || isLoggedIn) {
+    // 코드 제출 페이지와 랭킹 페이지는 로그인 여부에 관계없이 이동 가능
+    if (url === '/submission' || url === '/ranking' || isLoggedIn) {
       window.location.href = url;
     } else {
       alert('로그인이 필요합니다.');

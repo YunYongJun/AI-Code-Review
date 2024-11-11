@@ -43,7 +43,7 @@ const Login = () => {
       window.location.href = '/main';
     } catch (error) {
       console.error('Error:', error);
-      alert('로그인 중 오류가 발생했습니다: ' + error.message);
+      alert('아이디나 패스워드를 잘못 입력하셨습니다.');
     }
   };
 

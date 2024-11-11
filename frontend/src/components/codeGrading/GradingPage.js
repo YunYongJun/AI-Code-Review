@@ -27,7 +27,7 @@ function GradingPage() {
     const loadingTimer = setTimeout(() => {
       setLoading(false);
       window.location.href = '/submitted-codes';
-    }, 25000000);
+    }, 10000);
 
 
     // 팁 인덱스를 주기적으로 업데이트하여 다른 팁을 표시하는 타이머 설정

@@ -3,11 +3,17 @@ package com.aicodegem.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.aicodegem.service.UserService;
+
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +22,16 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final SecretKey SECRET_KEY;
+
+    @Autowired
+    private UserService userService;
+
+    // application.properties에 정의된 시크릿 키를 불러와 SecretKey 객체로 변환
+    public JwtUtil(@Value("${jwt.secret}") String secret) {
+        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        this.SECRET_KEY = new SecretKeySpec(decodedKey, 0, decodedKey.length, "HmacSHA256");
+    }
 
     // 사용자 이름 추출
     public String extractUsername(String token) {
@@ -44,17 +59,23 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
     }
 
+    // private Long extractUserId(String token){
+    // return extractClaim(token, Claims::getId)
+    // }
+
     // 토큰 만료 여부 확인
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     // 토큰 생성 (username과 role 포함)
-    public String generateToken(UserDetails userDetails, String role, Long userId) {
+    public String generateToken(UserDetails userDetails, String role, String username) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
+        Long userId = userService.getUserId(username);
+
+        claims.put("userId", String.valueOf(userId));
         claims.put("role", role); // 역할 정보 추가
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, username);
     }
 
     // JWT 생성 메서드

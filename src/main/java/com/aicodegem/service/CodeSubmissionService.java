@@ -3,6 +3,9 @@ package com.aicodegem.service;
 import com.aicodegem.dto.CodeSubmissionRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +57,15 @@ public class CodeSubmissionService {
         rankingService.updateTotalScore(userId, revisedScore, previousScore);
 
         return codeRepository.save(submission);
+    }
+
+    // 특정 사용자 ID의 모든 제출 기록 조회
+    public List<CodeSubmission> getAllSubmissionsByUserId(Long userId) {
+        return codeRepository.findAllByUserId(userId);
+    }
+
+    // 특정 submissionId로 제출 코드 조회
+    public CodeSubmission getSubmissionById(String submissionId) {
+        return codeRepository.findById(submissionId).orElse(null);
     }
 }

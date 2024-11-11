@@ -1,26 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import CodeMirror from '@uiw/react-codemirror';
+import { java } from '@codemirror/lang-java';
+import { python } from '@codemirror/lang-python';
+import { cpp } from '@codemirror/lang-cpp';
 import './SubmitCodePage.css';
 
 function SubmitCodePage() {
-  // 상태 변수 정의
-  const [language, setLanguage] = useState('Java 11'); // 선택된 프로그래밍 언어
-  const [sourceCode, setSourceCode] = useState(''); // 소스 코드 입력
-  const [title, setTitle] = useState(''); // 제목 상태 추가
+  const [language, setLanguage] = useState('java');
+  const [sourceCode, setSourceCode] = useState('');
+  const [title, setTitle] = useState('');
+  const [userId, setUserId] = useState('');
 
-  // 제출 핸들러
+  // JWT 토큰에서 사용자 ID 추출
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId);
+    }
+  }, []);
+
+  // 언어별 확장 모드 매핑
+  const languageExtensions = {
+    java: java(),
+    python: python(),
+    cpp: cpp(),
+  };
+
   const handleSubmit = async () => {
     console.log('제출된 제목:', title);
-    console.log('제출된 소스 코드:', sourceCode);
+    console.log('제출된 사용자 ID:', userId);
 
-    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    const formattedCode = sourceCode.replace(/\n/g, '\\n'); // 줄바꿈을 \n으로 통일
+    console.log('제출된 소스 코드:', formattedCode);
+
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
 
     const submissionData = {
-      submittedCode: sourceCode,
-      submissionDate: new Date().toISOString().split('T')[0], // 현재 날짜를 ISO 포맷으로 변환
+      submittedCode: formattedCode,
+      submissionDate: new Date().toISOString().split('T')[0],
+      userId: userId,
     };
 
     try {
@@ -28,33 +52,29 @@ function SubmitCodePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // JWT 토큰 포함
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
-        throw new Error('제출 실패'); // 오류 발생 시 예외 처리
+        throw new Error('제출 실패');
       }
 
-      // 성공 시 처리 로직
-      window.location.href = '/grading'; // 제출 버튼 클릭 시 grading으로 이동
+      window.location.href = '/grading';
     } catch (error) {
       console.error('Error:', error);
       alert('제출 중 오류가 발생했습니다.');
     }
   };
 
-  // 목록 페이지로 이동하는 핸들러
   const handleListClick = () => {
-    const token = localStorage.getItem('token'); // 로컬 저장소에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
-
-    // 목록 페이지로 이동
-    window.location.href = '/submitted-codes'; // 목록 버튼 클릭 시 submitted-codes로 이동
+    window.location.href = '/submitted-codes';
   };
 
   return (
@@ -74,7 +94,7 @@ function SubmitCodePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="scp-input"
-              placeholder="제목을 입력하세요" // 플레이스홀더 추가
+              placeholder="제목을 입력하세요"
             />
           </div>
 
@@ -87,22 +107,21 @@ function SubmitCodePage() {
               onChange={(e) => setLanguage(e.target.value)}
               className="scp-select-input"
             >
-              <option value="Java 11">Java 11</option>
-              <option value="Python 3">Python 3</option>
-              <option value="C++">C++</option>
+              <option value="java">Java</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
             </select>
           </div>
 
-          {/* 소스 코드 입력 */}
+          {/* CodeMirror 에디터 */}
           <div className="scp-form-group">
             <label htmlFor="source-code">소스 코드</label>
-            <textarea
-              id="source-code"
+            <CodeMirror
               value={sourceCode}
-              onChange={(e) => setSourceCode(e.target.value)}
+              height="600px"
+              extensions={[languageExtensions[language]]}
+              onChange={(value) => setSourceCode(value)}
               className="scp-code-input"
-              rows="10"
-              placeholder="소스 코드를 입력하세요" // 플레이스홀더 추가
             />
           </div>
 

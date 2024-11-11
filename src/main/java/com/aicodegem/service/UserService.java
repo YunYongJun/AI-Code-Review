@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
 
     public Long getUserId(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        return userOptional.map(user -> Long.valueOf(user.getId())).orElse(null);
+        return userOptional.map(user -> (user.getId())).orElse(null);
     }
 
     // 유저 등록 로직

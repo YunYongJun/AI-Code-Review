@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import com.aicodegem.service.UserService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -22,7 +23,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) { // @Lazy 추가
+    @Autowired
+    public JwtRequestFilter(@Lazy UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
