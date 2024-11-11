@@ -2,6 +2,7 @@ package com.aicodegem.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.time.LocalDate;
 
 @Document(collection = "codeSubmissions")
 public class CodeSubmission {
@@ -14,6 +15,9 @@ public class CodeSubmission {
     private String feedback;
     private int initialScore;
     private int revisedScore;
+    private LocalDate submissionDate;
+    private String feedbackId;
+    private LocalDate feedbackDate;
 
     // 생성자
     public CodeSubmission(Long userId, String initialCode, String feedback, int initialScore) {
@@ -66,5 +70,29 @@ public class CodeSubmission {
 
     public void setRevisedScore(int revisedScore) {
         this.revisedScore = revisedScore;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public String getFeedbackId() {
+        return feedbackId;
+    }
+
+    public void setFeedbackId(String feedbackId) {
+        this.feedbackId = feedbackId;
+    }
+
+    public LocalDate getFeedbackDate() {
+        return feedbackDate;
+    }
+
+    public void setFeedbackDate(LocalDate feedbackDate) {
+        this.feedbackDate = feedbackDate;
     }
 }
