@@ -1,13 +1,15 @@
 package com.aicodegem.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDate;
 
 @Document(collection = "codeSubmissions")
 public class CodeSubmission {
 
-    private String id;
+    @Id
+    private String id; // MongoDB에서 자동 생성되는 _id 필드
+
     private Long userId;
     private String initialCode;
     private String revisedCode;

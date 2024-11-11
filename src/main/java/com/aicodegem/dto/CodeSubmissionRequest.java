@@ -1,13 +1,23 @@
 package com.aicodegem.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 public class CodeSubmissionRequest {
-    private Long userId;
-    private String code;
+    private Long userId; // 사용자 ID
+    private String code; // 제출된 코드
+
+    // Getters and Setters
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }
