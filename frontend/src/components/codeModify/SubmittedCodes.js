@@ -55,6 +55,7 @@ function SubmittedCodes() {
       return;
     }
 
+    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -79,7 +80,7 @@ function SubmittedCodes() {
       alert('수정된 코드가 제출되었습니다.');
     } catch (error) {
       console.error('Error:', error);
-      alert('수정된 코드 제출 중 오류가 발생했습니다.');
+      alert('코드 제출 중 오류가 발생했습니다.');
     }
   };
 
