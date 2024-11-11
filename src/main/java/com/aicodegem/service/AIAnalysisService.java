@@ -1,17 +1,18 @@
 package com.aicodegem.service;
 
+import com.aicodegem.model.CodeSubmission;
+import com.aicodegem.repository.CodeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.aicodegem.model.CodeSubmission;
-import com.aicodegem.repository.CodeRepository;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AIAnalysisService {
@@ -25,6 +26,18 @@ public class AIAnalysisService {
     public AIAnalysisService() {
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
+    }
+
+    // 간단한 코드 분석 메서드 (예제용)
+    public int analyzeCode(String code) {
+        // 실제 분석 로직을 구현하거나 AI 모델과 통신하는 부분을 작성합니다.
+        return (int) (Math.random() * 100); // 임의 점수 반환 예제
+    }
+
+    // 코드에 대한 피드백 생성 메서드 (예제용)
+    public String generateFeedback(String code) {
+        // 실제 피드백 로직을 구현하거나 AI 모델에서 반환된 피드백을 반환합니다.
+        return "코드의 성능을 개선할 수 있습니다."; // 예제 피드백
     }
 
     // AI 모델과 상호작용하여 코드를 분석하는 메서드
@@ -80,15 +93,23 @@ public class AIAnalysisService {
         // 응답에서 분석 결과 추출
         String feedbackContent = jsonResponse.get("response").asText();
         LocalDate feedbackDate = LocalDate.now();
-        // 기존 코드 제출 기록을 가져와 수정된 내용 업데이트
-        CodeSubmission submission = codeRepository.findByUserId(Long.parseLong(userId));
-        submission.setRevisedCode(revisedCode);
-        submission.setRevisedScore(jsonResponse.path("score").path("revisedScore").asInt());
-        submission.setFeedback(feedbackContent);
-        submission.setFeedbackDate(feedbackDate);
-        // DB에 저장
-        codeRepository.save(submission);
 
-        return submission;
+        // 기존 코드 제출 기록을 가져와 수정된 내용 업데이트
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findByUserId(Long.parseLong(userId));
+
+        if (optionalSubmission.isPresent()) {
+            CodeSubmission submission = optionalSubmission.get();
+            submission.setRevisedCode(revisedCode);
+            submission.setRevisedScore(jsonResponse.path("score").path("revisedScore").asInt());
+            submission.setFeedback(feedbackContent);
+            submission.setFeedbackDate(feedbackDate);
+
+            // DB에 저장
+            codeRepository.save(submission);
+
+            return submission;
+        } else {
+            throw new RuntimeException("해당 사용자 ID에 대한 코드 제출 기록이 없습니다.");
+        }
     }
 }

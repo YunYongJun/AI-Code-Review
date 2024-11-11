@@ -19,6 +19,8 @@ public class CodeSubmission {
     private String feedbackId;
     private LocalDate feedbackDate;
 
+    
+
     // 생성자
     public CodeSubmission(Long userId, String initialCode, String feedback, int initialScore) {
         this.userId = userId;
