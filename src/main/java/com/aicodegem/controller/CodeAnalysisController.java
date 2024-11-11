@@ -10,12 +10,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/code")
 public class CodeAnalysisController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CodeAnalysisController.class); // Logger 생성
 
     @Autowired
     private CodeSubmissionService codeSubmissionService;
@@ -29,9 +33,14 @@ public class CodeAnalysisController {
     public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request,
             Authentication authentication) {
         String username = authentication.getName(); // 인증된 사용자의 이름을 가져옴
+        logger.info("submitCode 호출됨 - username: {}", username);
+
         Long userId = userService.getUserId(username); // username을 통해 userId 조회
         request.setUserId(userId); // Long 타입의 userId 설정
+        logger.debug("submitCode - userId 설정됨: {}", userId);
+
         CodeSubmission submission = codeSubmissionService.submitCode(request);
+        logger.info("코드 제출 성공 - submissionId: {}", submission.getId());
         return ResponseEntity.ok(submission);
     }
 
@@ -40,8 +49,12 @@ public class CodeAnalysisController {
     @PostMapping("/resubmit")
     public ResponseEntity<CodeSubmission> resubmitCode(@RequestBody String revisedCode, Authentication authentication) {
         String username = authentication.getName(); // 인증된 사용자 ID
+        logger.info("resubmitCode 호출됨 - username: {}", username);
+
         Long userId = userService.getUserId(username);
         CodeSubmission submission = codeSubmissionService.resubmitCode(userId, revisedCode);
+        logger.info("코드 재제출 성공 - submissionId: {}", submission.getId());
+
         return ResponseEntity.ok(submission);
     }
 
@@ -49,9 +62,17 @@ public class CodeAnalysisController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/submissions")
     public ResponseEntity<List<CodeSubmission>> getSubmissions(Authentication authentication) {
+
         String username = authentication.getName(); // 인증된 사용자 ID
         Long userId = userService.getUserId(username);
         List<CodeSubmission> submissions = codeSubmissionService.getAllSubmissionsByUserId(userId);
+
+        if (submissions.isEmpty()) {
+            logger.warn("제출된 코드가 없음 - userId: {}", userId); // 제출된 코드가 없을 경우 경고
+        } else {
+            logger.info("제출 코드 목록 조회 성공 - userId: {}, 코드 수: {}", userId, submissions.size());
+        }
+
         return ResponseEntity.ok(submissions);
     }
 
@@ -59,7 +80,16 @@ public class CodeAnalysisController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/submissions/{submissionId}")
     public ResponseEntity<CodeSubmission> getSubmissionById(@PathVariable String submissionId) {
+        logger.info("getSubmissionById 호출됨 - submissionId: {}", submissionId);
+
         CodeSubmission submission = codeSubmissionService.getSubmissionById(submissionId);
+
+        if (submission == null) {
+            logger.warn("제출 코드가 존재하지 않음 - submissionId: {}", submissionId); // 코드가 없을 경우 경고
+            return ResponseEntity.notFound().build(); // 코드가 없으면 404 반환
+        }
+
+        logger.info("제출 코드 조회 성공 - submissionId: {}", submissionId);
         return submission != null ? ResponseEntity.ok(submission) : ResponseEntity.notFound().build();
     }
 }

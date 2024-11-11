@@ -27,4 +27,13 @@ public class Ranking {
     private int totalScore; // 총 점수 필드 (nullable)
 
     private LocalDate updateDate; // 업데이트 날짜 필드
+
+    // User 엔티티의 userId를 반환하는 메소드 추가
+    public Long getUserId() {
+        return this.user.getId();
+    }
+
+    public int getRank() {
+        return this.userRank; // userRank 값을 반환
+    }
 }

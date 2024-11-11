@@ -24,6 +24,10 @@ public class CodeSubmission {
     }
 
     // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
     public Long getUserId() {
         return userId;
     }
