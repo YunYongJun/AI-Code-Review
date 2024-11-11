@@ -4,10 +4,10 @@ import { FaSearch, FaPencilAlt, FaCheckCircle } from 'react-icons/fa';
 
 // 모든 이미지들 (gif와 jpg)을 배열에 포함
 const images = [
-  "/background6.jpg",
-  "/background7.jpg",
-  "/background8.jpg",
-  "/background9.jpg",
+  "/test1.png",
+  "/test2.png",
+  "/test3.png",
+  "/test4.jpg",
 ];
 
 function MainPage() {
@@ -16,7 +16,7 @@ function MainPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // 5초 간격으로 이미지 변경
+    }, 10000); // 10초 간격으로 이미지 변경
 
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 클리어
   }, []);
