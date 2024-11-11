@@ -32,18 +32,16 @@ function SubmitCodePage() {
     console.log('제출된 제목:', title);
     console.log('제출된 사용자 ID:', userId);
 
-    const formattedCode = sourceCode.replace(/\n/g, '\\n'); // 줄바꿈을 \n으로 통일
-    console.log('제출된 소스 코드:', formattedCode);
-
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
 
+    // submissionData 형식 수정
     const submissionData = {
-      submittedCode: formattedCode,
-      submissionDate: new Date().toISOString().split('T')[0],
+      promport: sourceCode,
+      submissionDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식으로 포맷
       userId: userId,
     };
 
@@ -61,7 +59,9 @@ function SubmitCodePage() {
         throw new Error('제출 실패');
       }
 
-      // window.location.href = '/grading';
+      // 성공 시 페이지 이동 또는 성공 메시지 표시
+      alert('코드가 성공적으로 제출되었습니다.');
+      window.location.href = '/grading';
     } catch (error) {
       console.error('Error:', error);
       alert('제출 중 오류가 발생했습니다.');
