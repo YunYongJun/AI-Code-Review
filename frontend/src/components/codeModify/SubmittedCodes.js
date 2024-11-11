@@ -1,47 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './SubmittedCodes.css';
+
+const submittedCodes = [
+  {
+    id: 1,
+    title: '테스트',
+    status: '0',
+    submissionTime: '2024-10-21 10:30',
+    detail: 'console.log("Hello World") // 세미콜론이 없습니다. \nint n = true; // 형식이 맞지 않습니다. \n\n\n\n',
+  },
+  {
+    id: 2,
+    title: '회원가입',
+    status: '2.3',
+    submissionTime: '2024-10-21 11:00',
+    detail: 'function nextNum(n) { return n + 1; }\n\n\n\n',
+  },
+  // 다른 코드들...
+];
 
 function SubmittedCodes() {
   const [submittedCodes, setSubmittedCodes] = useState([]);
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
 
-  // 페이지 로드 시 제출된 코드 목록을 가져옵니다.
-  useEffect(() => {
-    const fetchSubmittedCodes = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('로그인이 필요합니다.');
-        return;
-      }
-
-      try {
-        const response = await fetch('http://localhost:8080/api/code/submitted', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setSubmittedCodes(data); // 제출된 코드 목록을 상태에 설정
-        } else {
-          throw new Error('제출된 코드 목록을 가져오는 데 실패했습니다.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('코드 목록을 가져오는 중 오류가 발생했습니다.');
-      }
-    };
-
-    fetchSubmittedCodes();
-  }, []); // 컴포넌트 마운트 시에만 실행됩니다.
-
   // 코드 선택 핸들러
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
     setEditedDetail(code.detail);
+    setLanguage(code.language || 'java'); // 선택한 코드의 언어로 초기화
   };
 
   // 수정된 코드 제출 핸들러
@@ -58,7 +45,8 @@ function SubmittedCodes() {
     }
 
     const submissionData = {
-      revisedCode: editedDetail, // 수정된 코드 내용
+      revisedCode: editedDetail,
+      language, // 언어도 함께 전송
     };
 
     try {
@@ -76,14 +64,7 @@ function SubmittedCodes() {
       }
 
       alert('수정된 코드가 제출되었습니다.');
-
-      // 성공적으로 제출된 후, 새로 제출된 코드를 목록에 추가
-      const newCode = await response.json(); // 응답에서 새로 제출된 코드 데이터 받기
-      setSubmittedCodes((prevCodes) => [newCode, ...prevCodes]); // 새로운 코드를 목록의 앞에 추가
-
-      // 수정된 코드 선택을 해제
-      setSelectedCode(null);
-      setEditedDetail('');
+      // 필요시 추가적인 후속 처리 가능
     } catch (error) {
       console.error('Error:', error);
       alert('코드 제출 중 오류가 발생했습니다.');
@@ -107,12 +88,31 @@ function SubmittedCodes() {
         {selectedCode ? (
           <>
             <h4>{selectedCode.title}</h4>
-            <textarea
-              className="sc-input"
+
+            {/* 언어 선택 */}
+            <div className="scp-form-group">
+              <label htmlFor="language-select">언어</label>
+              <select
+                id="language-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="scp-select-input"
+              >
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+                <option value="cpp">C++</option>
+              </select>
+            </div>
+
+            {/* CodeMirror 에디터 */}
+            <CodeMirror
               value={editedDetail}
-              onChange={(e) => setEditedDetail(e.target.value)}
-              style={{ whiteSpace: 'pre-wrap', width: '100%', height: '200px' }}
+              extensions={[languageExtensions[language] || java()]} // 언어가 정의되지 않은 경우 기본값으로 Java 확장을 사용
+              onChange={(value) => setEditedDetail(value)}
+              height="200px"
+              className="sc-code-input"
             />
+
             <p>점수: {selectedCode.status}</p>
             <p>제출 시간: {selectedCode.submissionTime}</p>
             <button onClick={resubmitCode}>수정된 코드 제출</button>
