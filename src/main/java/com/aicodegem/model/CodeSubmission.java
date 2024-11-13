@@ -8,24 +8,23 @@ import java.time.LocalDate;
 public class CodeSubmission {
 
     @Id
-    private String id; // MongoDB에서 자동 생성되는 _id 필드
+    private String id;
 
     private Long userId;
     private String initialCode;
-    private String revisedCode;
+    private String title; // 코드 제목 필드
+    private LocalDate submissionDate;
     private String feedback;
     private int initialScore;
     private int revisedScore;
-    private LocalDate submissionDate;
     private String feedbackId;
     private LocalDate feedbackDate;
 
-    // 생성자
-    public CodeSubmission(Long userId, String initialCode, String feedback, int initialScore) {
+    // 생성자 (점수와 피드백은 AI 분석 후 업데이트)
+    public CodeSubmission(Long userId, String initialCode, String title) {
         this.userId = userId;
         this.initialCode = initialCode;
-        this.feedback = feedback;
-        this.initialScore = initialScore;
+        this.title = title;
         this.submissionDate = LocalDate.now();
     }
 
@@ -42,12 +41,20 @@ public class CodeSubmission {
         this.initialCode = initialCode;
     }
 
-    public String getRevisedCode() {
-        return revisedCode;
+    public String getTitle() {
+        return title;
     }
 
-    public void setRevisedCode(String revisedCode) {
-        this.revisedCode = revisedCode;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     public String getFeedback() {
@@ -72,14 +79,6 @@ public class CodeSubmission {
 
     public void setRevisedScore(int revisedScore) {
         this.revisedScore = revisedScore;
-    }
-
-    public LocalDate getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(LocalDate submissionDate) {
-        this.submissionDate = submissionDate;
     }
 
     public String getFeedbackId() {

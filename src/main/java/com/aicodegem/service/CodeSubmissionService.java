@@ -20,6 +20,8 @@ public class CodeSubmissionService {
 
     @Autowired
     private CodeRepository codeRepository;
+    @Autowired
+    private AIAnalysisService aiAnalysisService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -48,9 +50,9 @@ public class CodeSubmissionService {
     /**
      * 최초 코드 제출 처리 (AI 분석 후 DB에 저장)
      */
-    public CodeSubmission submitCode(String userId, String code) throws IOException {
+    public CodeSubmission submitCode(Long userId, String code, String title) throws IOException {
         // 1. 먼저 코드 정보를 DB에 저장 (AI 분석 이전 상태)
-        CodeSubmission submission = new CodeSubmission(Long.parseLong(userId), code, "", 0); // 초기 상태에서는 피드백과 점수는 비어 있음
+        CodeSubmission submission = new CodeSubmission(userId, code, title); // title 포함
         submission.setSubmissionDate(LocalDate.now());
 
         // MongoDB에 제출된 코드만 저장 (AI 분석 이전 상태)

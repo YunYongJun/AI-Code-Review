@@ -1,23 +1,32 @@
 package com.aicodegem.dto;
 
 public class CodeSubmissionRequest {
-    private Long userId; // 사용자 ID
-    private String code; // 제출된 코드
+    private Long userId;
+    private String code;
+    private String title; // 코드 제목 필드
 
     // Getters and Setters
-    public Long getUserId() {
-        return userId;
+    public Long getUserId() { 
+        return userId; 
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Long userId) { 
         this.userId = userId;
     }
 
-    public String getCode() {
+    public String getCode() { 
         return code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.code = code; 
+    }
+
+    public String getTitle() { 
+        return title; 
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
