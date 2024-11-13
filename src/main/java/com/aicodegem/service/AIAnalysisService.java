@@ -30,74 +30,48 @@ public class AIAnalysisService {
 
     // AI 모델을 호출하여 코드 분석 점수 반환
     public int analyzeCode(String code) throws IOException {
-        // AI 모델에 전달할 데이터 구성
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        // AI 모델의 URL 설정
         String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
-
-        // AI 모델에 요청 보내기
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
-        // AI 모델의 응답을 JSON으로 파싱
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-
-        // 응답에서 점수 추출 (AI 모델이 반환한 "score" 필드에서 점수 값 가져오기)
-        return jsonResponse.path("score").asInt(); // 예시: 'score' 필드에서 점수 추출
+        return jsonResponse.path("score").asInt(); // "score" 필드에서 점수 추출
     }
 
     // AI 모델을 호출하여 코드에 대한 피드백 반환
     public String generateFeedback(String code) throws IOException {
-        // AI 모델에 전달할 데이터 구성
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        // AI 모델의 URL 설정
-        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
-
-        // AI 모델에 요청 보내기
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
-        // AI 모델의 응답을 JSON으로 파싱
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-
-        // 응답에서 피드백 추출 (AI 모델이 반환한 "feedback" 필드에서 피드백 내용 가져오기)
-        return jsonResponse.path("feedback").asText(); // 예시: 'feedback' 필드에서 피드백 추출
+        return jsonResponse.path("feedback").asText(); // "feedback" 필드에서 피드백 추출
     }
 
     // AI 모델과 상호작용하여 코드를 분석하고 저장하는 메서드
-    public CodeSubmission analyzeAndStoreCode(String userId, String code) throws IOException {
-        // 코드 정보를 JSON으로 변환하여 AI 모델에 전송할 데이터 생성
+    public CodeSubmission analyzeAndStoreCode(String userId, String code, String title) throws IOException {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("userID", userId);
         requestBody.put("submittedCode", code);
 
-        // AI 모델의 URL 설정
-        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
-
-        // AI 모델에 요청 보내기
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
-
-        // AI의 응답을 JSON으로 파싱
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
 
-        // 응답에서 분석 결과 추출
-        String feedbackContent = jsonResponse.get("response").asText();
+        String feedbackContent = jsonResponse.path("feedback").asText();
+        int initialScore = jsonResponse.path("score").asInt();
         LocalDate feedbackDate = LocalDate.now();
 
-        // CodeSubmission 객체 생성 및 JSON 구조에 맞게 설정
-        CodeSubmission submission = new CodeSubmission(
-                Long.parseLong(userId),
-                code,
-                feedbackContent,
-                jsonResponse.path("score").path("initialScore").asInt() // 초기 점수 설정
-        );
-        submission.setSubmissionDate(LocalDate.now());
-        submission.setRevisedScore(jsonResponse.path("score").path("revisedScore").asInt());
+        // CodeSubmission 객체 생성 및 설정
+        CodeSubmission submission = new CodeSubmission(Long.parseLong(userId), code, title);
+        submission.setFeedback(feedbackContent);
+        submission.setInitialScore(initialScore);
         submission.setFeedbackDate(feedbackDate);
 
-        // DB에 저장
         codeRepository.save(submission);
 
         return submission;
@@ -105,34 +79,28 @@ public class AIAnalysisService {
 
     // 수정된 코드 분석 및 저장 메서드
     public CodeSubmission analyzeAndStoreRevisedCode(String userId, String revisedCode) throws IOException {
-        // 수정된 코드 정보를 JSON으로 변환하여 AI 모델에 전송할 데이터 생성
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("userID", userId);
         requestBody.put("revisedCode", revisedCode);
 
-        // AI 모델의 URL 설정 (수정된 코드 분석)
-        String aiModelUrl = "http://192.168.34.16:8888/repredict"; // AI 모델 서버 URL
-        // AI 모델에 요청 보내기
+        String aiModelUrl = "http://192.168.34.16:8888/repredict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
-        // AI의 응답을 JSON으로 파싱
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-        // 응답에서 분석 결과 추출
-        String feedbackContent = jsonResponse.get("response").asText();
+
+        String feedbackContent = jsonResponse.path("feedback").asText();
+        int revisedScore = jsonResponse.path("score").asInt();
         LocalDate feedbackDate = LocalDate.now();
 
-        // 기존 코드 제출 기록을 가져와 수정된 내용 업데이트
         Optional<CodeSubmission> optionalSubmission = codeRepository.findByUserId(Long.parseLong(userId));
 
         if (optionalSubmission.isPresent()) {
             CodeSubmission submission = optionalSubmission.get();
             submission.setRevisedCode(revisedCode);
-            submission.setRevisedScore(jsonResponse.path("score").path("revisedScore").asInt());
+            submission.setRevisedScore(revisedScore);
             submission.setFeedback(feedbackContent);
             submission.setFeedbackDate(feedbackDate);
 
-            // DB에 저장
             codeRepository.save(submission);
-
             return submission;
         } else {
             throw new RuntimeException("해당 사용자 ID에 대한 코드 제출 기록이 없습니다.");
