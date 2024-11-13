@@ -97,7 +97,7 @@ public class AIAnalysisService {
             CodeSubmission submission = optionalSubmission.get();
             submission.setRevisedCode(revisedCode);
             submission.setRevisedScore(revisedScore);
-            submission.setFeedback(feedbackContent);
+            submission.setRevisedFeedback(feedbackContent); // 수정된 코드에 대한 피드백 설정
             submission.setFeedbackDate(feedbackDate);
 
             codeRepository.save(submission);

@@ -19,7 +19,8 @@ public class CodeSubmission {
     private int revisedScore;
     private String feedbackId;
     private LocalDate feedbackDate;
-    private String revisedCode; // 수정된 코드 필드 추가
+    private String revisedCode; 
+    private String revisedFeedback;
 
     // 생성자 (점수와 피드백은 AI 분석 후 업데이트)
     public CodeSubmission(Long userId, String initialCode, String title) {
@@ -105,4 +106,13 @@ public class CodeSubmission {
     public void setRevisedCode(String revisedCode) { 
         this.revisedCode = revisedCode; 
     }
+
+    public String getRevisedFeedback() {
+         return revisedFeedback; 
+        }
+
+    public void setRevisedFeedback(String revisedFeedback) { 
+        this.revisedFeedback = revisedFeedback; 
+    }
 }
+
