@@ -7,11 +7,11 @@ import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
 function SubmittedCodes() {
-  const [submittedCodes, setSubmittedCodes] = useState([]); // 제출된 코드 목록
-  const [selectedCode, setSelectedCode] = useState(null); // 선택된 코드
-  const [editedDetail, setEditedDetail] = useState(''); // 수정된 코드
-  const [language, setLanguage] = useState('java'); // 언어
-  const [userId, setUserId] = useState(null); // 사용자 ID
+  const [submittedCodes, setSubmittedCodes] = useState([]);
+  const [selectedCode, setSelectedCode] = useState(null);
+  const [editedDetail, setEditedDetail] = useState('');
+  const [language, setLanguage] = useState('java');
+  const [userId, setUserId] = useState(null);
 
   const languageExtensions = {
     java: java(),
@@ -19,19 +19,16 @@ function SubmittedCodes() {
     cpp: cpp(),
   };
 
-  // 페이지 로딩 시 제출된 코드 목록을 불러옵니다.
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       setUserId(decodedToken.userId);
 
-      // 제출된 코드 목록 API 요청
       fetch(`http://localhost:8080/api/code/submissions?userId=${decodedToken.userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => {
@@ -43,31 +40,22 @@ function SubmittedCodes() {
     }
   }, []);
 
-  // 코드 선택 시 해당 코드로 내용 업데이트
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    // revisedCode가 없으면 initialCode를 사용하도록 설정
     const codeToDisplay = code.revisedCode || code.initialCode;
-    setEditedDetail(codeToDisplay);  // editedDetail에 코드 설정
-    setLanguage(code.language || 'java'); // 언어 설정
+    setEditedDetail(codeToDisplay);
+    setLanguage(code.language || 'java');
   };
 
-  // 코드 수정 후 제출 처리
   const resubmitCode = async () => {
     if (!selectedCode) {
       alert('수정할 코드를 선택해 주세요.');
       return;
     }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
-
     const resubmissionData = {
       userId,
-      revisedCode: editedDetail, // 수정된 코드 제출
+      revisedCode: editedDetail,
     };
 
     try {
@@ -75,7 +63,6 @@ function SubmittedCodes() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(resubmissionData),
       });
@@ -86,6 +73,22 @@ function SubmittedCodes() {
       console.error('Error:', error);
       alert('코드 제출 중 오류가 발생했습니다.');
     }
+  };
+
+  const formatFeedback = (feedback) => {
+    if (!feedback) return '아직 피드백이 없습니다.';
+
+    return feedback
+      .replace('###Instruction### 코드 스니펫이 명시한 항목의 원칙을 잘 따르고 있는지 판단하십시오, 평가 사항은 각 항목당 10점 만점으로 숫자와 함께 점수를 표기 하십시오.', '')
+      .replace('1. 가독성:', '\n1. 가독성:')
+      .replace('2. 간결함:', '\n2. 간결함:')
+      .replace('3. 명확한 의도:', '\n3. 명확한 의도:')
+      .replace('4. 중복 최소화:', '\n4. 중복 최소화:')
+      .replace('5. 적절한 주석:', '\n5. 적절한 주석:')
+      .replace('6. 작고 집중된 함수:', '\n6. 작고 집중된 함수:')
+      .replace('7. 일관성:', '\n7. 일관성:')
+      .replace('8. 적절한 오류 처리:', '\n8. 적절한 오류 처리:')
+      .replace('###결론###', '\n###결론###');
   };
 
   return (
@@ -127,17 +130,14 @@ function SubmittedCodes() {
               className="sc-code-input"
             />
 
-            {/* AI 피드백 영역 */}
             <div className="sc-feedback-section">
               <h5>AI 피드백</h5>
-              <p>{selectedCode.feedback || '아직 피드백이 없습니다.'}</p>
+              <pre>{formatFeedback(selectedCode.feedback)}</pre>
             </div>
 
-            {/* 점수 정보 */}
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
 
-            {/* 수정된 코드 제출 버튼 */}
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
         ) : (
