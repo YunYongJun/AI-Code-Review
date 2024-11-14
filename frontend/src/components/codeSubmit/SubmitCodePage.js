@@ -11,6 +11,7 @@ function SubmitCodePage() {
   const [sourceCode, setSourceCode] = useState('');
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -33,6 +34,7 @@ function SubmitCodePage() {
       return;
     }
 
+    setIsLoading(true); // 로딩 시작
     const submissionData = {
       userId,
       code: sourceCode,
@@ -54,10 +56,12 @@ function SubmitCodePage() {
       }
 
       alert('코드가 성공적으로 제출되었습니다.');
-      window.location.href = '/grading';
+      window.location.href = '/submitted-codes';
     } catch (error) {
       console.error('Error:', error);
       alert('제출 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -67,12 +71,12 @@ function SubmitCodePage() {
       alert('로그인이 필요합니다.');
       return;
     }
-    window.location.href = '/submitted-codes'; // 목록 페이지로 이동
+    window.location.href = '/submitted-codes';
   };
 
   return (
     <div className="app-container">
-      <div className="scp-submit-code-page">
+      <div className={`scp-submit-code-page ${isLoading ? 'scp-blur' : ''}`}>
         <header className="scp-header">
           <h1 className="scp-title">코드 제출</h1>
         </header>
@@ -116,17 +120,21 @@ function SubmitCodePage() {
           </div>
 
           <div className="scp-submit-button-container">
-            {/* 목록으로 이동하는 버튼 */}
             <button className="scp-submit-button" onClick={handleListClick}>
               목록
             </button>
-            {/* 제출 버튼 */}
             <button className="scp-submit-button" onClick={handleSubmit}>
               제출
             </button>
           </div>
         </div>
       </div>
+
+      {isLoading && (
+        <div className="scp-loading-overlay">
+          <div className="scp-loading-spinner"></div>
+        </div>
+      )}
     </div>
   );
 }

@@ -59,12 +59,13 @@ public class CodeSubmissionService {
         submission = codeRepository.save(submission); // 초기 코드 저장
 
         // 2. AI 모델에 코드 분석 요청
-        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 URL
+        String aiModelUrl = "http://192.168.34.13:8888/predict"; // AI 모델 URL
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("submittedCode", code);
 
         // AI 모델에 요청 보내고, 응답 받기
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class); // AI 모델 응답 받기
+        System.out.println(aiResponse);
 
         // 3. AI 분석 결과 처리
         JsonNode jsonResponse = objectMapper.readTree(aiResponse); // AI 응답을 JSON으로 변환
