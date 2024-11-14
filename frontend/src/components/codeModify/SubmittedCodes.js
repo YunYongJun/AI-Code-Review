@@ -75,10 +75,23 @@ function SubmittedCodes() {
     }
   };
 
+  const calculateAverageScore = (feedback) => {
+    const scores = feedback.match(/:\s*([\d.]+)\/10/g);
+    if (!scores) return null;
+
+    const totalScore = scores.reduce((sum, scoreText) => {
+      const score = parseFloat(scoreText.match(/([\d.]+)\/10/)[1]);
+      return sum + score;
+    }, 0);
+
+    return (totalScore / scores.length).toFixed(1); // 평균 점수 계산, 소수점 1자리
+  };
+
   const formatFeedback = (feedback) => {
     if (!feedback) return '아직 피드백이 없습니다.';
 
-    return feedback
+    // 항목별 줄바꿈 처리
+    const formattedFeedback = feedback
       .replace('###Instruction### 코드 스니펫이 명시한 항목의 원칙을 잘 따르고 있는지 판단하십시오, 평가 사항은 각 항목당 10점 만점으로 숫자와 함께 점수를 표기 하십시오.', '')
       .replace('1. 가독성:', '\n1. 가독성:')
       .replace('2. 간결함:', '\n2. 간결함:')
@@ -89,6 +102,11 @@ function SubmittedCodes() {
       .replace('7. 일관성:', '\n7. 일관성:')
       .replace('8. 적절한 오류 처리:', '\n8. 적절한 오류 처리:')
       .replace('###결론###', '\n###결론###');
+
+    const averageScore = calculateAverageScore(formattedFeedback);
+    if (averageScore) selectedCode.initialScore = averageScore; // 초기 점수 갱신
+
+    return formattedFeedback;
   };
 
   return (
