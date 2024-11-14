@@ -7,11 +7,11 @@ import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
 function SubmittedCodes() {
-  const [submittedCodes, setSubmittedCodes] = useState([]); // API에서 가져온 코드 제출 목록을 저장
-  const [selectedCode, setSelectedCode] = useState(null);
-  const [editedDetail, setEditedDetail] = useState('');
-  const [language, setLanguage] = useState('java');
-  const [userId, setUserId] = useState(null); // 사용자 ID 상태 추가
+  const [submittedCodes, setSubmittedCodes] = useState([]); // 제출된 코드 목록
+  const [selectedCode, setSelectedCode] = useState(null); // 선택된 코드
+  const [editedDetail, setEditedDetail] = useState(''); // 수정된 코드
+  const [language, setLanguage] = useState('java'); // 언어
+  const [userId, setUserId] = useState(null); // 사용자 ID
 
   const languageExtensions = {
     java: java(),
@@ -19,15 +19,15 @@ function SubmittedCodes() {
     cpp: cpp(),
   };
 
-  // 컴포넌트 마운트 시 사용자 ID 설정 및 API 호출
+  // 페이지 로딩 시 제출된 코드 목록을 불러옵니다.
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      setUserId(decodedToken.userId); // 사용자 ID 설정
+      setUserId(decodedToken.userId);
 
-      // 사용자 코드 제출 목록 가져오기
-      fetch('http://localhost:8080/api/code/submissions', {
+      // 제출된 코드 목록 API 요청
+      fetch(`http://localhost:8080/api/code/submissions?userId=${decodedToken.userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -43,12 +43,16 @@ function SubmittedCodes() {
     }
   }, []);
 
+  // 코드 선택 시 해당 코드로 내용 업데이트
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    setEditedDetail(code.feedback || ''); // 선택한 코드의 피드백 내용을 코드 에디터에 표시
-    setLanguage(code.language || 'java');
+    // revisedCode가 없으면 initialCode를 사용하도록 설정
+    const codeToDisplay = code.revisedCode || code.initialCode;
+    setEditedDetail(codeToDisplay);  // editedDetail에 코드 설정
+    setLanguage(code.language || 'java'); // 언어 설정
   };
 
+  // 코드 수정 후 제출 처리
   const resubmitCode = async () => {
     if (!selectedCode) {
       alert('수정할 코드를 선택해 주세요.');
@@ -61,19 +65,19 @@ function SubmittedCodes() {
       return;
     }
 
-    const submissionData = {
-      revisedCode: editedDetail,
-      language,
+    const resubmissionData = {
+      userId,
+      revisedCode: editedDetail, // 수정된 코드 제출
     };
 
     try {
-      const response = await fetch('http://192.168.34.16:8888/api/code/resubmit', {
+      const response = await fetch('http://localhost:8080/api/code/revise', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(submissionData),
+        body: JSON.stringify(resubmissionData),
       });
 
       if (!response.ok) throw new Error('수정된 코드 제출 실패');
@@ -91,7 +95,7 @@ function SubmittedCodes() {
         <ul>
           {submittedCodes.map((code, index) => (
             <li key={index} onClick={() => handleCodeSelect(code)}>
-              {index + 1}
+              {code.title || `제출 코드 ${index + 1}`}
             </li>
           ))}
         </ul>
@@ -100,7 +104,7 @@ function SubmittedCodes() {
       <div className="sc-code-details">
         {selectedCode ? (
           <>
-            <h4>{`제출 코드 ${submittedCodes.indexOf(selectedCode) + 1}`}</h4>
+            <h4>{selectedCode.title}</h4>
             <div className="scp-form-group">
               <label htmlFor="language-select">언어</label>
               <select
@@ -123,8 +127,17 @@ function SubmittedCodes() {
               className="sc-code-input"
             />
 
+            {/* AI 피드백 영역 */}
+            <div className="sc-feedback-section">
+              <h5>AI 피드백</h5>
+              <p>{selectedCode.feedback || '아직 피드백이 없습니다.'}</p>
+            </div>
+
+            {/* 점수 정보 */}
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
+
+            {/* 수정된 코드 제출 버튼 */}
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
         ) : (

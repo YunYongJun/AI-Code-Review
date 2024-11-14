@@ -12,7 +12,6 @@ function SubmitCodePage() {
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState('');
 
-  // JWT 토큰에서 사용자 ID 추출
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -21,7 +20,6 @@ function SubmitCodePage() {
     }
   }, []);
 
-  // 언어별 확장 모드 매핑
   const languageExtensions = {
     java: java(),
     python: python(),
@@ -29,20 +27,16 @@ function SubmitCodePage() {
   };
 
   const handleSubmit = async () => {
-    console.log('제출된 제목:', title);
-    console.log('제출된 사용자 ID:', userId);
-
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
     }
 
-    // submissionData 형식 수정
     const submissionData = {
-      promport: sourceCode,
-      submissionDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식으로 포맷
-      userId: userId,
+      userId,
+      code: sourceCode,
+      title,
     };
 
     try {
@@ -59,7 +53,6 @@ function SubmitCodePage() {
         throw new Error('제출 실패');
       }
 
-      // 성공 시 페이지 이동 또는 성공 메시지 표시
       alert('코드가 성공적으로 제출되었습니다.');
       window.location.href = '/grading';
     } catch (error) {
@@ -74,7 +67,7 @@ function SubmitCodePage() {
       alert('로그인이 필요합니다.');
       return;
     }
-    window.location.href = '/submitted-codes';
+    window.location.href = '/submitted-codes'; // 목록 페이지로 이동
   };
 
   return (
@@ -85,7 +78,6 @@ function SubmitCodePage() {
         </header>
 
         <div className="scp-form-container">
-          {/* 제목 입력 */}
           <div className="scp-form-group">
             <label htmlFor="title-input">제목</label>
             <input
@@ -98,7 +90,6 @@ function SubmitCodePage() {
             />
           </div>
 
-          {/* 언어 선택 */}
           <div className="scp-form-group">
             <label htmlFor="language-select">언어</label>
             <select
@@ -113,23 +104,23 @@ function SubmitCodePage() {
             </select>
           </div>
 
-          {/* CodeMirror 에디터 */}
           <div className="scp-form-group">
             <label htmlFor="source-code">소스 코드</label>
             <CodeMirror
               value={sourceCode}
-              height="600px"
               extensions={[languageExtensions[language]]}
               onChange={(value) => setSourceCode(value)}
+              height="600px"
               className="scp-code-input"
             />
           </div>
 
-          {/* 버튼들 */}
           <div className="scp-submit-button-container">
+            {/* 목록으로 이동하는 버튼 */}
             <button className="scp-submit-button" onClick={handleListClick}>
               목록
             </button>
+            {/* 제출 버튼 */}
             <button className="scp-submit-button" onClick={handleSubmit}>
               제출
             </button>
