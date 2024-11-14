@@ -23,7 +23,7 @@ public class AchievementController {
 
     // 사용자 ID로 업적을 조회하는 GET 요청 처리
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Achievement>> getAchievements(@PathVariable Long userId) {
+    public ResponseEntity<List<Achievement>> getAchievements(@PathVariable("userId") Long userId) {
 
         // 업적 조회 메서드 호출 시 사용자 ID를 로깅
         logger.info("getAchievements 호출됨 - userId: {}", userId);

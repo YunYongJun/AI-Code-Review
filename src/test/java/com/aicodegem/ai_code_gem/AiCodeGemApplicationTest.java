@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AiCodeGemApplication {
+public class AiCodeGemApplicationTest {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AiCodeGemApplication.class, args);
+		SpringApplication.run(AiCodeGemApplicationTest.class, args);
 	}
 }
