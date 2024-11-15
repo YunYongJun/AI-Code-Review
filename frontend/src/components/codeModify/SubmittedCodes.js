@@ -144,8 +144,7 @@ function SubmittedCodes() {
               value={editedDetail}
               extensions={[languageExtensions[language] || java()]}
               onChange={(value) => setEditedDetail(value)}
-              height="200px"
-              className="sc-code-input"
+              height="400px"
             />
 
             <div className="sc-feedback-section">
