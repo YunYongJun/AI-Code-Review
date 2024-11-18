@@ -49,6 +49,12 @@ function SubmitCodePage() {
   };
 
   const handleSubmit = async () => {
+    // 제목이나 소스 코드가 비어있으면 제출되지 않도록 처리
+    if (!title.trim() || !sourceCode.trim()) {
+      alert('제목과 소스 코드를 모두 입력해주세요.');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
