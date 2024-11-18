@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/code")
@@ -36,21 +37,19 @@ public class CodeAnalysisController {
             CodeSubmission submission = codeSubmissionService.submitCode(
                     request.getUserId(),
                     request.getCode(),
-                    request.getTitle() // title 필드 처리
-            );
+                    request.getTitle());
             return ResponseEntity.ok(submission);
         } catch (IOException e) {
             throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
         }
     }
 
-    // 수정된 코드 제출 API - AI 분석 후 저장
-    @PostMapping("/resubmit")
-    public ResponseEntity<CodeSubmission> resubmitCode(@RequestParam Long userId, @RequestBody String revisedCode) {
+    // 수정된 코드 제출 API - AI 분석 후 저장 및 평가 결과 반환
+    @PostMapping("/revise")
+    public ResponseEntity<Map<String, Object>> reviseCode(@RequestParam Long userId, @RequestBody String revisedCode) {
         try {
-            CodeSubmission revisedSubmission = codeSubmissionService.analyzeAndStoreRevisedCode(userId.toString(),
-                    revisedCode);
-            return ResponseEntity.ok(revisedSubmission);
+            Map<String, Object> result = codeSubmissionService.analyzeAndStoreRevisedCode(userId, revisedCode);
+            return ResponseEntity.ok(result);
         } catch (IOException e) {
             throw new RuntimeException("수정된 코드 제출 중 오류 발생: " + e.getMessage());
         }

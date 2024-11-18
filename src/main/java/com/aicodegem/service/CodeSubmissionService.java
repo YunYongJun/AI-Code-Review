@@ -20,15 +20,13 @@ public class CodeSubmissionService {
 
     @Autowired
     private CodeRepository codeRepository;
-    @Autowired
-    private AIAnalysisService aiAnalysisService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 사용자 ID로 모든 제출 기록을 조회
-     * 
+     *
      * @param userId 사용자 ID
      * @return 사용자 코드 제출 목록
      */
@@ -38,7 +36,7 @@ public class CodeSubmissionService {
 
     /**
      * 특정 제출 ID로 제출 기록을 조회
-     * 
+     *
      * @param submissionId 제출 ID
      * @return 코드 제출 정보
      */
@@ -51,34 +49,62 @@ public class CodeSubmissionService {
      * 최초 코드 제출 처리 (AI 분석 후 DB에 저장)
      */
     public CodeSubmission submitCode(Long userId, String code, String title) throws IOException {
-        // 1. 먼저 코드 정보를 DB에 저장 (AI 분석 이전 상태)
-        CodeSubmission submission = new CodeSubmission(userId, code, title); // title 포함
+        CodeSubmission submission = new CodeSubmission(userId, code, title);
         submission.setSubmissionDate(LocalDate.now());
 
-        // MongoDB에 제출된 코드만 저장 (AI 분석 이전 상태)
-        submission = codeRepository.save(submission); // 초기 코드 저장
+        submission = codeRepository.save(submission);
 
-        // 2. AI 모델에 코드 분석 요청
-        String aiModelUrl = "http://192.168.34.13:8888/predict"; // AI 모델 URL
+        String aiModelUrl = "http://192.168.34.13:8888/predict";
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("submittedCode", code);
 
-        // AI 모델에 요청 보내고, 응답 받기
-        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class); // AI 모델 응답 받기
-        System.out.println(aiResponse);
+        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
-        // 3. AI 분석 결과 처리
-        JsonNode jsonResponse = objectMapper.readTree(aiResponse); // AI 응답을 JSON으로 변환
-        String feedbackContent = jsonResponse.get("response").asText(); // 피드백 내용 추출
-        int score = jsonResponse.path("score").asInt(); // 점수 추출
+        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+        String feedbackContent = jsonResponse.get("feedback").asText();
+        int score = jsonResponse.path("score").asInt();
 
-        // 4. 분석 결과를 기존 submission에 반영
-        submission.setFeedback(feedbackContent); // AI 피드백 저장
-        submission.setInitialScore(score); // 초기 점수 저장
-        submission.setRevisedScore(score); // 수정된 점수(초기와 동일할 경우 동일하게 처리)
-        submission.setFeedbackDate(LocalDate.now()); // 피드백 날짜 저장
+        submission.setFeedback(feedbackContent);
+        submission.setInitialScore(score);
+        submission.setFeedbackDate(LocalDate.now());
 
-        // 5. DB에 저장된 제출 정보 업데이트 (AI 분석 결과 반영)
-        return codeRepository.save(submission); // 분석 결과 반영 후 업데이트된 코드 저장
+        return codeRepository.save(submission);
+    }
+
+    /**
+     * 수정된 코드 제출 처리 (AI 분석 후 DB 업데이트 및 결과 반환)
+     */
+    public Map<String, Object> analyzeAndStoreRevisedCode(Long userId, String revisedCode) throws IOException {
+        Optional<CodeSubmission> existingSubmission = codeRepository.findByUserId(userId);
+
+        if (existingSubmission.isEmpty()) {
+            throw new RuntimeException("해당 사용자 ID에 대한 코드 제출 기록이 없습니다.");
+        }
+
+        CodeSubmission submission = existingSubmission.get();
+
+        String aiModelUrl = "http://192.168.34.13:8888/repredict";
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("revisedCode", revisedCode);
+
+        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
+
+        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+        String feedbackContent = jsonResponse.path("feedback").asText();
+        int revisedScore = jsonResponse.path("score").asInt();
+
+        submission.setRevisedCode(revisedCode);
+        submission.setRevisedFeedback(feedbackContent);
+        submission.setRevisedScore(revisedScore);
+        submission.setFeedbackDate(LocalDate.now());
+
+        codeRepository.save(submission);
+
+        // 평가 결과 반환용 데이터 생성
+        Map<String, Object> result = new HashMap<>();
+        result.put("revisedScore", revisedScore);
+        result.put("revisedFeedback", feedbackContent);
+        result.put("submissionId", submission.getId());
+        return result;
     }
 }
