@@ -5,10 +5,10 @@ import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/code")
@@ -29,19 +29,30 @@ public class CodeAnalysisController {
         return codeSubmissionService.getSubmissionById(submissionId);
     }
 
-// 코드 제출 API - AI 분석 후 저장
-@PostMapping("/submit")
-public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) {
-    try {
-        CodeSubmission submission = codeSubmissionService.submitCode(
-            request.getUserId(),
-            request.getCode(),
-            request.getTitle() // title 필드 처리
-        );
-        return ResponseEntity.ok(submission);
-    } catch (IOException e) {
-        throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
+    // 코드 최초 제출 API - AI 분석 후 저장
+    @PostMapping("/submit")
+    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) {
+        try {
+            CodeSubmission submission = codeSubmissionService.submitCode(
+                    request.getUserId(),
+                    request.getCode(),
+                    request.getTitle() // title 필드 처리
+            );
+            return ResponseEntity.ok(submission);
+        } catch (IOException e) {
+            throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    // 수정된 코드 제출 API - AI 분석 후 저장
+    @PostMapping("/resubmit")
+    public ResponseEntity<CodeSubmission> resubmitCode(@RequestParam Long userId, @RequestBody String revisedCode) {
+        try {
+            CodeSubmission revisedSubmission = codeSubmissionService.analyzeAndStoreRevisedCode(userId.toString(),
+                    revisedCode);
+            return ResponseEntity.ok(revisedSubmission);
+        } catch (IOException e) {
+            throw new RuntimeException("수정된 코드 제출 중 오류 발생: " + e.getMessage());
+        }
     }
 }
-}
-
