@@ -1,11 +1,12 @@
 package com.aicodegem.controller;
 
 import com.aicodegem.dto.CodeSubmissionRequest;
+import com.aicodegem.dto.RevisedCodeRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,9 +47,11 @@ public class CodeAnalysisController {
 
     // 수정된 코드 제출 API - AI 분석 후 저장 및 평가 결과 반환
     @PostMapping("/revise")
-    public ResponseEntity<Map<String, Object>> reviseCode(@RequestParam Long userId, @RequestBody String revisedCode) {
+    public ResponseEntity<Map<String, Object>> reviseCode(@RequestBody RevisedCodeRequest request) {
         try {
-            Map<String, Object> result = codeSubmissionService.analyzeAndStoreRevisedCode(userId, revisedCode);
+            Map<String, Object> result = codeSubmissionService.analyzeAndStoreRevisedCode(
+                    request.getSubmissionId(),
+                    request.getRevisedCode());
             return ResponseEntity.ok(result);
         } catch (IOException e) {
             throw new RuntimeException("수정된 코드 제출 중 오류 발생: " + e.getMessage());

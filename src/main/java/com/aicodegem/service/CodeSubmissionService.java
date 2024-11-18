@@ -24,30 +24,18 @@ public class CodeSubmissionService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /**
-     * 사용자 ID로 모든 제출 기록을 조회
-     *
-     * @param userId 사용자 ID
-     * @return 사용자 코드 제출 목록
-     */
+    // 사용자 ID로 모든 제출 기록을 조회
     public List<CodeSubmission> getAllSubmissionsByUserId(Long userId) {
         return codeRepository.findAllByUserId(userId);
     }
 
-    /**
-     * 특정 제출 ID로 제출 기록을 조회
-     *
-     * @param submissionId 제출 ID
-     * @return 코드 제출 정보
-     */
+    // 특정 제출 ID로 제출 기록을 조회
     public CodeSubmission getSubmissionById(String submissionId) {
         Optional<CodeSubmission> submission = codeRepository.findById(submissionId);
         return submission.orElse(null);
     }
 
-    /**
-     * 최초 코드 제출 처리 (AI 분석 후 DB에 저장)
-     */
+    // 최초 코드 제출 처리 (AI 분석 후 DB에 저장)
     public CodeSubmission submitCode(Long userId, String code, String title) throws IOException {
         CodeSubmission submission = new CodeSubmission(userId, code, title);
         submission.setSubmissionDate(LocalDate.now());
@@ -61,7 +49,7 @@ public class CodeSubmissionService {
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-        String feedbackContent = jsonResponse.get("feedback").asText();
+        String feedbackContent = jsonResponse.path("feedback").asText();
         int score = jsonResponse.path("score").asInt();
 
         submission.setFeedback(feedbackContent);
@@ -71,14 +59,12 @@ public class CodeSubmissionService {
         return codeRepository.save(submission);
     }
 
-    /**
-     * 수정된 코드 제출 처리 (AI 분석 후 DB 업데이트 및 결과 반환)
-     */
-    public Map<String, Object> analyzeAndStoreRevisedCode(Long userId, String revisedCode) throws IOException {
-        Optional<CodeSubmission> existingSubmission = codeRepository.findByUserId(userId);
+    // 수정된 코드 제출 처리 (AI 분석 후 DB 업데이트 및 결과 반환)
+    public Map<String, Object> analyzeAndStoreRevisedCode(String submissionId, String revisedCode) throws IOException {
+        Optional<CodeSubmission> existingSubmission = codeRepository.findById(submissionId);
 
         if (existingSubmission.isEmpty()) {
-            throw new RuntimeException("해당 사용자 ID에 대한 코드 제출 기록이 없습니다.");
+            throw new RuntimeException("해당 제출물 ID에 대한 코드 제출 기록이 없습니다.");
         }
 
         CodeSubmission submission = existingSubmission.get();
