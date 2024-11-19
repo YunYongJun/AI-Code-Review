@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/code")
@@ -29,19 +30,34 @@ public class CodeAnalysisController {
         return codeSubmissionService.getSubmissionById(submissionId);
     }
 
-// 코드 제출 API - AI 분석 후 저장
-@PostMapping("/submit")
-public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) {
-    try {
-        CodeSubmission submission = codeSubmissionService.submitCode(
-            request.getUserId(),
-            request.getCode(),
-            request.getTitle() // title 필드 처리
-        );
-        return ResponseEntity.ok(submission);
-    } catch (IOException e) {
-        throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
+    // 코드 제출 API - AI 분석 후 저장
+    @PostMapping("/submit")
+    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) {
+        try {
+            CodeSubmission submission = codeSubmissionService.submitCode(
+                    request.getUserId(),
+                    request.getCode(),
+                    request.getTitle() // title 필드 처리
+            );
+            return ResponseEntity.ok(submission);
+        } catch (IOException e) {
+            throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
+        }
     }
-}
-}
 
+    // 코드 수정
+    @PutMapping("/submit/revised")
+    public ResponseEntity<CodeSubmission> updateRevisedCode(@RequestBody Map<String, String> request) {
+        String submissionId = request.get("submissionId");
+        String revisedCode = request.get("revisedCode");
+
+        try {
+            CodeSubmission updatedSubmission = codeSubmissionService.analyzeAndStoreRevisedCode(submissionId,
+                    revisedCode);
+            return ResponseEntity.ok(updatedSubmission);
+        } catch (IOException e) {
+            throw new RuntimeException("수정된 코드 제출 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+}

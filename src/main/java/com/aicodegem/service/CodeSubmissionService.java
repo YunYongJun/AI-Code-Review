@@ -81,4 +81,34 @@ public class CodeSubmissionService {
         // 5. DB에 저장된 제출 정보 업데이트 (AI 분석 결과 반영)
         return codeRepository.save(submission); // 분석 결과 반영 후 업데이트된 코드 저장
     }
+
+    // 코드 수정
+    public CodeSubmission analyzeAndStoreRevisedCode(String submissionId, String revisedCode) throws IOException {
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
+
+        if (optionalSubmission.isEmpty()) {
+            throw new RuntimeException("제출 ID에 해당하는 기록이 없습니다.");
+        }
+
+        CodeSubmission submission = optionalSubmission.get();
+
+        // AI 분석 요청
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("revisedCode", revisedCode);
+
+        String aiModelUrl = "http://192.168.34.13:8888/repredict";
+        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
+
+        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+        String feedbackContent = jsonResponse.path("feedback").asText();
+        int revisedScore = jsonResponse.path("score").asInt();
+
+        // 기존 제출 정보 업데이트
+        submission.setRevisedCode(revisedCode);
+        submission.setRevisedFeedback(feedbackContent);
+        submission.setRevisedScore(revisedScore);
+        submission.setFeedbackDate(LocalDate.now());
+
+        return codeRepository.save(submission);
+    }
 }

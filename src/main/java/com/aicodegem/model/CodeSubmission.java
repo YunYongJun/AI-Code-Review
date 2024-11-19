@@ -19,7 +19,7 @@ public class CodeSubmission {
     private int revisedScore;
     private String feedbackId;
     private LocalDate feedbackDate;
-    private String revisedCode; 
+    private String revisedCode;
     private String revisedFeedback;
 
     // 생성자 (점수와 피드백은 AI 분석 후 업데이트)
@@ -31,88 +31,91 @@ public class CodeSubmission {
     }
 
     // Getter와 Setter
-    public Long getUserId() {
-         return userId;
-         }
-
-    public String getInitialCode() { 
-        return initialCode;
-     }
-
-    public void setInitialCode(String initialCode) {
-         this.initialCode = initialCode;
-         }
-
-    public String getTitle() { 
-        return title;
-     }
-
-    public void setTitle(String title) {
-         this.title = title;
-         }
-
-    public LocalDate getSubmissionDate() { 
-        return submissionDate;
-     }
-
-    public void setSubmissionDate(LocalDate submissionDate) { 
-        this.submissionDate = submissionDate;
-     }
-
-    public String getFeedback() { 
-        return feedback;
-     }
-
-    public void setFeedback(String feedback) {
-         this.feedback = feedback;
-         }
-
-    public int getInitialScore() {
-         return initialScore; 
-        }
-
-    public void setInitialScore(int initialScore) {
-         this.initialScore = initialScore;
-         }
-
-    public int getRevisedScore() { 
-        return revisedScore; 
+    public String getId() {
+        return id.toString();
     }
 
-    public void setRevisedScore(int revisedScore) { 
-        this.revisedScore = revisedScore; 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public String getInitialCode() {
+        return initialCode;
+    }
+
+    public void setInitialCode(String initialCode) {
+        this.initialCode = initialCode;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getInitialScore() {
+        return initialScore;
+    }
+
+    public void setInitialScore(int initialScore) {
+        this.initialScore = initialScore;
+    }
+
+    public int getRevisedScore() {
+        return revisedScore;
+    }
+
+    public void setRevisedScore(int revisedScore) {
+        this.revisedScore = revisedScore;
     }
 
     public String getFeedbackId() {
-         return feedbackId; 
-        }
+        return feedbackId;
+    }
 
     public void setFeedbackId(String feedbackId) {
-         this.feedbackId = feedbackId; 
-        }
+        this.feedbackId = feedbackId;
+    }
 
-    public LocalDate getFeedbackDate() { 
-        return feedbackDate; 
+    public LocalDate getFeedbackDate() {
+        return feedbackDate;
     }
 
     public void setFeedbackDate(LocalDate feedbackDate) {
-         this.feedbackDate = feedbackDate; 
-        }
+        this.feedbackDate = feedbackDate;
+    }
 
     public String getRevisedCode() {
-         return revisedCode; 
-        }
+        return revisedCode;
+    }
 
-    public void setRevisedCode(String revisedCode) { 
-        this.revisedCode = revisedCode; 
+    public void setRevisedCode(String revisedCode) {
+        this.revisedCode = revisedCode;
     }
 
     public String getRevisedFeedback() {
-         return revisedFeedback; 
-        }
+        return revisedFeedback;
+    }
 
-    public void setRevisedFeedback(String revisedFeedback) { 
-        this.revisedFeedback = revisedFeedback; 
+    public void setRevisedFeedback(String revisedFeedback) {
+        this.revisedFeedback = revisedFeedback;
     }
 }
-

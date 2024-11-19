@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import CodeMirror from '@uiw/react-codemirror';
 import { java } from '@codemirror/lang-java';
 import { python } from '@codemirror/lang-python';
 import { cpp } from '@codemirror/lang-cpp';
-import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
 function SubmittedCodes() {
@@ -12,12 +12,17 @@ function SubmittedCodes() {
   const [editedDetail, setEditedDetail] = useState('');
   const [language, setLanguage] = useState('java');
   const [userId, setUserId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);  // 로딩 상태 추가
+  const [tipIndex, setTipIndex] = useState(0);  // 팁 인덱스 관리
 
-  const languageExtensions = {
-    java: java(),
-    python: python(),
-    cpp: cpp(),
-  };
+  // 로딩 중에 표시될 팁 목록
+  const tips = [
+    "Tip 1: 상단 카테고리바에 있는 순위 버튼을 클릭하면 누적 점수에 따른 전체 순위를 확인할 수 있습니다.",
+    "Tip 2: 상단 로그아웃 버튼 왼쪽에 있는 사용자 이름을 클릭하면 개인 정보를 수정할 수 있습니다.",
+    "Tip 3: CODEREVIEW 로고를 클릭하면 메인화면으로 이동합니다.",
+    "Tip 4: 상단 카테고리바에 있는 코드 제출 버튼을 클릭한 후, 코드를 입력하여 체점을 받을 수 있습니다.",
+    "Tip 5: 로그인을 하지 않으면, 업적을 볼 수 없고, 체점 기능을 사용할 수 없습니다."
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,10 +40,29 @@ function SubmittedCodes() {
           if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
           return response.json();
         })
-        .then((data) => setSubmittedCodes(data))
+        .then((data) => {
+          setSubmittedCodes(data);
+        })
         .catch((error) => console.error('Error:', error));
     }
   }, []);
+
+  useEffect(() => {
+    // 팁 인덱스를 6초 간격으로 업데이트하여 다른 팁을 표시
+    const tipTimer = setInterval(() => {
+      setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
+    }, 6000); // 6초 간격
+
+    return () => {
+      clearInterval(tipTimer);      // 팁 변경 인터벌 정리
+    };
+  }, [tips.length]);
+
+  const languageExtensions = {
+    java: java(),
+    python: python(),
+    cpp: cpp(),
+  };
 
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
@@ -53,25 +77,34 @@ function SubmittedCodes() {
       return;
     }
 
+    setIsLoading(true); // 로딩 시작
+
+    const submissionId = selectedCode.submissionId || selectedCode.id;
     const resubmissionData = {
-      userId,
+      submissionId: submissionId,
       revisedCode: editedDetail,
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/code/revise', {
-        method: 'POST',
+      const response = await fetch('http://localhost:8080/api/code/submit/revised', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify(resubmissionData),
       });
 
       if (!response.ok) throw new Error('수정된 코드 제출 실패');
-      alert('수정된 코드가 제출되었습니다.');
+
+      const updatedSubmission = await response.json();
+      setSelectedCode(updatedSubmission);
+      alert('수정된 코드가 성공적으로 제출되었습니다.');
     } catch (error) {
       console.error('Error:', error);
       alert('코드 제출 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -84,13 +117,12 @@ function SubmittedCodes() {
       return sum + score;
     }, 0);
 
-    return (totalScore / scores.length).toFixed(1); // 평균 점수 계산, 소수점 1자리
+    return (totalScore / scores.length).toFixed(1);
   };
 
   const formatFeedback = (feedback) => {
     if (!feedback) return '아직 피드백이 없습니다.';
 
-    // 항목별 줄바꿈 처리
     const formattedFeedback = feedback
       .replace('###Instruction### 코드 스니펫이 명시한 항목의 원칙을 잘 따르고 있는지 판단하십시오, 평가 사항은 각 항목당 10점 만점으로 숫자와 함께 점수를 표기 하십시오.', '')
       .replace('1. 가독성:', '\n1. 가독성:')
@@ -104,14 +136,14 @@ function SubmittedCodes() {
       .replace('###결론###', '\n###결론###');
 
     const averageScore = calculateAverageScore(formattedFeedback);
-    if (averageScore) selectedCode.initialScore = averageScore; // 초기 점수 갱신
+    if (averageScore) selectedCode.initialScore = averageScore;
 
     return formattedFeedback;
   };
 
   return (
     <div className="sc-submitted-codes-page">
-      <div className="sc-code-list">
+      <div className={`sc-code-list ${isLoading ? 'scp-blur' : ''}`}>
         <h3>제출 코드 목록</h3>
         <ul>
           {submittedCodes.map((code, index) => (
@@ -152,8 +184,8 @@ function SubmittedCodes() {
               <pre>{formatFeedback(selectedCode.feedback)}</pre>
             </div>
 
-            <p>초기 점수: {selectedCode.initialScore}</p>
-            <p>수정 후 점수: {selectedCode.revisedScore}</p>
+            <p>초기 점수: {selectedCode.initialScore || 'N/A'}</p>
+            <p>수정 후 점수: {selectedCode.revisedScore || 'N/A'}</p>
 
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
@@ -161,6 +193,15 @@ function SubmittedCodes() {
           <p>코드를 선택해 주세요.</p>
         )}
       </div>
+
+      {isLoading && (
+        <div className="scp-loading-overlay">
+          <div className="scp-loading-spinner"></div>  {/* 로딩 애니메이션 */}
+          <div className="scp-tip-container">
+            <p>{tips[tipIndex]}</p>  {/* 로딩 중 팁 표시 */}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
