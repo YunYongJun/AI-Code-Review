@@ -12,8 +12,8 @@ function SubmittedCodes() {
   const [editedDetail, setEditedDetail] = useState('');
   const [language, setLanguage] = useState('java');
   const [userId, setUserId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);  // 로딩 상태 추가
-  const [tipIndex, setTipIndex] = useState(0);  // 팁 인덱스 관리
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const [tipIndex, setTipIndex] = useState(0); // 팁 인덱스 관리
 
   // 로딩 중에 표시될 팁 목록
   const tips = [
@@ -21,7 +21,7 @@ function SubmittedCodes() {
     "Tip 2: 상단 로그아웃 버튼 왼쪽에 있는 사용자 이름을 클릭하면 개인 정보를 수정할 수 있습니다.",
     "Tip 3: CODEREVIEW 로고를 클릭하면 메인화면으로 이동합니다.",
     "Tip 4: 상단 카테고리바에 있는 코드 제출 버튼을 클릭한 후, 코드를 입력하여 체점을 받을 수 있습니다.",
-    "Tip 5: 로그인을 하지 않으면, 업적을 볼 수 없고, 체점 기능을 사용할 수 없습니다."
+    "Tip 5: 로그인을 하지 않으면, 업적을 볼 수 없고, 체점 기능을 사용할 수 없습니다.",
   ];
 
   useEffect(() => {
@@ -54,7 +54,7 @@ function SubmittedCodes() {
     }, 6000); // 6초 간격
 
     return () => {
-      clearInterval(tipTimer);      // 팁 변경 인터벌 정리
+      clearInterval(tipTimer); // 팁 변경 인터벌 정리
     };
   }, [tips.length]);
 
@@ -79,6 +79,11 @@ function SubmittedCodes() {
 
     setIsLoading(true); // 로딩 시작
 
+    // 피드백에 값이 있으면 수정된 코드 대신 피드백으로 editedDetail을 업데이트
+    if (selectedCode.revisedFeedback) {
+      setEditedDetail(selectedCode.revisedFeedback);
+    }
+
     const submissionId = selectedCode.submissionId || selectedCode.id;
     const resubmissionData = {
       submissionId: submissionId,
@@ -98,7 +103,7 @@ function SubmittedCodes() {
       if (!response.ok) throw new Error('수정된 코드 제출 실패');
 
       const updatedSubmission = await response.json();
-      setSelectedCode(updatedSubmission);
+      setSelectedCode(updatedSubmission); // 수정된 코드 데이터 반영
       alert('수정된 코드가 성공적으로 제출되었습니다.');
     } catch (error) {
       console.error('Error:', error);
@@ -180,8 +185,16 @@ function SubmittedCodes() {
             />
 
             <div className="sc-feedback-section">
-              <h5>AI 피드백</h5>
-              <pre>{formatFeedback(selectedCode.feedback)}</pre>
+              <h5>
+                {selectedCode.revisedFeedback
+                  ? 'AI 피드백 (수정 후 결과)'
+                  : 'AI 피드백'}
+              </h5>
+              <pre>
+                {selectedCode.revisedFeedback
+                  ? formatFeedback(selectedCode.revisedFeedback)
+                  : formatFeedback(selectedCode.feedback)}
+              </pre>
             </div>
 
             <p>초기 점수: {selectedCode.initialScore || 'N/A'}</p>
@@ -196,9 +209,9 @@ function SubmittedCodes() {
 
       {isLoading && (
         <div className="scp-loading-overlay">
-          <div className="scp-loading-spinner"></div>  {/* 로딩 애니메이션 */}
+          <div className="scp-loading-spinner"></div> {/* 로딩 애니메이션 */}
           <div className="scp-tip-container">
-            <p>{tips[tipIndex]}</p>  {/* 로딩 중 팁 표시 */}
+            <p>{tips[tipIndex]}</p> {/* 로딩 중 팁 표시 */}
           </div>
         </div>
       )}

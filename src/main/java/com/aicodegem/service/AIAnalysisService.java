@@ -33,7 +33,7 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
+        String aiModelUrl = "http://192.168.34.13:8888/predict"; // AI 모델 서버 URL
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -45,7 +45,7 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.16:8888/predict";
+        String aiModelUrl = "http://192.168.34.13:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -58,7 +58,7 @@ public class AIAnalysisService {
         requestBody.put("userID", userId);
         requestBody.put("submittedCode", code);
 
-        String aiModelUrl = "http://192.168.34.16:8888/predict";
+        String aiModelUrl = "http://192.168.34.13:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
 
@@ -78,32 +78,40 @@ public class AIAnalysisService {
     }
 
     // 수정된 코드 분석 및 저장 메서드
-    public CodeSubmission analyzeAndStoreRevisedCode(String userId, String revisedCode) throws IOException {
+    public CodeSubmission analyzeAndStoreRevisedCode(String submissionId, String revisedCode) throws IOException {
+        // 기존 제출 기록 조회
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
+
+        if (optionalSubmission.isEmpty()) {
+            throw new RuntimeException("제출 ID에 해당하는 기록이 없습니다.");
+        }
+
+        CodeSubmission submission = optionalSubmission.get();
+
+        // AI 분석 요청
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("userID", userId);
         requestBody.put("revisedCode", revisedCode);
 
-        String aiModelUrl = "http://192.168.34.16:8888/repredict";
+        String aiModelUrl = "http://192.168.34.13:8888/repredict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
+
+        // AI 응답 파싱
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
+        String feedbackContent = jsonResponse.path("feedback").asText(); // 피드백 추출
+        int revisedScore = jsonResponse.path("score").asInt(); // 점수 추출
 
-        String feedbackContent = jsonResponse.path("feedback").asText();
-        int revisedScore = jsonResponse.path("score").asInt();
-        LocalDate feedbackDate = LocalDate.now();
+        // 응답 로그 출력 (디버깅용)
+        System.out.println("AI Feedback: " + feedbackContent);
+        System.out.println("AI Score: " + revisedScore);
 
-        Optional<CodeSubmission> optionalSubmission = codeRepository.findByUserId(Long.parseLong(userId));
+        // 기존 제출 정보 업데이트
+        submission.setRevisedCode(revisedCode); // 수정된 코드 저장
+        submission.setRevisedFeedback(feedbackContent); // 수정된 피드백 저장
+        submission.setRevisedScore(revisedScore); // 수정된 점수 저장
+        submission.setFeedbackDate(LocalDate.now()); // 피드백 날짜 갱신
 
-        if (optionalSubmission.isPresent()) {
-            CodeSubmission submission = optionalSubmission.get();
-            submission.setRevisedCode(revisedCode);
-            submission.setRevisedScore(revisedScore);
-            submission.setRevisedFeedback(feedbackContent); // 수정된 코드에 대한 피드백 설정
-            submission.setFeedbackDate(feedbackDate);
-
-            codeRepository.save(submission);
-            return submission;
-        } else {
-            throw new RuntimeException("해당 사용자 ID에 대한 코드 제출 기록이 없습니다.");
-        }
+        // DB 업데이트
+        return codeRepository.save(submission);
     }
+
 }
