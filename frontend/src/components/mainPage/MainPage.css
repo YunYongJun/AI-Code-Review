@@ -1,3 +1,82 @@
+/* 전체 페이지 스타일 */
+.mainPage-App {
+  font-family: Arial, sans-serif;
+  position: relative;
+  min-height: 100vh;
+  /* 최소 높이를 화면 전체 높이로 설정 */
+  height: 100%;
+  /* 화면 전체 높이 */
+  background-size: cover;
+  /* 배경 이미지를 화면을 꽉 채우도록 설정 */
+  background-position: center center;
+  /* 배경 이미지 중앙 배치 */
+  background-repeat: no-repeat;
+  /* 배경 이미지 반복 방지 */
+  transition: background-image 1s ease-in-out;
+  /* 배경 이미지 전환 애니메이션 */
+}
+
+/* gif 이미지를 화면에 맞게 배경으로 덮는 스타일 */
+.image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  /* 배경으로 설정하여 콘텐츠 위에 표시되지 않도록 */
+}
+
+.image-wrapper .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 이미지를 부모 요소에 맞게 비율을 유지하며 꽉 차게 만듦 */
+}
+
+/* 큰 화면에서는 배경 이미지를 화면에 맞게 꽉 채우기 */
+@media (min-width: 1024px) {
+  .mainPage-App {
+    background-size: cover;
+    /* 이미지가 화면을 꽉 채움 */
+    background-position: center center;
+    /* 중앙에 이미지 배치 */
+    background-attachment: fixed;
+    /* 스크롤 시 배경 이미지가 고정되어 보이도록 설정 */
+  }
+}
+
+.mainPage-header {
+  background-color: rgba(32, 32, 32, 0.5);
+  color: #fff;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
+
+.mainPage-header-content {
+  max-width: 700px;
+  margin: auto;
+}
+
+.mainPage-header-content p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.mainPage-spring-label {
+  padding: 5px 10px;
+  display: inline-block;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
 .box-container {
   display: flex;
   justify-content: center;
@@ -7,7 +86,6 @@
 
 .box {
   background-color: rgba(255, 255, 255, 0.8);
-  /* 투명한 하얀색 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
@@ -22,87 +100,22 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.box-icon1 {
-  width: 50px;
-  /* 아이콘의 너비 */
-  height: auto;
-  /* 자동 높이 조정 */
-  margin-bottom: 15px;
-  /* 아이콘과 텍스트 사이의 간격 */
-}
-
-.box-icon2 {
-  width: 50px;
-  /* 아이콘의 너비 */
-  height: auto;
-  /* 자동 높이 조정 */
-  margin-bottom: 15px;
-  /* 아이콘과 텍스트 사이의 간격 */
-}
-
+.box-icon1,
+.box-icon2,
 .box-icon3 {
   width: 50px;
   height: auto;
   margin-bottom: 15px;
-
 }
 
 .review {
   color: #1abc9c;
 }
 
-
 .box-title {
   font-size: 22px;
-  /* 글씨 크기를 기존보다 키움 */
   font-weight: bold;
   margin-bottom: 10px;
-  /* 제목과 아이콘/내용 사이 간격 */
-}
-
-
-
-
-.mainPage-App {
-  font-family: Arial, sans-serif;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  transition: background-image 1s ease-in-out;
-}
-
-
-.mainPage-header {
-  background-color: rgba(128, 128, 128, 0.5);
-  /* 투명한 회색 */
-  color: white;
-  padding: 40px;
-  text-align: center;
-  position: relative;
-}
-
-
-.mainPage-header-content p {
-  font-size: 16px;
-  color: #fff;
-  /* 글씨 색상 변경 */
-  margin-top: 20px;
-  /* 위쪽 간격 */
-  margin-bottom: 30px;
-  /* 아래쪽 간격 */
-}
-
-.mainPage-header-content {
-  max-width: 700px;
-  margin: auto;
-}
-
-.mainPage-spring-label {
-  padding: 5px 10px;
-  display: inline-block;
-  border-radius: 15px;
-  font-weight: bold;
 }
 
 .mainPage-signup-button {
@@ -121,14 +134,12 @@
   text-align: center;
   padding: 100px;
   margin-top: 20px;
-  /* 필요시 여백 조정 */
 }
 
 .mainPage-code-review-section h2 {
   font-size: 28px;
   font-weight: bold;
   color: #fff;
-  /* 글씨 색상 변경 */
   margin-bottom: 10px;
 }
 
@@ -136,15 +147,7 @@
   width: 50px;
   height: 2px;
   background-color: #fff;
-  /* 변경된 색상 */
   margin: 10px auto;
-}
-
-.mainPage-code-review-section p {
-  font-size: 16px;
-  color: #fff;
-  /* 글씨 색상 변경 */
-  margin-top: 0;
 }
 
 .mainPage-footer {
@@ -198,10 +201,10 @@
 
 .mainPage-column ul li:hover {
   color: #1abc9c;
-  /* 마우스를 올리면 글씨 색상 변경 */
   cursor: pointer;
 }
 
+/* 모바일 화면에서 다단 컬럼 레이아웃을 세로로 쌓기 위한 스타일 */
 @media (max-width: 768px) {
   .mainPage-multi-column-container {
     flex-direction: column;

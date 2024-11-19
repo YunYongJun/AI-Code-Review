@@ -3,17 +3,14 @@ package com.aicodegem.controller;
 import com.aicodegem.dto.CodeSubmissionRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
-import com.aicodegem.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/code")
@@ -24,72 +21,30 @@ public class CodeAnalysisController {
     @Autowired
     private CodeSubmissionService codeSubmissionService;
 
-    @Autowired
-    private UserService userService;
-
-    // 최초 코드 제출 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/submit")
-    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request,
-            Authentication authentication) {
-        String username = authentication.getName(); // 인증된 사용자의 이름을 가져옴
-        logger.info("submitCode 호출됨 - username: {}", username);
-
-        Long userId = userService.getUserId(username); // username을 통해 userId 조회
-        request.setUserId(userId); // Long 타입의 userId 설정
-        logger.debug("submitCode - userId 설정됨: {}", userId);
-
-        CodeSubmission submission = codeSubmissionService.submitCode(request);
-        logger.info("코드 제출 성공 - submissionId: {}", submission.getId());
-        return ResponseEntity.ok(submission);
-    }
-
-    // 수정된 코드 제출 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/resubmit")
-    public ResponseEntity<CodeSubmission> resubmitCode(@RequestBody String revisedCode, Authentication authentication) {
-        String username = authentication.getName(); // 인증된 사용자 ID
-        logger.info("resubmitCode 호출됨 - username: {}", username);
-
-        Long userId = userService.getUserId(username);
-        CodeSubmission submission = codeSubmissionService.resubmitCode(userId, revisedCode);
-        logger.info("코드 재제출 성공 - submissionId: {}", submission.getId());
-
-        return ResponseEntity.ok(submission);
-    }
-
-    // 특정 사용자의 모든 제출 코드 조회 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
+    // 특정 사용자의 모든 제출 코드 조회 API
     @GetMapping("/submissions")
-    public ResponseEntity<List<CodeSubmission>> getSubmissions(Authentication authentication) {
-
-        String username = authentication.getName(); // 인증된 사용자 ID
-        Long userId = userService.getUserId(username);
-        List<CodeSubmission> submissions = codeSubmissionService.getAllSubmissionsByUserId(userId);
-
-        if (submissions.isEmpty()) {
-            logger.warn("제출된 코드가 없음 - userId: {}", userId); // 제출된 코드가 없을 경우 경고
-        } else {
-            logger.info("제출 코드 목록 조회 성공 - userId: {}, 코드 수: {}", userId, submissions.size());
-        }
-
-        return ResponseEntity.ok(submissions);
+    public List<CodeSubmission> getSubmissions(@RequestParam Long userId) {
+        return codeSubmissionService.getAllSubmissionsByUserId(userId);
     }
 
-    // 특정 제출 코드 조회 API - USER 역할을 가진 로그인된 사용자만 접근 가능
-    @PreAuthorize("hasRole('USER')")
+    // 특정 제출 코드 조회 API
     @GetMapping("/submissions/{submissionId}")
-    public ResponseEntity<CodeSubmission> getSubmissionById(@PathVariable String submissionId) {
-        logger.info("getSubmissionById 호출됨 - submissionId: {}", submissionId);
+    public CodeSubmission getSubmissionById(@PathVariable String submissionId) {
+        return codeSubmissionService.getSubmissionById(submissionId);
+    }
 
-        CodeSubmission submission = codeSubmissionService.getSubmissionById(submissionId);
-
-        if (submission == null) {
-            logger.warn("제출 코드가 존재하지 않음 - submissionId: {}", submissionId); // 코드가 없을 경우 경고
-            return ResponseEntity.notFound().build(); // 코드가 없으면 404 반환
+    // 코드 제출 API - AI 분석 후 저장
+    @PostMapping("/submit")
+    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) {
+        try {
+            CodeSubmission submission = codeSubmissionService.submitCode(
+                    request.getUserId(),
+                    request.getCode(),
+                    request.getTitle() // title 필드 처리
+            );
+            return ResponseEntity.ok(submission);
+        } catch (IOException e) {
+            throw new RuntimeException("코드 제출 중 오류 발생: " + e.getMessage());
         }
-
-        logger.info("제출 코드 조회 성공 - submissionId: {}", submissionId);
-        return submission != null ? ResponseEntity.ok(submission) : ResponseEntity.notFound().build();
     }
 }

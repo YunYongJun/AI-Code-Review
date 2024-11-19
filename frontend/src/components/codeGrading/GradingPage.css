@@ -6,6 +6,12 @@ body {
     box-sizing: border-box;
 }
 
+.gpg-tip-image {
+    max-width: 300px;
+    /* 이미지 크기 조정 */
+    margin-top: 10px;
+}
+
 /* 전체 컨테이너 */
 .gpg-grading-page {
     max-width: 800px;

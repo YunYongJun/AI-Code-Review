@@ -21,20 +21,16 @@ function GradingPage() {
       setDots((prevDots) => (prevDots.length < 5 ? prevDots + "." : ""));
     }, 700);
 
-
     // 로딩이 완료되는 타이머 설정 (로딩 완료되고 페이지 이동)
-    // 나중에 코드 제출과 연동 해야 함.
     const loadingTimer = setTimeout(() => {
       setLoading(false);
       window.location.href = '/submitted-codes';
     }, 10000);
 
-
-    // 팁 인덱스를 주기적으로 업데이트하여 다른 팁을 표시하는 타이머 설정
+    // 팁 인덱스를 10초 간격으로 업데이트하여 다른 팁을 표시
     const tipTimer = setInterval(() => {
       setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
     }, 10000); // 10초 간격
-
 
     // 컴포넌트가 언마운트될 때 타이머와 인터벌을 정리하여 메모리 누수 방지 
     return () => {

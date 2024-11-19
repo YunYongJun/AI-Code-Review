@@ -9,6 +9,9 @@
   color: #333;
   font-family: 'Noto Sans KR', sans-serif;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+
+
   /* 아래쪽 그림자 추가 */
 }
 
@@ -22,8 +25,6 @@
   align-items: center;
   gap: 12px;
 }
-
-
 
 .menuBar-logo-link {
   font-size: 22px;
@@ -51,6 +52,23 @@
   color: #1abc9c;
 }
 
+.menuBar-item-auth {
+  color: #333;
+  text-decoration: none;
+  font-size: 17px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: bold;
+
+  /* 아래쪽 그림자 추가 */
+}
+
+.menuBar-item-auth:hover {
+  background-color: #1abc9c;
+  color: #fff;
+}
 
 
 .menuBar-items {
@@ -105,7 +123,8 @@
   padding: 6px 12px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
-  /* 호버 효과 애니메이션 */
+  background-color: #1abc9c
+    /* 호버 효과 애니메이션 */
 }
 
 .menuBar-auth .menuBar-logout-button:hover {
