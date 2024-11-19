@@ -186,8 +186,8 @@ function SubmittedCodes() {
 
             <div className="sc-feedback-section">
               <h5>
-                {selectedCode.revisedFeedback
-                  ? 'AI 피드백 (수정 후 결과)'
+                {selectedCode.revisedCode
+                  ? 'AI 피드백 (채점 후 결과)'
                   : 'AI 피드백'}
               </h5>
               <pre>
@@ -197,8 +197,9 @@ function SubmittedCodes() {
               </pre>
             </div>
 
+
             <p>초기 점수: {selectedCode.initialScore || 'N/A'}</p>
-            <p>수정 후 점수: {selectedCode.revisedScore || 'N/A'}</p>
+            <p>수정 후 점수: {selectedCode.revisedCode ? selectedCode.initialScore : 'N/A'}</p>
 
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
