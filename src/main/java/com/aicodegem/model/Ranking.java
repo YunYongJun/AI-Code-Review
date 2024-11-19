@@ -30,10 +30,20 @@ public class Ranking {
 
     // User 엔티티의 userId를 반환하는 메소드 추가
     public Long getUserId() {
-        return this.user.getId();
+        return (this.user != null) ? this.user.getId() : null; // user가 null이면 null 반환
     }
 
     public int getRank() {
         return this.userRank; // userRank 값을 반환
     }
+
+    // User 객체가 null일 수 있도록 생성자 수정
+    public Ranking(Integer id, User user, Integer userRank, Integer totalScore, LocalDate updateDate) {
+        this.id = (id != null) ? id : 0; // 기본값 설정
+        this.user = user; // user는 null일 수 있음, 필요 시 null 처리 추가
+        this.userRank = (userRank != null) ? userRank : 0; // 기본값 설정
+        this.totalScore = (totalScore != null) ? totalScore : 0; // 기본값 설정
+        this.updateDate = (updateDate != null) ? updateDate : LocalDate.now(); // 기본값 설정
+    }
+
 }

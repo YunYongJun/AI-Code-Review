@@ -27,7 +27,7 @@ public class RankingController {
 
     // 사용자 ID로 순위를 조회하는 GET 요청 처리
     @GetMapping("/{userId}")
-    public ResponseEntity<Ranking> getRanking(@PathVariable Long userId) {
+    public ResponseEntity<Ranking> getRanking(@PathVariable("userId") Long userId) {
         logger.info("Ranking 조회 요청 - userId: {}", userId);
         Ranking ranking = rankingService.getRankingByUserId(userId); // 순위 조회
 
@@ -35,6 +35,7 @@ public class RankingController {
             logger.info("순위 조회 성공 - userId: {}, 순위: {}", userId, ranking.getRank()); // 순위 조회 성공 로그
         } else {
             logger.warn("순위 조회 실패 - userId: {}에 해당하는 순위 없음", userId); // 순위 조회 실패 로그
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(ranking); // 성공 응답 반환
