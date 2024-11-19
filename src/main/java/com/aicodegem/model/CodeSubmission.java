@@ -32,7 +32,7 @@ public class CodeSubmission {
 
     // Getter와 Setter
     public String getId() {
-        return id;
+        return id.toString();
     }
 
     public Long getUserId() {

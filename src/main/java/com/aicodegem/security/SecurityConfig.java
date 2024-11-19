@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/rankings", "/api/**")
                         .permitAll() // 모든 사용자 접근 허용
-                        .requestMatchers("/api/code/submit", "/api/code/resubmit").authenticated() // 코드 제출 경로 인증 필요
+                        .requestMatchers("/api/code/submit/**", "/api/code/**").authenticated() // 코드 제출 경로 인증 필요
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
                 )
                 .sessionManagement(session -> session

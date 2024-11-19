@@ -11,7 +11,17 @@ function SubmitCodePage() {
   const [sourceCode, setSourceCode] = useState('');
   const [title, setTitle] = useState('');
   const [userId, setUserId] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
+  const [tipIndex, setTipIndex] = useState(0);  // 표시할 팁의 인덱스 관리
+
+  // 로딩 중에 표시될 팁 목록
+  const tips = [
+    "Tip 1: 상단 카테고리바에 있는 순위 버튼을 클릭하면 누적 점수에 따른 전체 순위를 확인할 수 있습니다.",
+    "Tip 2: 상단 로그아웃 버튼 왼쪽에 있는 사용자 이름을 클릭하면 개인 정보를 수정할 수 있습니다.",
+    "Tip 3: CODEREVIEW 로고를 클릭하면 메인화면으로 이동합니다.",
+    "Tip 4: 상단 카테고리바에 있는 코드 제출 버튼을 클릭한 후, 코드를 입력하여 체점을 받을 수 있습니다.",
+    "Tip 5: 로그인을 하지 않으면, 업적을 볼 수 없고, 체점 기능을 사용할 수 없습니다."
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,6 +31,17 @@ function SubmitCodePage() {
     }
   }, []);
 
+  useEffect(() => {
+    // 팁 인덱스를 6초 간격으로 업데이트하여 다른 팁을 표시
+    const tipTimer = setInterval(() => {
+      setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
+    }, 6000); // 6초 간격
+
+    return () => {
+      clearInterval(tipTimer);      // 팁 변경 인터벌 정리
+    };
+  }, [tips.length]);
+
   const languageExtensions = {
     java: java(),
     python: python(),
@@ -28,6 +49,12 @@ function SubmitCodePage() {
   };
 
   const handleSubmit = async () => {
+    // 제목이나 소스 코드가 비어있으면 제출되지 않도록 처리
+    if (!title.trim() || !sourceCode.trim()) {
+      alert('제목과 소스 코드를 모두 입력해주세요.');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
@@ -132,7 +159,10 @@ function SubmitCodePage() {
 
       {isLoading && (
         <div className="scp-loading-overlay">
-          <div className="scp-loading-spinner"></div>
+          <div className="scp-loading-spinner"></div>  {/* 로딩 애니메이션 위로 배치 */}
+          <div className="scp-tip-container">
+            <p>{tips[tipIndex]}</p>
+          </div>
         </div>
       )}
     </div>

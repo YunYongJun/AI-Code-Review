@@ -83,8 +83,8 @@ const Login = () => {
         </div>
         <button type="submit" className="login-button">로그인</button>
         <div className="login-footer">
-          <a href="/forgot-id">아이디</a>
-          <a href="/forgot-password">/비밀번호 찾기</a> | <a href="/signup">회원가입</a>
+          <a href="/profile-edit">아이디</a>
+          <a href="/profile-edit">/비밀번호 찾기</a> | <a href="/signup">회원가입</a>
         </div>
       </form>
 
