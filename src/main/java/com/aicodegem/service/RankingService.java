@@ -11,5 +11,5 @@ public interface RankingService {
 
     List<Ranking> getAllRankings(); // 모든 랭킹 정보 조회
 
-    void updateTotalScore(Long userId, int newScore, int previousScore);
+    void updateTotalScore(Long userId, int newScore);
 }

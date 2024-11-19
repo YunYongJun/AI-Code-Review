@@ -26,6 +26,8 @@ public class CodeSubmissionService {
     private CodeRepository codeRepository;
     @Autowired
     private AIAnalysisService aiAnalysisService;
+    @Autowired
+    private RankingService rankingService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -100,7 +102,12 @@ public class CodeSubmissionService {
 
         // 5. DB에 저장된 제출 정보 업데이트 (AI 분석 결과 반영)
         logger.info("AI 분석 결과를 DB에 반영하여 제출 정보를 업데이트합니다."); // 로그 추가
+
+        // 6. Ranking의 totalScore 업데이트
+        rankingService.updateTotalScore(userId, score); // RankingService를 호출하여 점수 업데이트
+
         return codeRepository.save(submission); // 분석 결과 반영 후 업데이트된 코드 저장
+
     }
 
     // 코드 수정
@@ -129,6 +136,9 @@ public class CodeSubmissionService {
         submission.setRevisedFeedback(feedbackContent);
         submission.setRevisedScore(revisedScore);
         submission.setFeedbackDate(LocalDate.now());
+
+        // 6. Ranking의 totalScore 업데이트
+        rankingService.updateTotalScore(submission.getUserId(), revisedScore); // RankingService를 호출하여 점수 업데이트
 
         return codeRepository.save(submission);
     }

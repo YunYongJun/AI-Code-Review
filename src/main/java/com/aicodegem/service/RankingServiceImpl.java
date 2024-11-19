@@ -1,13 +1,15 @@
 package com.aicodegem.service;
 
-import com.aicodegem.model.Ranking;
-import com.aicodegem.repository.RankingRepository;
+import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aicodegem.model.Ranking;
+import com.aicodegem.repository.RankingRepository;
 
 // RankingService 인터페이스의 구현 클래스
 @Service
@@ -50,20 +52,25 @@ public class RankingServiceImpl implements RankingService {
 
     // 점수를 업데이트하는 메서드
     @Override
-    public void updateTotalScore(Long userId, int newScore, int previousScore) {
-        logger.info("사용자 ID {}의 총점 업데이트 요청 - 새로운 점수: {}, 이전 점수: {}", userId, newScore, previousScore);
-        Ranking ranking = rankingRepository.findByUser_Id(userId).orElse(null);
+    public void updateTotalScore(Long userId, int newScore) {
+        try {
+            // Ranking을 찾기 위한 Optional 처리
+            Optional<Ranking> rankingOpt = rankingRepository.findByUser_Id(userId);
 
-        if (ranking != null) {
-            // 기존 점수를 빼고 새로운 점수를 추가하여 총점을 업데이트
-            int updatedScore = ranking.getTotalScore() - previousScore + newScore;
-            ranking.setTotalScore(updatedScore);
-            rankingRepository.save(ranking);
-            logger.info("총점 업데이트 성공 - 사용자 ID: {}, 새로운 총점: {}", userId, updatedScore);
-        } else {
-            String errorMessage = "사용자를 찾을 수 없습니다 - 사용자 ID: " + userId;
-            logger.error(errorMessage);
-            throw new RuntimeException(errorMessage);
+            if (rankingOpt.isPresent()) {
+                Ranking ranking = rankingOpt.get();
+                int currentTotalScore = ranking.getTotalScore();
+                ranking.setTotalScore(currentTotalScore + newScore); // 최신 점수를 기존 totalScore에 추가
+
+                rankingRepository.save(ranking); // 업데이트된 totalScore 저장
+            } else {
+                // 해당 사용자가 없을 경우 예외를 던짐
+                throw new RuntimeException("사용자가 없습니다.");
+            }
+        } catch (Exception e) {
+            // 예외 발생 시 로그를 찍고, 예외 메시지를 반환
+            logger.error("점수 업데이트 중 오류 발생: {}", e.getMessage()); // 로그에 오류 메시지 출력
+            throw new RuntimeException("점수 업데이트 중 오류 발생: " + e.getMessage()); // 호출한 곳에 예외 던짐
         }
     }
 
