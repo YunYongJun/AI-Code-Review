@@ -91,7 +91,8 @@ public class CodeSubmissionService {
         // 3. AI 분석 결과 처리
         JsonNode jsonResponse = objectMapper.readTree(aiResponse); // AI 응답을 JSON으로 변환
         String feedbackContent = jsonResponse.get("response").asText(); // 피드백 내용 추출
-        int score = jsonResponse.path("score").asInt(); // 점수 추출
+        int score = 6000;
+        // int score = jsonResponse.path("score").asInt(); // 점수 추출
         logger.info("AI 분석 결과 - 피드백: {}, 점수: {}", feedbackContent, score); // AI 분석 결과 로그
 
         // 4. 분석 결과를 기존 submission에 반영
@@ -105,6 +106,7 @@ public class CodeSubmissionService {
 
         // 6. Ranking의 totalScore 업데이트
         rankingService.updateTotalScore(userId, score); // RankingService를 호출하여 점수 업데이트
+        logger.info("Ranking에 점수 업데이트 완료 - 점수: {}", score);
 
         return codeRepository.save(submission); // 분석 결과 반영 후 업데이트된 코드 저장
 

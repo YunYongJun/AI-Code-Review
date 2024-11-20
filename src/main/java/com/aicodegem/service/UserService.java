@@ -5,7 +5,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.aicodegem.model.Ranking;
 import com.aicodegem.model.User;
+import com.aicodegem.repository.RankingRepository;
 import com.aicodegem.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +16,7 @@ import com.aicodegem.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -22,10 +26,13 @@ public class UserService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final RankingRepository rankingRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RankingRepository rankingRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.rankingRepository = rankingRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -63,7 +70,7 @@ public class UserService implements UserDetailsService {
         return userId;
     }
 
-    // 유저 등록 로직
+    // 유저 등록 로직 (Ranking 추가)
     public String registerUser(UserDTO userDTO) {
         logger.info("새 유저 등록 시도 - 사용자명: {}", userDTO.getUsername());
         if (userRepository.existsByUsername(userDTO.getUsername())) {
@@ -71,7 +78,10 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Username already taken.");
         }
 
+        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+
+        // User 객체 생성
         User newUser = new User();
         newUser.setUsername(userDTO.getUsername());
         newUser.setPassword(encodedPassword);
@@ -79,9 +89,22 @@ public class UserService implements UserDetailsService {
         newUser.setPhoneNum(userDTO.getPhoneNum());
         newUser.setRole("user"); // 기본 역할을 "user"로 설정
 
+        // User 저장
         userRepository.save(newUser);
         logger.info("유저 '{}'이(가) 성공적으로 등록되었습니다.", userDTO.getUsername());
-        return "User registered successfully";
+
+        // Ranking 객체 생성 및 저장
+        Ranking ranking = new Ranking();
+        ranking.setUser(newUser); // User와 연결
+        ranking.setUserRank(0); // 초기 순위 0
+        ranking.setTotalScore(0); // 초기 점수 0
+        ranking.setUpdateDate(LocalDate.now()); // 현재 날짜 설정
+
+        // Ranking 저장
+        rankingRepository.save(ranking);
+        logger.info("유저 '{}'의 Ranking이 성공적으로 등록되었습니다.", userDTO.getUsername());
+
+        return "User and Ranking registered successfully";
     }
 
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
