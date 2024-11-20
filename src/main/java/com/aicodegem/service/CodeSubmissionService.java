@@ -114,9 +114,11 @@ public class CodeSubmissionService {
 
     // 코드 수정
     public CodeSubmission analyzeAndStoreRevisedCode(String submissionId, String revisedCode) throws IOException {
+        logger.info("제출 ID {}에 대한 코드 수정 요청이 들어왔습니다.", submissionId);
         Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
 
         if (optionalSubmission.isEmpty()) {
+            logger.error("제출 ID '{}'에 해당하는 기록이 없습니다.", submissionId); // 에러 로그 추가
             throw new RuntimeException("제출 ID에 해당하는 기록이 없습니다.");
         }
 
@@ -127,6 +129,7 @@ public class CodeSubmissionService {
         requestBody.put("revisedCode", revisedCode);
 
         String aiModelUrl = "http://192.168.34.13:8888/repredict";
+        logger.info("AI 모델에 수정된 코드 분석 요청을 보냅니다.");
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -139,8 +142,11 @@ public class CodeSubmissionService {
         submission.setRevisedScore(revisedScore);
         submission.setFeedbackDate(LocalDate.now());
 
-        // 6. Ranking의 totalScore 업데이트
+        logger.info("수정된 AI 분석 결과를 DB에 반영하여 제출 정보를 업데이트합니다.");
+
+        // Ranking의 totalScore 업데이트
         rankingService.updateTotalScore(submission.getUserId(), revisedScore); // RankingService를 호출하여 점수 업데이트
+        logger.info("Ranking에 점수 업데이트 완료 - 점수: {}", revisedScore);
 
         return codeRepository.save(submission);
     }
