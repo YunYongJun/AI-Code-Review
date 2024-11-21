@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,14 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class); // Logger 생성
 
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -31,11 +38,11 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public String registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
         logger.info("회원가입 요청: {}", userDTO.getUsername()); // 회원가입 요청 로그
         String result = userService.registerUser(userDTO);
         logger.info("회원가입 성공: {}", userDTO.getUsername()); // 회원가입 성공 로그
-        return result;
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 로그인
@@ -48,7 +55,7 @@ public class UserController {
 
         // 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(userDTO.getPassword(), userDetails.getPassword())) {
-            logger.error("로그인 실패: 잘못된 비밀번호 - {}", userDTO.getUsername()); // 로그인 실패 로그
+            logger.error("로그인 실패: 잘못된 비밀번호 - {}", userDTO.getPassword()); // 로그인 실패 로그
             throw new Exception("Invalid credentials");
         }
 
@@ -94,11 +101,11 @@ public class UserController {
     // 사용자 정보 수정 엔드포인트
     @PutMapping("/update/{userId}")
     public ResponseEntity<String> updateUser(
-            @PathVariable Long userId,
-            @RequestParam String email,
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword,
-            @RequestParam String phoneNum) {
+            @PathVariable("userId") Long userId,
+            @RequestParam("email") String email,
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("phoneNum") String phoneNum) {
 
         logger.info("사용자 정보 수정 요청: userId={}", userId); // 사용자 정보 수정 요청 로그
         // 사용자 정보 업데이트 결과 반환

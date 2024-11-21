@@ -16,9 +16,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import com.aicodegem.service.UserService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -45,11 +49,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(username);
 
+            if (userDetails == null) {
+                logger.error("User not found: {}", username);
+                // `userDetails`가 null인 경우 인증을 설정하지 않고 종료
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                logger.warn("Invalid JWT token for user: {}", username);
             }
         }
 
