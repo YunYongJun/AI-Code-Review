@@ -4,16 +4,14 @@ import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public class CodeSubmissionService {
@@ -21,76 +19,73 @@ public class CodeSubmissionService {
     @Autowired
     private CodeRepository codeRepository;
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private String runPylint(String code) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder("pylint", "-");
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
 
-    // 사용자 ID로 모든 제출 기록을 조회
-    public List<CodeSubmission> getAllSubmissionsByUserId(Long userId) {
-        return codeRepository.findAllByUserId(userId);
+        try (var writer = process.getOutputStream()) {
+            writer.write(code.getBytes());
+            writer.flush();
+        }
+
+        StringBuilder pylintOutput = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                pylintOutput.append(line).append("\n");
+            }
+        }
+
+        return pylintOutput.toString();
     }
 
-    // 특정 제출 ID로 제출 기록을 조회
-    public CodeSubmission getSubmissionById(String submissionId) {
-        Optional<CodeSubmission> submission = codeRepository.findById(submissionId);
-        return submission.orElse(null);
-    }
-
-    // 최초 코드 제출 처리 (AI 분석 후 DB에 저장)
     public CodeSubmission submitCode(Long userId, String code, String title) throws IOException {
+        String pylintResult = runPylint(code);
+
         CodeSubmission submission = new CodeSubmission(userId, code, title);
+        submission.setPylintOutput(pylintResult);
         submission.setSubmissionDate(LocalDate.now());
-
-        submission = codeRepository.save(submission);
-
-        String aiModelUrl = "http://192.168.34.13:8888/predict";
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("submittedCode", code);
-
-        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
-
-        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-        String feedbackContent = jsonResponse.path("feedback").asText();
-        int score = jsonResponse.path("score").asInt();
-
-        submission.setFeedback(feedbackContent);
-        submission.setInitialScore(score);
-        submission.setFeedbackDate(LocalDate.now());
 
         return codeRepository.save(submission);
     }
 
-    // 수정된 코드 제출 처리 (AI 분석 후 DB 업데이트 및 결과 반환)
-    public Map<String, Object> analyzeAndStoreRevisedCode(String submissionId, String revisedCode) throws IOException {
-        Optional<CodeSubmission> existingSubmission = codeRepository.findById(submissionId);
+    public Map<String, String> reviseCode(String submissionId, String revisedCode) throws IOException {
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
 
-        if (existingSubmission.isEmpty()) {
-            throw new RuntimeException("해당 제출물 ID에 대한 코드 제출 기록이 없습니다.");
+        if (optionalSubmission.isEmpty()) {
+            throw new RuntimeException("해당 제출물이 존재하지 않습니다.");
         }
 
-        CodeSubmission submission = existingSubmission.get();
-
-        String aiModelUrl = "http://192.168.34.13:8888/repredict";
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("revisedCode", revisedCode);
-
-        String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
-
-        JsonNode jsonResponse = objectMapper.readTree(aiResponse);
-        String feedbackContent = jsonResponse.path("feedback").asText();
-        int revisedScore = jsonResponse.path("score").asInt();
+        CodeSubmission submission = optionalSubmission.get();
+        String pylintResult = runPylint(revisedCode);
 
         submission.setRevisedCode(revisedCode);
-        submission.setRevisedFeedback(feedbackContent);
-        submission.setRevisedScore(revisedScore);
+        submission.setRevisedPylintOutput(pylintResult);
         submission.setFeedbackDate(LocalDate.now());
 
         codeRepository.save(submission);
 
-        // 평가 결과 반환용 데이터 생성
-        Map<String, Object> result = new HashMap<>();
-        result.put("revisedScore", revisedScore);
-        result.put("revisedFeedback", feedbackContent);
+        Map<String, String> result = new HashMap<>();
+        result.put("pylintOutput", pylintResult);
         result.put("submissionId", submission.getId());
         return result;
+    }
+
+    public String improveCode(String submissionId) {
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
+
+        if (optionalSubmission.isEmpty()) {
+            throw new RuntimeException("해당 제출물이 존재하지 않습니다.");
+        }
+
+        // Mocked AI improvement logic
+        return """
+                # Improved Code by AI
+                def main():
+                    print("Hello, World!")
+                if __name__ == "__main__":
+                    main()
+                """;
     }
 }

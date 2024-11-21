@@ -14,6 +14,6 @@ public interface CodeRepository extends MongoRepository<CodeSubmission, String> 
     // 특정 제출 ID로 코드 제출을 조회
     Optional<CodeSubmission> findById(String submissionId);
 
-    // 사용자 ID로 특정 코드 제출을 조회
+    // 사용자 ID로 특정 코드 제출을 조회 (단일 항목)
     Optional<CodeSubmission> findByUserId(Long userId);
 }

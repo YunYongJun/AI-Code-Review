@@ -1,8 +1,8 @@
 package com.aicodegem.dto;
 
 public class RevisedCodeRequest {
-    private String submissionId; // 수정하려는 제출물 ID
-    private String revisedCode; // 수정된 코드
+    private String submissionId;
+    private String revisedCode;
 
     // Getters and Setters
     public String getSubmissionId() {
