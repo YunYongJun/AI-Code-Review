@@ -42,7 +42,7 @@ public class CodeAnalysisController {
     // 특정 제출 코드 조회 API
     @GetMapping("/submissions/{submissionId}")
     public CodeSubmission getSubmissionById(@PathVariable("submissionId") String submissionId) {
-        logger.info("제출 코드 조회 요청: submissionId={}", submissionId);
+        logger.info("제출 코드 조회 요청: submissionId = {}", submissionId);
         CodeSubmission submission = codeSubmissionService.getSubmissionById(submissionId);
         if (submission != null) {
             logger.info("제출 코드 조회 성공: {}", submissionId); // 성공 로그

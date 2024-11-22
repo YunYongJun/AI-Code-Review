@@ -13,11 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,98 +30,95 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class CodeAnalysisControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Mock
-    private CodeSubmissionService codeSubmissionService;
+        @MockBean
+        private CodeSubmissionService codeSubmissionService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @Test
-    void getSubmissions_ShouldReturnSubmissionsForUser() throws Exception {
-        Long userId = 1L;
-        List<CodeSubmission> submissions = Arrays.asList(
-                new CodeSubmission(userId, "Initial Code 1", "Title 1"),
-                new CodeSubmission(userId, "Initial Code 2", "Title 2"));
-        submissions.get(0).setId("1");
-        submissions.get(1).setId("2");
+        @Test // 사용자 코드 조회
+        void getSubmissions_ShouldReturnSubmissionsForUser() throws Exception {
+                Long userId = 1L;
+                List<CodeSubmission> submissions = Arrays.asList(
+                                new CodeSubmission(userId, "Initial Code 1", "Title 1"),
+                                new CodeSubmission(userId, "Initial Code 2", "Title 2"));
+                submissions.get(0).setId("1");
+                submissions.get(1).setId("2");
 
-        when(codeSubmissionService.getAllSubmissionsByUserId(userId)).thenReturn(submissions);
+                when(codeSubmissionService.getAllSubmissionsByUserId(userId)).thenReturn(submissions);
 
-        mockMvc.perform(get("/api/code/submissions")
-                .param("userId", String.valueOf(userId)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(submissions.size()))
-                .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].title").value("Title 1"))
-                .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].title").value("Title 2"));
-    }
+                mockMvc.perform(get("/api/code/submissions")
+                                .param("userId", String.valueOf(userId)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.size()").value(submissions.size()))
+                                .andExpect(jsonPath("$[0].id").value("1"))
+                                .andExpect(jsonPath("$[0].title").value("Title 1"))
+                                .andExpect(jsonPath("$[1].id").value("2"))
+                                .andExpect(jsonPath("$[1].title").value("Title 2"));
+        }
 
-    @Test
-    void getSubmissionById_ShouldReturnSubmission() throws Exception {
-        String submissionId = "1";
-        CodeSubmission submission = new CodeSubmission(1L, "Initial Code", "Sample Title");
-        submission.setId(submissionId);
-        submission.setSubmissionDate(LocalDate.of(2024, 11, 21));
-        submission.setInitialScore(5);
+        @Test // 제출 코드 조회
+        void getSubmissionById_ShouldReturnSubmission() throws Exception {
+                String submissionId = "1";
+                CodeSubmission submission = new CodeSubmission(1L, "Initial Code", "Sample Title");
+                submission.setId(submissionId);
+                submission.setSubmissionDate(LocalDate.of(2024, 11, 21));
+                submission.setInitialScore(5);
 
-        when(codeSubmissionService.getSubmissionById(submissionId)).thenReturn(submission);
+                when(codeSubmissionService.getSubmissionById(submissionId)).thenReturn(submission);
 
-        mockMvc.perform(get("/api/code/submissions/{submissionId}", submissionId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(submissionId))
-                .andExpect(jsonPath("$.title").value("Sample Title"))
-                .andExpect(jsonPath("$.initialCode").value("Initial Code"))
-                .andExpect(jsonPath("$.submissionDate").value("2024-11-21"))
-                .andExpect(jsonPath("$.initialScore").value(5));
-    }
+                mockMvc.perform(get("/api/code/submissions/{submissionId}", submissionId))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.id").value(submissionId))
+                                .andExpect(jsonPath("$.title").value("Sample Title"))
+                                .andExpect(jsonPath("$.initialCode").value("Initial Code"))
+                                .andExpect(jsonPath("$.submissionDate").value("2024-11-21"))
+                                .andExpect(jsonPath("$.initialScore").value(5));
+        }
 
-    @Test
-    void getSubmissionById_ShouldReturnNotFoundWhenSubmissionDoesNotExist() throws Exception {
-        String submissionId = "1";
+        @Test // 제출 코드 조회 실패
+        void getSubmissionById_ShouldReturnNotFoundWhenSubmissionDoesNotExist() throws Exception {
+                String submissionId = "1";
 
-        when(codeSubmissionService.getSubmissionById(submissionId)).thenReturn(null);
+                when(codeSubmissionService.getSubmissionById(submissionId)).thenReturn(null);
 
-        mockMvc.perform(get("/api/code/submissions/{submissionId}", submissionId))
-                .andExpect(status().isOk()) // 컨트롤러에서 null 반환을 처리했음
-                .andExpect(content().string("")); // 반환된 내용이 비어 있는지 확인
-    }
+                mockMvc.perform(get("/api/code/submissions/{submissionId}", submissionId))
+                                .andExpect(status().isOk()) // 컨트롤러에서 null 반환을 처리했음
+                                .andExpect(content().string("")); // 반환된 내용이 비어 있는지 확인
+        }
 
-    @Test
-    void submitCode_ShouldSaveCodeAndReturnSubmission() throws Exception {
-        CodeSubmissionRequest request = new CodeSubmissionRequest(1L, "Sample Initial Code", "Sample Title");
-        CodeSubmission submission = new CodeSubmission(request.getUserId(), request.getCode(), request.getTitle());
-        submission.setId("1");
-        submission.setSubmissionDate(LocalDate.now());
+        @Test // 코드 제출
+        void submitCode_ShouldSaveCodeAndReturnSubmission() throws Exception {
+                CodeSubmissionRequest request = new CodeSubmissionRequest(1L, "Sample Initial Code", "Sample Title");
+                CodeSubmission submission = new CodeSubmission(request.getUserId(), request.getCode(),
+                                request.getTitle());
+                submission.setId("1");
+                submission.setSubmissionDate(LocalDate.now());
 
-        when(codeSubmissionService.submitCode(request.getUserId(), request.getCode(), request.getTitle()))
-                .thenReturn(submission);
+                when(codeSubmissionService.submitCode(request.getUserId(), request.getCode(), request.getTitle()))
+                                .thenReturn(submission);
 
-        mockMvc.perform(post("/api/code/submit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.userId").value(1L))
-                .andExpect(jsonPath("$.title").value("Sample Title"))
-                .andExpect(jsonPath("$.initialCode").value("Sample Initial Code"))
-                .andExpect(jsonPath("$.submissionDate").exists());
-    }
+                mockMvc.perform(post("/api/code/submit")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string(String.format("코드 제출 성공, 제출 ID: %s", submission.getId())));
+        }
 
-    @Test
-    void submitCode_ShouldReturnErrorWhenIOExceptionOccurs() throws Exception {
-        CodeSubmissionRequest request = new CodeSubmissionRequest(1L, "Sample Initial Code", "Sample Title");
+        @Test // 코드 제출 중 오류
+        void submitCode_ShouldReturnErrorWhenIOExceptionOccurs() throws Exception {
+                CodeSubmissionRequest request = new CodeSubmissionRequest(1L, "Sample Initial Code", "Sample Title");
 
-        when(codeSubmissionService.submitCode(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
-                .thenThrow(new IOException("Test Exception"));
+                when(codeSubmissionService.submitCode(Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
+                                .thenThrow(new IOException("Test Exception"));
 
-        mockMvc.perform(post("/api/code/submit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string("코드 제출 중 오류 발생: Test Exception"));
-    }
+                mockMvc.perform(post("/api/code/submit")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                                .andExpect(status().isInternalServerError())
+                                .andExpect(content().string("코드 제출 중 오류 발생: Test Exception"));
+        }
 }
