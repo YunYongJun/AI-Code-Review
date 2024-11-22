@@ -25,7 +25,7 @@ public class CodeSubmission {
     private String revisedFeedback;
     private LocalDate feedbackDate;
 
-    @SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
     private String revisedPylintOutput; // 추가된 필드
 
     // 생성자
@@ -37,6 +37,10 @@ public class CodeSubmission {
     }
 
     // Getters and Setters
+    public String getRevisedPylintOutput() {
+        return revisedPylintOutput;
+    }
+
     public String getId() {
         return id;
     }
