@@ -75,6 +75,7 @@ function SubmitCodePage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`,  // Authorization 헤더 추가
         },
         body: formBody.toString(),
       });
@@ -92,6 +93,7 @@ function SubmitCodePage() {
       setIsLoading(false); // 로딩 종료
     }
   };
+
 
 
   const handleListClick = () => {
