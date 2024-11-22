@@ -5,25 +5,34 @@ public class CodeSubmissionRequest {
     private String code;
     private String title; // 코드 제목 필드
 
-    // Getters and Setters
-    public Long getUserId() { 
-        return userId; 
+    public CodeSubmissionRequest(Long userId, String code, String title) {
+        this.userId = userId;
+        this.code = code;
+        this.title = title;
     }
 
-    public void setUserId(Long userId) { 
+    public CodeSubmissionRequest() {
+    }
+
+    // Getters and Setters
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public String getCode() { 
+    public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
-        this.code = code; 
+        this.code = code;
     }
 
-    public String getTitle() { 
-        return title; 
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {

@@ -78,7 +78,7 @@ public class RankingControllerTest {
                                 .andExpect(jsonPath("$.totalScore").value(ranking.getTotalScore()));
         }
 
-        @Test
+        @Test // 순위 조회 실패
         @WithMockUser(roles = "USER")
         public void testGetRanking_NotFound() throws Exception {
                 Long userId = 1L;
@@ -92,7 +92,7 @@ public class RankingControllerTest {
                 resultActions.andExpect(status().isNotFound());
         }
 
-        @Test
+        @Test // 순위 저장
         @WithMockUser(roles = "USER")
         public void testCreateRanking() throws Exception {
 

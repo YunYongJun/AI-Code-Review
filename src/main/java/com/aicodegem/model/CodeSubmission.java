@@ -35,6 +35,10 @@ public class CodeSubmission {
         return id.toString();
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Long getUserId() {
         return userId;
     }

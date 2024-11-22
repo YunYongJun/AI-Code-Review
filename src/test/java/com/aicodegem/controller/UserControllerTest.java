@@ -54,7 +54,7 @@ public class UserControllerTest {
                 passwordEncoder = new BCryptPasswordEncoder();
         }
 
-        @Test
+        @Test // 회원가입
         public void testRegisterUser() throws Exception {
                 // Given
                 UserDTO userDTO = new UserDTO("testUser", "testEmail@example.com", "password123", "1234567890");
@@ -73,7 +73,7 @@ public class UserControllerTest {
                 verify(userService, times(1)).registerUser(any(UserDTO.class));
         }
 
-        @Test
+        @Test // 로그인
         public void testLogin() throws Exception {
                 // Given
                 UserDTO userDTO = new UserDTO("testUser", "password123", "testEmail@example.com", "1234567890");
@@ -107,7 +107,7 @@ public class UserControllerTest {
                 verify(jwtUtil, times(1)).generateToken(eq(userDetails), eq("user"), eq("testUser"));
         }
 
-        @Test
+        @Test // 개인정보 수정
         public void testUpdateUserInfo() throws Exception {
                 // Given
                 Long userId = 1L;
@@ -132,7 +132,7 @@ public class UserControllerTest {
                 verify(userService, times(1)).updateUserInfo(userId, email, currentPassword, newPassword, phoneNum);
         }
 
-        @Test
+        @Test // 토큰 재생성
         public void testRefreshToken() throws Exception {
                 // Given
                 String jwtToken = "dummyJwtToken";
