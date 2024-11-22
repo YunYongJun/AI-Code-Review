@@ -1,14 +1,12 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.dto.CodeSubmissionRequest;
-import com.aicodegem.dto.RevisedCodeRequest;
+import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.service.CodeSubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/code")
@@ -18,24 +16,24 @@ public class CodeAnalysisController {
     private CodeSubmissionService codeSubmissionService;
 
     @PostMapping("/submit")
-    public ResponseEntity<CodeSubmission> submitCode(@RequestBody CodeSubmissionRequest request) throws IOException {
-        CodeSubmission submission = codeSubmissionService.submitCode(
-                request.getUserId(),
-                request.getCode(),
-                request.getTitle());
-        return ResponseEntity.ok(submission);
+    public ResponseEntity<CodeSubmission> submitCode(@RequestParam Long userId, @RequestParam String code,
+            @RequestParam String title) {
+        try {
+            CodeSubmission submission = codeSubmissionService.submitCode(userId, code, title);
+            return ResponseEntity.ok(submission);
+        } catch (IOException | InterruptedException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @PostMapping("/revise")
-    public ResponseEntity<Map<String, String>> reviseCode(@RequestBody RevisedCodeRequest request) throws IOException {
-        Map<String, String> result = codeSubmissionService.reviseCode(request.getSubmissionId(),
-                request.getRevisedCode());
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping("/improve/{submissionId}")
-    public ResponseEntity<String> improveCode(@PathVariable String submissionId) {
-        String improvedCode = codeSubmissionService.improveCode(submissionId);
-        return ResponseEntity.ok(improvedCode);
+    public ResponseEntity<CodeSubmission> reviseCode(@RequestParam String submissionId,
+            @RequestParam String revisedCode) {
+        try {
+            CodeSubmission submission = codeSubmissionService.reviseCode(submissionId, revisedCode);
+            return ResponseEntity.ok(submission);
+        } catch (IOException | InterruptedException e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 }

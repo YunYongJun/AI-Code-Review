@@ -16,10 +16,19 @@ public class CodeSubmission {
     private String title;
     private LocalDate submissionDate;
     private String pylintOutput;
+
+    // 추가된 필드
+    private String feedback;
+    private int initialScore;
     private String revisedCode;
-    private String revisedPylintOutput;
+    private int revisedScore;
+    private String revisedFeedback;
     private LocalDate feedbackDate;
 
+    @SuppressWarnings("unused")
+    private String revisedPylintOutput; // 추가된 필드
+
+    // 생성자
     public CodeSubmission(Long userId, String initialCode, String title) {
         this.userId = userId;
         this.initialCode = initialCode;
@@ -27,6 +36,7 @@ public class CodeSubmission {
         this.submissionDate = LocalDate.now();
     }
 
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -67,6 +77,23 @@ public class CodeSubmission {
         this.pylintOutput = pylintOutput;
     }
 
+    // 추가된 Getter & Setter
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getInitialScore() {
+        return initialScore;
+    }
+
+    public void setInitialScore(int initialScore) {
+        this.initialScore = initialScore;
+    }
+
     public String getRevisedCode() {
         return revisedCode;
     }
@@ -75,8 +102,20 @@ public class CodeSubmission {
         this.revisedCode = revisedCode;
     }
 
-    public String getRevisedPylintOutput() {
-        return revisedPylintOutput;
+    public int getRevisedScore() {
+        return revisedScore;
+    }
+
+    public void setRevisedScore(int revisedScore) {
+        this.revisedScore = revisedScore;
+    }
+
+    public String getRevisedFeedback() {
+        return revisedFeedback;
+    }
+
+    public void setRevisedFeedback(String revisedFeedback) {
+        this.revisedFeedback = revisedFeedback;
     }
 
     public void setRevisedPylintOutput(String revisedPylintOutput) {
