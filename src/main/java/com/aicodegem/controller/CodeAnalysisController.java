@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/code")
@@ -35,5 +36,17 @@ public class CodeAnalysisController {
         } catch (IOException | InterruptedException e) {
             return ResponseEntity.status(500).body(null);
         }
+    }
+
+    // 사용자 제출물 조회 API
+    @GetMapping("/submissions")
+    public ResponseEntity<List<CodeSubmission>> getUserSubmissions(@RequestParam Long userId) {
+        List<CodeSubmission> submissions = codeSubmissionService.getUserSubmissions(userId);
+
+        if (submissions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(submissions);
     }
 }

@@ -11,7 +11,6 @@ function SubmittedCodes() {
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
   const [language, setLanguage] = useState('java');
-  const [userId, setUserId] = useState(null);
 
   const languageExtensions = {
     java: java(),
@@ -23,27 +22,32 @@ function SubmittedCodes() {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
-      setUserId(decodedToken.userId);
+      const userIdFromToken = decodedToken.userId;
 
-      fetch(`http://localhost:8080/api/code/submissions?userId=${decodedToken.userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
-          return response.json();
+      if (userIdFromToken) {
+        fetch(`http://localhost:8080/api/code/submissions?userId=${userIdFromToken}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
-        .then((data) => setSubmittedCodes(data))
-        .catch((error) => console.error('Error:', error));
+          .then((response) => {
+            if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
+            return response.json();
+          })
+          .then((data) => setSubmittedCodes(data))
+          .catch((error) => console.error('Error:', error));
+      } else {
+        console.error('JWT 토큰에서 userId를 찾을 수 없습니다.');
+      }
+    } else {
+      console.error('로컬 스토리지에 토큰이 없습니다.');
     }
   }, []);
 
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    const codeToDisplay = code.revisedCode || code.initialCode;
-    setEditedDetail(codeToDisplay);
+    setEditedDetail(code.revisedCode || code.initialCode);
     setLanguage(code.language || 'java');
   };
 
@@ -53,18 +57,17 @@ function SubmittedCodes() {
       return;
     }
 
-    const resubmissionData = {
-      userId,
-      revisedCode: editedDetail,
-    };
+    const resubmissionData = new URLSearchParams();
+    resubmissionData.append('submissionId', selectedCode.id);
+    resubmissionData.append('revisedCode', editedDetail);
 
     try {
       const response = await fetch('http://localhost:8080/api/code/revise', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(resubmissionData),
+        body: resubmissionData.toString(),
       });
 
       if (!response.ok) throw new Error('수정된 코드 제출 실패');
@@ -75,38 +78,9 @@ function SubmittedCodes() {
     }
   };
 
-  const calculateAverageScore = (feedback) => {
-    const scores = feedback.match(/:\s*([\d.]+)\/10/g);
-    if (!scores) return null;
-
-    const totalScore = scores.reduce((sum, scoreText) => {
-      const score = parseFloat(scoreText.match(/([\d.]+)\/10/)[1]);
-      return sum + score;
-    }, 0);
-
-    return (totalScore / scores.length).toFixed(1); // 평균 점수 계산, 소수점 1자리
-  };
-
   const formatFeedback = (feedback) => {
     if (!feedback) return '아직 피드백이 없습니다.';
-
-    // 항목별 줄바꿈 처리
-    const formattedFeedback = feedback
-      .replace('###Instruction### 코드 스니펫이 명시한 항목의 원칙을 잘 따르고 있는지 판단하십시오, 평가 사항은 각 항목당 10점 만점으로 숫자와 함께 점수를 표기 하십시오.', '')
-      .replace('1. 가독성:', '\n1. 가독성:')
-      .replace('2. 간결함:', '\n2. 간결함:')
-      .replace('3. 명확한 의도:', '\n3. 명확한 의도:')
-      .replace('4. 중복 최소화:', '\n4. 중복 최소화:')
-      .replace('5. 적절한 주석:', '\n5. 적절한 주석:')
-      .replace('6. 작고 집중된 함수:', '\n6. 작고 집중된 함수:')
-      .replace('7. 일관성:', '\n7. 일관성:')
-      .replace('8. 적절한 오류 처리:', '\n8. 적절한 오류 처리:')
-      .replace('###결론###', '\n###결론###');
-
-    const averageScore = calculateAverageScore(formattedFeedback);
-    if (averageScore) selectedCode.initialScore = averageScore; // 초기 점수 갱신
-
-    return formattedFeedback;
+    return feedback.replace(/###결론###/, '\n###결론###');
   };
 
   return (
@@ -152,6 +126,16 @@ function SubmittedCodes() {
               <pre>{formatFeedback(selectedCode.feedback)}</pre>
             </div>
 
+            {/* 조건부로 pylint 출력 */}
+            <div className="sc-pylint-section">
+              <h5>Pylint 결과</h5>
+              <pre>
+                {selectedCode.revisedCode
+                  ? selectedCode.revisedPylintOutput || '수정된 pylint 결과가 없습니다.'
+                  : selectedCode.pylintOutput || '최초 제출 pylint 결과가 없습니다.'}
+              </pre>
+            </div>
+
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
 
@@ -166,3 +150,4 @@ function SubmittedCodes() {
 }
 
 export default SubmittedCodes;
+

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,10 @@ public class CodeSubmissionService {
         submission.setFeedbackDate(LocalDate.now());
 
         return codeRepository.save(submission);
+    }
+
+    // 사용자 제출물 조회
+    public List<CodeSubmission> getUserSubmissions(Long userId) {
+        return codeRepository.findAllByUserId(userId);
     }
 }
