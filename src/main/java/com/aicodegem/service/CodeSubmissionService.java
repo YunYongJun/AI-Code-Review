@@ -29,17 +29,20 @@ public class CodeSubmissionService {
     private AchievementService achievementService;
 
     public CodeSubmission submitCode(Long userId, String code, String title) throws IOException, InterruptedException {
-        String pylintOutput = pylintService.runPylint(code);
+        PylintService.PylintResult pylintResult = pylintService.runPylint(code);
 
-        int initialScore = 10;
+        // pylint 점수로 초기 점수 설정
+        int initialScore = (int) pylintResult.getScore();
 
         CodeSubmission submission = new CodeSubmission(userId, code, title);
-        submission.setPylintOutput(pylintOutput);
+        submission.setPylintOutput(pylintResult.getOutput());
         submission.setInitialScore(initialScore);
         submission.setSubmissionDate(LocalDate.now());
 
+        // 랭킹 점수 업데이트 (pylint 점수를 사용)
         rankingService.updateTotalScore(userId, initialScore);
 
+        // 업적 할당
         achievementService.assignAchievementsByTotalScore(userId);
 
         return codeRepository.save(submission);
@@ -53,11 +56,20 @@ public class CodeSubmissionService {
         }
 
         CodeSubmission submission = optionalSubmission.get();
-        String pylintOutput = pylintService.runPylint(revisedCode);
+        PylintService.PylintResult pylintResult = pylintService.runPylint(revisedCode);
+
+        int revisedScore = (int) pylintResult.getScore();
 
         submission.setRevisedCode(revisedCode);
-        submission.setRevisedPylintOutput(pylintOutput);
+        submission.setRevisedPylintOutput(pylintResult.getOutput());
+        submission.setRevisedScore(revisedScore);
         submission.setFeedbackDate(LocalDate.now());
+
+        // 수정된 점수로 랭킹 점수 업데이트
+        rankingService.updateTotalScore(submission.getUserId(), revisedScore);
+
+        // 업적 할당
+        achievementService.assignAchievementsByTotalScore(submission.getUserId());
 
         return codeRepository.save(submission);
     }
