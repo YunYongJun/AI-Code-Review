@@ -11,8 +11,10 @@ function SubmittedCodes() {
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
   const [language, setLanguage] = useState('java');
-  const [aiFeedback, setAiFeedback] = useState(null); // AI 피드백 상태 관리
-  const [isLoadingFeedback, setIsLoadingFeedback] = useState(false); // 로딩 상태 관리
+  const [aiFeedback, setAiFeedback] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // 전체 로딩 상태 관리
+  const [isLoadingFeedback, setIsLoadingFeedback] = useState(false); // AI 피드백 로딩 상태 관리
+  const [tipIndex, setTipIndex] = useState(0); // 로딩 중 팁 인덱스 관리
 
   const languageExtensions = {
     java: java(),
@@ -20,8 +22,25 @@ function SubmittedCodes() {
     cpp: cpp(),
   };
 
+  const tips = [
+    'Tip 1: 제출된 코드 목록에서 코드를 클릭하여 상세 내용을 확인하세요.',
+    'Tip 2: 코드를 수정한 후 제출하여 새 점수를 확인할 수 있습니다.',
+    'Tip 3: AI 피드백 분석을 통해 코드 개선 팁을 받아보세요.',
+    'Tip 4: Pylint 분석 결과를 참고해 Python 코드 품질을 향상시키세요.',
+    'Tip 5: 다른 언어의 코드를 선택하려면 언어 드롭다운을 변경하세요.',
+  ];
+
+  useEffect(() => {
+    const tipTimer = setInterval(() => {
+      setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
+    }, 5000); // 팁 변경 주기: 5초
+
+    return () => clearInterval(tipTimer);
+  }, [tips.length]);
+
   // 제출된 코드 목록 로드
   useEffect(() => {
+    setIsLoading(true);
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -39,21 +58,23 @@ function SubmittedCodes() {
             return response.json();
           })
           .then((data) => setSubmittedCodes(data))
-          .catch((error) => console.error('Error:', error));
+          .catch((error) => console.error('Error:', error))
+          .finally(() => setIsLoading(false));
       } else {
         console.error('JWT 토큰에서 userId를 찾을 수 없습니다.');
+        setIsLoading(false);
       }
     } else {
       console.error('로컬 스토리지에 토큰이 없습니다.');
+      setIsLoading(false);
     }
   }, []);
 
-  // 코드 선택 처리
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
     setEditedDetail(code.revisedCode || code.initialCode);
     setLanguage(code.language || 'java');
-    setAiFeedback(null); // 새로운 코드 선택 시 AI 피드백 초기화
+    setAiFeedback(null);
   };
 
   // 코드 수정
@@ -231,7 +252,13 @@ function SubmittedCodes() {
               )}
             </div>
 
-            {isLoadingFeedback && <p>AI 피드백 분석 중...</p>}
+            {isLoadingFeedback && (
+              <div className="sc-loading-overlay">
+                <div className="sc-loading-spinner"></div>
+                <p className="sc-loading-tip">{tips[tipIndex]}</p>
+              </div>
+            )}
+            <div className={`sc-content ${isLoading ? 'sc-blur' : ''}`}></div>
 
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
