@@ -1,11 +1,10 @@
-//mongoDB와 상호작용하는 리포지토리
 package com.aicodegem.repository;
 
 import com.aicodegem.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> { // Long 타입의 기본 키
     Optional<User> findByUsername(String username);
 
     boolean existsByUsername(String username);

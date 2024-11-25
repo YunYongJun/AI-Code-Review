@@ -1,0 +1,86 @@
+.footer {
+    background-color: #1f2023;
+    color: #aaaaaa;
+    padding: 20px 0;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-menuBar-logo {
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    /* 로고 부분 줄바꿈 방지 */
+}
+
+.footer-menuBar-logo-highlight {
+    color: #1abc9c;
+}
+
+.footer-menuBar-logo-subtext {
+    font-size: 14px;
+    color: #bbb;
+    margin-top: 5px;
+}
+
+.footer-info {
+    text-align: left;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.footer-admin {
+    display: flex;
+    align-items: center;
+}
+
+.admin-button {
+    background-color: #333;
+    color: #cccccc;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin-button:hover {
+    background-color: #555;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-info {
+        margin: 10px 0;
+    }
+
+    .footer-menuBar-logo {
+        font-size: 20px;
+        /* 작은 화면에서 폰트 크기 조정 */
+    }
+
+    .footer-menuBar-logo-subtext {
+        font-size: 12px;
+    }
+
+    .footer-info {
+        font-size: 12px;
+        /* 작은 화면에서 정보 글씨 크기 조정 */
+    }
+}

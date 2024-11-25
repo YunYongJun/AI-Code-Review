@@ -1,38 +1,44 @@
-// 사용자 엔티티
 package com.aicodegem.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Document(collection = "users") // MongoDB에서 "users" 컬렉션과 매핑
+@Entity // JPA 엔티티로 설정
+@Table(name = "users") // MySQL의 "users" 테이블과 매핑
 public class User {
 
-    @Id // MongoDB의 _id 필드와 매핑
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL에서 자동 생성되는 기본 키
+    private Long id; // id 타입을 Long으로 변경
+
     private String username;
     private String password;
     private String email;
     private String phoneNum;
+    private String role; // 사용자의 역할 필드 추가 (예: "user", "admin")
 
-    // 기본 생성자 (No-args constructor)
+    // 기본 생성자
     public User() {
     }
 
-    // 모든 필드를 받는 생성자
-    public User(String id, String username, String password, String email) {
-        this.id = id; // 몽고디비에서 자동으로 설정됨
-        this.username = username; // 로그인아이디 (중복체크함)
+    // 모든 필드를 받는 생성자 (id는 MongoDB에서 자동으로 설정)
+    public User(String username, String password, String email, String phoneNum, String role) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;
+        this.role = role;
     }
 
     // Getters and Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -68,15 +74,24 @@ public class User {
         this.phoneNum = phoneNum;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     // Optional: toString() method for debugging
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id + // Long 타입으로 변경
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
