@@ -3,13 +3,15 @@ package com.aicodegem.service;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class PylintService {
 
     private final String PYTHON_SCRIPT_PATH = "./pylint_runner.py"; // pylint_runner.py 파일 경로
 
-    public String runPylint(String code) throws IOException, InterruptedException {
+    public PylintResult runPylint(String code) throws IOException, InterruptedException {
         // 1. 임시 Python 파일 생성
         File tempFile = File.createTempFile("code", ".py");
         try (FileWriter writer = new FileWriter(tempFile)) {
@@ -38,6 +40,35 @@ public class PylintService {
             throw new RuntimeException("Pylint failed with exit code: " + exitCode);
         }
 
-        return pylintOutput.toString();
+        // 4. Pylint 점수 파싱
+        double score = parseScore(pylintOutput.toString());
+        return new PylintResult(pylintOutput.toString(), score);
+    }
+
+    private double parseScore(String pylintOutput) {
+        Pattern pattern = Pattern.compile("Your code has been rated at ([0-9.]+)/10");
+        Matcher matcher = pattern.matcher(pylintOutput);
+        if (matcher.find()) {
+            return Double.parseDouble(matcher.group(1));
+        }
+        return 0.0;
+    }
+
+    public static class PylintResult {
+        private final String output;
+        private final double score;
+
+        public PylintResult(String output, double score) {
+            this.output = output;
+            this.score = score;
+        }
+
+        public String getOutput() {
+            return output;
+        }
+
+        public double getScore() {
+            return score;
+        }
     }
 }

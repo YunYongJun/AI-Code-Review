@@ -20,10 +20,11 @@ public class CodeSubmissionService {
     private PylintService pylintService;
 
     public CodeSubmission submitCode(Long userId, String code, String title) throws IOException, InterruptedException {
-        String pylintOutput = pylintService.runPylint(code);
+        PylintService.PylintResult pylintResult = pylintService.runPylint(code);
 
         CodeSubmission submission = new CodeSubmission(userId, code, title);
-        submission.setPylintOutput(pylintOutput);
+        submission.setPylintOutput(pylintResult.getOutput());
+        submission.setInitialScore((int) pylintResult.getScore());
         submission.setSubmissionDate(LocalDate.now());
 
         return codeRepository.save(submission);
@@ -37,12 +38,14 @@ public class CodeSubmissionService {
         }
 
         CodeSubmission submission = optionalSubmission.get();
-        String pylintOutput = pylintService.runPylint(revisedCode);
+        PylintService.PylintResult pylintResult = pylintService.runPylint(revisedCode);
 
         submission.setRevisedCode(revisedCode);
-        submission.setRevisedPylintOutput(pylintOutput);
+        submission.setRevisedPylintOutput(pylintResult.getOutput());
+        submission.setRevisedScore((int) pylintResult.getScore());
         submission.setFeedbackDate(LocalDate.now());
 
+        System.out.println(submission.getInitialScore() + " " + submission.getRevisedScore());
         return codeRepository.save(submission);
     }
 
