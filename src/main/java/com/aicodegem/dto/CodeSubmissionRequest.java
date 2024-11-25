@@ -3,16 +3,7 @@ package com.aicodegem.dto;
 public class CodeSubmissionRequest {
     private Long userId;
     private String code;
-    private String title; // 코드 제목 필드
-
-    public CodeSubmissionRequest(Long userId, String code, String title) {
-        this.userId = userId;
-        this.code = code;
-        this.title = title;
-    }
-
-    public CodeSubmissionRequest() {
-    }
+    private String title;
 
     // Getters and Setters
     public Long getUserId() {

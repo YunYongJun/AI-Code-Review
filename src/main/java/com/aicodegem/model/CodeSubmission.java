@@ -2,6 +2,7 @@ package com.aicodegem.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
 @Document(collection = "codeSubmissions")
@@ -12,17 +13,22 @@ public class CodeSubmission {
 
     private Long userId;
     private String initialCode;
-    private String title; // 코드 제목 필드
+    private String title;
     private LocalDate submissionDate;
+    private String pylintOutput;
+
+    // 추가된 필드
     private String feedback;
     private int initialScore;
-    private int revisedScore;
-    private String feedbackId;
-    private LocalDate feedbackDate;
     private String revisedCode;
+    private int revisedScore;
     private String revisedFeedback;
+    private LocalDate feedbackDate;
 
-    // 생성자 (점수와 피드백은 AI 분석 후 업데이트)
+    // @SuppressWarnings("unused")
+    private String revisedPylintOutput; // 추가된 필드
+
+    // 생성자
     public CodeSubmission(Long userId, String initialCode, String title) {
         this.userId = userId;
         this.initialCode = initialCode;
@@ -30,13 +36,13 @@ public class CodeSubmission {
         this.submissionDate = LocalDate.now();
     }
 
-    // Getter와 Setter
-    public String getId() {
-        return id.toString();
+    // Getters and Setters
+    public String getRevisedPylintOutput() {
+        return revisedPylintOutput;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getId() {
+        return id;
     }
 
     public Long getUserId() {
@@ -67,6 +73,15 @@ public class CodeSubmission {
         this.submissionDate = submissionDate;
     }
 
+    public String getPylintOutput() {
+        return pylintOutput;
+    }
+
+    public void setPylintOutput(String pylintOutput) {
+        this.pylintOutput = pylintOutput;
+    }
+
+    // 추가된 Getter & Setter
     public String getFeedback() {
         return feedback;
     }
@@ -83,30 +98,6 @@ public class CodeSubmission {
         this.initialScore = initialScore;
     }
 
-    public int getRevisedScore() {
-        return revisedScore;
-    }
-
-    public void setRevisedScore(int revisedScore) {
-        this.revisedScore = revisedScore;
-    }
-
-    public String getFeedbackId() {
-        return feedbackId;
-    }
-
-    public void setFeedbackId(String feedbackId) {
-        this.feedbackId = feedbackId;
-    }
-
-    public LocalDate getFeedbackDate() {
-        return feedbackDate;
-    }
-
-    public void setFeedbackDate(LocalDate feedbackDate) {
-        this.feedbackDate = feedbackDate;
-    }
-
     public String getRevisedCode() {
         return revisedCode;
     }
@@ -115,11 +106,31 @@ public class CodeSubmission {
         this.revisedCode = revisedCode;
     }
 
+    public int getRevisedScore() {
+        return revisedScore;
+    }
+
+    public void setRevisedScore(int revisedScore) {
+        this.revisedScore = revisedScore;
+    }
+
     public String getRevisedFeedback() {
         return revisedFeedback;
     }
 
     public void setRevisedFeedback(String revisedFeedback) {
         this.revisedFeedback = revisedFeedback;
+    }
+
+    public void setRevisedPylintOutput(String revisedPylintOutput) {
+        this.revisedPylintOutput = revisedPylintOutput;
+    }
+
+    public LocalDate getFeedbackDate() {
+        return feedbackDate;
+    }
+
+    public void setFeedbackDate(LocalDate feedbackDate) {
+        this.feedbackDate = feedbackDate;
     }
 }

@@ -6,6 +6,7 @@ import com.aicodegem.model.UserAchievement;
 import com.aicodegem.repository.AchievementRepository;
 import com.aicodegem.repository.RankingRepository;
 import com.aicodegem.repository.UserAchievementRepository;
+import com.aicodegem.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class AchievementServiceImpl implements AchievementService {
     @Autowired
     private UserAchievementService userAchievementService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public List<Achievement> getAllAchievements() {
         return achievementRepository.findAll();
@@ -55,13 +59,16 @@ public class AchievementServiceImpl implements AchievementService {
 
         List<Achievement> achievements = this.getAllAchievements();
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+
         for (Achievement achievement : achievements) {
             if (evaluateCriteria(achievement.getCriteria(), totalScore)) {
                 boolean alreadyAssigned = userAchievementService.isAchievementAlreadyAssigned(userId,
                         achievement.getId());
                 if (!alreadyAssigned) {
                     UserAchievement userAchievement = new UserAchievement();
-                    // userAchievement.setUser(new User(userId));
+                    userAchievement.setUser(user);
                     userAchievement.setAchievement(achievement);
                     userAchievement.setDateAchieved(LocalDate.now());
                     userAchievementService.assignAchievementToUser(userAchievement);
@@ -73,6 +80,9 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     private boolean evaluateCriteria(String criteria, int totalScore) {
+        if (criteria == null || criteria.isEmpty()) {
+            return false; // 또는 적절한 기본값을 반환할 수 있습니다.
+        }
         if (criteria.contains("total_score >= ")) {
             int requiredScore = Integer.parseInt(criteria.split(">= ")[1]);
             return totalScore >= requiredScore;

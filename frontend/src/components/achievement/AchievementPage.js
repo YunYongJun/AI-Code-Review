@@ -76,13 +76,13 @@ const AchievementPage = () => {
               </tr>
             </thead>
             <tbody>
-              {achievements.map((achievement) => (
-                <tr key={achievement.id}>
+              {achievements.map((userAchievement) => (
+                <tr key={userAchievement.id}>
                   <td style={{ fontWeight: 'bold' }}>
-                    {achievement.achievementName}
+                    {userAchievement.achievement.achievementName}
                   </td>
-                  <td>{achievement.achievementDesc}</td>
-                  <td>{achievement.dateAchieved}</td>
+                  <td>{userAchievement.achievement.achievementDesc}</td>
+                  <td>{userAchievement.dateAchieved}</td>
                 </tr>
               ))}
             </tbody>

@@ -62,20 +62,22 @@ function SubmitCodePage() {
     }
 
     setIsLoading(true); // 로딩 시작
-    const submissionData = {
-      userId,
+
+    // x-www-form-urlencoded 형식으로 데이터 변환
+    const formBody = new URLSearchParams({
+      userId: userId.toString(),
       code: sourceCode,
       title,
-    };
+    });
 
     try {
       const response = await fetch('http://localhost:8080/api/code/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`,  // Authorization 헤더 추가
         },
-        body: JSON.stringify(submissionData),
+        body: formBody.toString(),
       });
 
       if (!response.ok) {
@@ -91,6 +93,8 @@ function SubmitCodePage() {
       setIsLoading(false); // 로딩 종료
     }
   };
+
+
 
   const handleListClick = () => {
     const token = localStorage.getItem('token');

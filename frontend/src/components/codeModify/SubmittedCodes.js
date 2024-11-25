@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import CodeMirror from '@uiw/react-codemirror';
 import { java } from '@codemirror/lang-java';
 import { python } from '@codemirror/lang-python';
 import { cpp } from '@codemirror/lang-cpp';
+import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
 function SubmittedCodes() {
@@ -11,52 +11,6 @@ function SubmittedCodes() {
   const [selectedCode, setSelectedCode] = useState(null);
   const [editedDetail, setEditedDetail] = useState('');
   const [language, setLanguage] = useState('java');
-  const [userId, setUserId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-  const [tipIndex, setTipIndex] = useState(0); // 팁 인덱스 관리
-
-  // 로딩 중에 표시될 팁 목록
-  const tips = [
-    "Tip 1: 상단 카테고리바에 있는 순위 버튼을 클릭하면 누적 점수에 따른 전체 순위를 확인할 수 있습니다.",
-    "Tip 2: 상단 로그아웃 버튼 왼쪽에 있는 사용자 이름을 클릭하면 개인 정보를 수정할 수 있습니다.",
-    "Tip 3: CODEREVIEW 로고를 클릭하면 메인화면으로 이동합니다.",
-    "Tip 4: 상단 카테고리바에 있는 코드 제출 버튼을 클릭한 후, 코드를 입력하여 체점을 받을 수 있습니다.",
-    "Tip 5: 로그인을 하지 않으면, 업적을 볼 수 없고, 체점 기능을 사용할 수 없습니다.",
-  ];
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserId(decodedToken.userId);
-
-      fetch(`http://localhost:8080/api/code/submissions?userId=${decodedToken.userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
-          return response.json();
-        })
-        .then((data) => {
-          setSubmittedCodes(data);
-        })
-        .catch((error) => console.error('Error:', error));
-    }
-  }, []);
-
-  useEffect(() => {
-    // 팁 인덱스를 6초 간격으로 업데이트하여 다른 팁을 표시
-    const tipTimer = setInterval(() => {
-      setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
-    }, 6000); // 6초 간격
-
-    return () => {
-      clearInterval(tipTimer); // 팁 변경 인터벌 정리
-    };
-  }, [tips.length]);
 
   const languageExtensions = {
     java: java(),
@@ -64,91 +18,137 @@ function SubmittedCodes() {
     cpp: cpp(),
   };
 
+  // 제출된 코드 목록 로드
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userIdFromToken = decodedToken.userId;
+
+      if (userIdFromToken) {
+        fetch(`http://localhost:8080/api/code/submissions?userId=${userIdFromToken}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
+            return response.json();
+          })
+          .then((data) => setSubmittedCodes(data))
+          .catch((error) => console.error('Error:', error));
+      } else {
+        console.error('JWT 토큰에서 userId를 찾을 수 없습니다.');
+      }
+    } else {
+      console.error('로컬 스토리지에 토큰이 없습니다.');
+    }
+  }, []);
+
+  // 코드 선택 처리
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
-    const codeToDisplay = code.revisedCode || code.initialCode;
-    setEditedDetail(codeToDisplay);
+    setEditedDetail(code.revisedCode || code.initialCode);
     setLanguage(code.language || 'java');
   };
 
+  // 코드 수정
   const resubmitCode = async () => {
     if (!selectedCode) {
       alert('수정할 코드를 선택해 주세요.');
       return;
     }
 
-    setIsLoading(true); // 로딩 시작
+    // 수정된 코드 제출에 필요한 데이터 준비
+    const resubmissionData = new URLSearchParams();
+    resubmissionData.append('submissionId', selectedCode.id);
+    resubmissionData.append('revisedCode', editedDetail);
 
-    // 피드백에 값이 있으면 수정된 코드 대신 피드백으로 editedDetail을 업데이트
-    if (selectedCode.revisedFeedback) {
-      setEditedDetail(selectedCode.revisedFeedback);
+    // 로컬 스토리지에서 JWT 토큰 가져오기
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
     }
 
-    const submissionId = selectedCode.submissionId || selectedCode.id;
-    const resubmissionData = {
-      submissionId: submissionId,
-      revisedCode: editedDetail,
-    };
-
     try {
-      const response = await fetch('http://localhost:8080/api/code/submit/revised', {
-        method: 'PUT',
+      // API 요청: Authorization 헤더에 JWT 토큰 추가
+      const response = await fetch('http://localhost:8080/api/code/revise', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`, // Authorization 헤더 추가
         },
-        body: JSON.stringify(resubmissionData),
+        body: resubmissionData.toString(),
       });
 
-      if (!response.ok) throw new Error('수정된 코드 제출 실패');
+      if (!response.ok) {
+        throw new Error('수정된 코드 제출 실패');
+      }
 
-      const updatedSubmission = await response.json();
-      setSelectedCode(updatedSubmission); // 수정된 코드 데이터 반영
-      alert('수정된 코드가 성공적으로 제출되었습니다.');
+      // 수정된 코드 응답 받기
+      const updatedCode = await response.json();
+      setSelectedCode(updatedCode); // 수정된 코드 상태 업데이트
+
+      alert('수정된 코드가 제출되었습니다.');
     } catch (error) {
       console.error('Error:', error);
       alert('코드 제출 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false); // 로딩 종료
     }
   };
 
-  const calculateAverageScore = (feedback) => {
-    const scores = feedback.match(/:\s*([\d.]+)\/10/g);
-    if (!scores) return null;
 
-    const totalScore = scores.reduce((sum, scoreText) => {
-      const score = parseFloat(scoreText.match(/([\d.]+)\/10/)[1]);
-      return sum + score;
-    }, 0);
+  // Pylint 결과 포맷팅
+  const formatPylintOutput = (output) => {
+    if (!output) return 'Pylint 결과가 없습니다.';
 
-    return (totalScore / scores.length).toFixed(1);
+    // 불필요한 라인 제거: DeprecationWarning 및 ************* Module 관련 라인
+    const cleanedOutput = output
+      .split('\n')
+      .filter(
+        (line) =>
+          !line.includes('DeprecationWarning') &&
+          !line.startsWith('************* Module') &&
+          !line.includes('(pylint_stdout, _) = lint.py_run(file_path, return_std=True)')
+      );
+
+    // 파일 경로를 'py:{line}' 형태로 변경 및 메시지 변환
+    const formattedOutput = cleanedOutput
+      .map((line) => {
+        // 파일 경로 변환
+        let updatedLine = line.replace(/.*\\Temp\\[^\\]+\.py:(\d+):/, 'py:$1:');
+
+        // 포맷 변경: convention 메시지
+        updatedLine = updatedLine.replace(/convention \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
+        // 포맷 변경: warning 메시지
+        updatedLine = updatedLine.replace(/warning \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
+        // 포맷 변경: error 메시지
+        updatedLine = updatedLine.replace(/error \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
+        // 메시지와 설명을 분리
+        const match = updatedLine.match(/^(py:\d+: \([^)]*\))\s*(.*)/);
+        if (match) {
+          const message = match[1]; // py:와 괄호 부분
+          const description = match[2]; // 설명 부분
+          return `<span class="sc-highlight">${message}</span>\n<span class="sc-bold">${description}</span>\n`;
+        } else {
+          // 매칭이 안 될 경우 전체를 굵은 글씨로 처리
+          return `<span class="sc-bold">${updatedLine}</span>`;
+        }
+      })
+      .join('\n\n'); // 메시지 간 두 줄씩 띄움
+
+    return formattedOutput.trim();
   };
 
-  const formatFeedback = (feedback) => {
-    if (!feedback) return '아직 피드백이 없습니다.';
-
-    const formattedFeedback = feedback
-      .replace('###Instruction### 코드 스니펫이 명시한 항목의 원칙을 잘 따르고 있는지 판단하십시오, 평가 사항은 각 항목당 10점 만점으로 숫자와 함께 점수를 표기 하십시오.', '')
-      .replace('1. 가독성:', '\n1. 가독성:')
-      .replace('2. 간결함:', '\n2. 간결함:')
-      .replace('3. 명확한 의도:', '\n3. 명확한 의도:')
-      .replace('4. 중복 최소화:', '\n4. 중복 최소화:')
-      .replace('5. 적절한 주석:', '\n5. 적절한 주석:')
-      .replace('6. 작고 집중된 함수:', '\n6. 작고 집중된 함수:')
-      .replace('7. 일관성:', '\n7. 일관성:')
-      .replace('8. 적절한 오류 처리:', '\n8. 적절한 오류 처리:')
-      .replace('###결론###', '\n###결론###');
-
-    const averageScore = calculateAverageScore(formattedFeedback);
-    if (averageScore) selectedCode.initialScore = averageScore;
-
-    return formattedFeedback;
-  };
 
   return (
     <div className="sc-submitted-codes-page">
-      <div className={`sc-code-list ${isLoading ? 'scp-blur' : ''}`}>
+      {/* 제출 코드 목록 */}
+      <div className="sc-code-list">
         <h3>제출 코드 목록</h3>
         <ul>
           {submittedCodes.map((code, index) => (
@@ -159,6 +159,7 @@ function SubmittedCodes() {
         </ul>
       </div>
 
+      {/* 선택된 코드 세부 정보 */}
       <div className="sc-code-details">
         {selectedCode ? (
           <>
@@ -184,22 +185,25 @@ function SubmittedCodes() {
               height="400px"
             />
 
+            <div className="sc-feedback-font">
+              <h5>AI 피드백</h5>
+            </div>
+
             <div className="sc-feedback-section">
-              <h5>
-                {selectedCode.revisedCode
-                  ? 'AI 피드백 (채점 후 결과)'
-                  : 'AI 피드백'}
-              </h5>
-              <pre>
-                {selectedCode.revisedFeedback
-                  ? formatFeedback(selectedCode.revisedFeedback)
-                  : formatFeedback(selectedCode.feedback)}
-              </pre>
+              <pre
+                dangerouslySetInnerHTML={{
+                  __html: selectedCode.revisedPylintOutput
+                    ? formatPylintOutput(selectedCode.revisedPylintOutput)
+                    : formatPylintOutput(selectedCode.pylintOutput),
+                }}
+              />
             </div>
 
 
-            <p>초기 점수: {selectedCode.initialScore || 'N/A'}</p>
-            <p>수정 후 점수: {selectedCode.revisedCode ? selectedCode.initialScore : 'N/A'}</p>
+
+
+            <p>초기 점수: {selectedCode.initialScore}</p>
+            <p>수정 후 점수: {selectedCode.revisedScore}</p>
 
             <button onClick={resubmitCode}>수정된 코드 제출</button>
           </>
@@ -207,15 +211,6 @@ function SubmittedCodes() {
           <p>코드를 선택해 주세요.</p>
         )}
       </div>
-
-      {isLoading && (
-        <div className="scp-loading-overlay">
-          <div className="scp-loading-spinner"></div> {/* 로딩 애니메이션 */}
-          <div className="scp-tip-container">
-            <p>{tips[tipIndex]}</p> {/* 로딩 중 팁 표시 */}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
