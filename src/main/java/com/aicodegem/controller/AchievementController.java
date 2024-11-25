@@ -11,13 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 
-import java.util.List; //주석
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/achievements")
 public class AchievementController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AchievementController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AchievementController.class); // 로거 생성
 
     @Autowired
     private AchievementService achievementService;
@@ -25,13 +25,13 @@ public class AchievementController {
     @Autowired
     private UserAchievementService userAchievementService;
 
-    // **1. 모든 업적 조회 (Achievement 테이블)**
+    // 모든 업적 조회 (Achievement 테이블)
     @GetMapping
     public ResponseEntity<List<Achievement>> getAllAchievements() {
         logger.info("getAllAchievements 호출됨");
         List<Achievement> achievements = achievementService.getAllAchievements();
 
-        if (achievements.isEmpty()) {
+        if (achievements.isEmpty()) { // db에 업적목록을 가지고 있는지 확인 로그
             logger.warn("업적 목록이 비어있음");
         } else {
             logger.info("업적 조회 성공 - 업적 수: {}", achievements.size());
@@ -40,13 +40,13 @@ public class AchievementController {
         return ResponseEntity.ok(achievements);
     }
 
-    // **2. 사용자별 업적 조회 (UserAchievement 테이블)**
+    // 사용자별 업적 조회 (UserAchievement 테이블)
     @GetMapping("/{userId}")
-    public ResponseEntity<List<UserAchievement>> getUserAchievements(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<UserAchievement>> getUserAchievements(@PathVariable("userId") Long userId) { // userId를 경로로 가져오기
         logger.info("getUserAchievements 호출됨 - userId: {}", userId);
         List<UserAchievement> userAchievements = userAchievementService.getAchievementsByUserId(userId);
 
-        if (userAchievements.isEmpty()) {
+        if (userAchievements.isEmpty()) { // 사용자가 업적을 가지고 있는지 확인하는 로그
             logger.warn("사용자의 업적이 발견되지 않음 - userId: {}", userId);
         } else {
             logger.info("사용자 업적 조회 성공 - userId: {}, 업적 수: {}", userId, userAchievements.size());

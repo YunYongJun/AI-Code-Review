@@ -1,5 +1,7 @@
 package com.aicodegem.dto;
 
+
+@Getter
 public class CodeSubmissionRequest {
     private Long userId;
     private String code;
