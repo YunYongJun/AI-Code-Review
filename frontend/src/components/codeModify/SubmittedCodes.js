@@ -233,6 +233,15 @@ function SubmittedCodes() {
             />
 
             <div className="sc-feedback-section">
+              {aiFeedback && (
+                <div className="ai-feedback-section">
+                  <h5>AI 피드백 결과:</h5>
+                  <pre>{aiFeedback}</pre>
+                </div>
+              )}
+            </div>
+
+            <div className="sc-feedback-section">
               <h5>Pylint 결과: </h5>
               <pre
                 dangerouslySetInnerHTML={{
@@ -241,15 +250,6 @@ function SubmittedCodes() {
                     : formatPylintOutput(selectedCode.pylintOutput),
                 }}
               />
-            </div>
-
-            <div className="sc-feedback-section">
-              {aiFeedback && (
-                <div className="ai-feedback-section">
-                  <h5>AI 피드백 결과:</h5>
-                  <pre>{aiFeedback}</pre>
-                </div>
-              )}
             </div>
 
             {isLoadingFeedback && (
@@ -263,8 +263,12 @@ function SubmittedCodes() {
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
 
-            <button onClick={resubmitCode}>수정된 코드 제출</button>
-            <button onClick={analyzeFeedback}>AI 피드백 분석</button>
+            <button onClick={resubmitCode} className="sc-resubmit-button">
+              수정된 코드 제출
+            </button>
+            <button onClick={analyzeFeedback} className="sc-analyze-feedback-button">
+              AI 피드백 분석
+            </button>
           </>
         ) : (
           <p>코드를 선택해 주세요.</p>
