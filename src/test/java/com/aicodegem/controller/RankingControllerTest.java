@@ -65,7 +65,7 @@ public class RankingControllerTest {
         @WithMockUser(roles = "USER")
         public void testGetRanking() throws Exception {
                 Long userId = 1L;
-                Ranking ranking = new Ranking(1, null, 1, 100, null);
+                Ranking ranking = new Ranking(userId, null, 1, 100, null);
 
                 when(rankingService.getRankingByUserId(userId)).thenReturn(ranking);
 
@@ -102,7 +102,7 @@ public class RankingControllerTest {
 
                 // User 객체를 포함한 Ranking 객체 생성
                 Ranking ranking = new Ranking(null, user, 1, 100, null);
-                Ranking savedRanking = new Ranking(1, user, 1, 100, null);
+                Ranking savedRanking = new Ranking(null, user, 1, 100, null);
 
                 when(rankingService.saveRanking(any(Ranking.class))).thenReturn(savedRanking);
 
@@ -120,8 +120,8 @@ public class RankingControllerTest {
         @Test // 전체 사용자의 순위조회
         @WithMockUser(roles = "USER")
         public void testGetAllRankings() throws Exception {
-                Ranking ranking1 = new Ranking(1, null, 1, 100, null);
-                Ranking ranking2 = new Ranking(2, null, 2, 90, null);
+                Ranking ranking1 = new Ranking(null, null, 1, 100, null);
+                Ranking ranking2 = new Ranking(null, null, 2, 90, null);
 
                 when(rankingService.getAllRankings()).thenReturn(List.of(ranking1, ranking2));
 

@@ -15,7 +15,7 @@ public class Ranking {
 
     @Id // 기본 키를 나타내는 어노테이션
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 방식의 기본 키 생성 전략
-    private int id; // 기본 키 필드
+    private Long id; // 기본 키 필드
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false) // 외래 키 설정
@@ -38,7 +38,7 @@ public class Ranking {
     }
 
     // User 객체가 null일 수 있도록 생성자 수정
-    public Ranking(Integer id, User user, Integer userRank, Integer totalScore, LocalDate updateDate) {
+    public Ranking(Long id, User user, Integer userRank, Integer totalScore, LocalDate updateDate) {
         this.id = (id != null) ? id : 0; // 기본값 설정
         this.user = user; // user는 null일 수 있음, 필요 시 null 처리 추가
         this.userRank = (userRank != null) ? userRank : 0; // 기본값 설정

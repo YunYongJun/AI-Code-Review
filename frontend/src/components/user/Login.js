@@ -26,6 +26,8 @@ const Login = () => {
         body: JSON.stringify(formData),
       });
 
+      console.log("프론트에서의 데이터 : ", formData);
+
       if (!response.ok) {
         let errorMessage;
         try {

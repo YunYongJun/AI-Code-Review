@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;

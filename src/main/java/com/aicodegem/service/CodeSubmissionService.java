@@ -28,6 +28,8 @@ public class CodeSubmissionService {
     private AIAnalysisService aiAnalysisService;
     @Autowired
     private RankingService rankingService;
+    @Autowired
+    private AchievementService achievementService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -91,7 +93,7 @@ public class CodeSubmissionService {
         // 3. AI 분석 결과 처리
         JsonNode jsonResponse = objectMapper.readTree(aiResponse); // AI 응답을 JSON으로 변환
         String feedbackContent = jsonResponse.get("response").asText(); // 피드백 내용 추출
-        int score = 6000;
+        int score = 10;
         // int score = jsonResponse.path("score").asInt(); // 점수 추출
         logger.info("AI 분석 결과 - 피드백: {}, 점수: {}", feedbackContent, score); // AI 분석 결과 로그
 
@@ -107,6 +109,9 @@ public class CodeSubmissionService {
         // 6. Ranking의 totalScore 업데이트
         rankingService.updateTotalScore(userId, score); // RankingService를 호출하여 점수 업데이트
         logger.info("Ranking에 점수 업데이트 완료 - 점수: {}", score);
+
+        // 업적 할당
+        achievementService.assignAchievementsByTotalScore(userId);
 
         return codeRepository.save(submission); // 분석 결과 반영 후 업데이트된 코드 저장
 
@@ -147,6 +152,9 @@ public class CodeSubmissionService {
         // Ranking의 totalScore 업데이트
         rankingService.updateTotalScore(submission.getUserId(), revisedScore); // RankingService를 호출하여 점수 업데이트
         logger.info("Ranking에 점수 업데이트 완료 - 점수: {}", revisedScore);
+
+        // 업적 할당
+        achievementService.assignAchievementsByTotalScore(submission.getUserId());
 
         return codeRepository.save(submission);
     }

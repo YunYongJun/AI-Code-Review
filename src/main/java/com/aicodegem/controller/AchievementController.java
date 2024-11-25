@@ -1,7 +1,9 @@
 package com.aicodegem.controller;
 
 import com.aicodegem.model.Achievement;
+import com.aicodegem.model.UserAchievement;
 import com.aicodegem.service.AchievementService;
+import com.aicodegem.service.UserAchievementService;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,45 +13,55 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-// Achievement API를 제공하는 컨트롤러 클래스
 @RestController
-@RequestMapping("/api/achievements") // 기본 URL 매핑
+@RequestMapping("/api/achievements")
 public class AchievementController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AchievementController.class); // Logger 생성
+    private static final Logger logger = LoggerFactory.getLogger(AchievementController.class);
 
     @Autowired
-    private AchievementService achievementService; // AchievementService 의존성 주입
+    private AchievementService achievementService;
 
-    // 사용자 ID로 업적을 조회하는 GET 요청 처리
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Achievement>> getAchievements(@PathVariable("userId") Long userId) {
+    @Autowired
+    private UserAchievementService userAchievementService;
 
-        // 업적 조회 메서드 호출 시 사용자 ID를 로깅
-        logger.info("getAchievements 호출됨 - userId: {}", userId);
+    // **1. 모든 업적 조회 (Achievement 테이블)**
+    @GetMapping
+    public ResponseEntity<List<Achievement>> getAllAchievements() {
+        logger.info("getAllAchievements 호출됨");
+        List<Achievement> achievements = achievementService.getAllAchievements();
 
-        // 주어진 사용자 ID로 업적 조회
-        List<Achievement> achievements = achievementService.getAchievementsByUserId(userId);
-
-        // 업적이 발견되지 않은 경우 경고 로깅
         if (achievements.isEmpty()) {
-            logger.warn("업적이 발견되지 않음 - userId: {}", userId);
+            logger.warn("업적 목록이 비어있음");
         } else {
-            // 업적이 존재하는 경우 성공 로깅
-            logger.info("업적 조회 성공 - userId: {}, 업적 수: {}", userId, achievements.size());
+            logger.info("업적 조회 성공 - 업적 수: {}", achievements.size());
         }
 
-        return ResponseEntity.ok(achievements); // 조회된 업적 목록을 응답으로 반환
+        return ResponseEntity.ok(achievements);
     }
 
-    // 업적을 저장하는 POST 요청 처리
-    @PostMapping
-    public ResponseEntity<Achievement> createAchievement(@RequestBody Achievement achievement) {
+    // **2. 사용자별 업적 조회 (UserAchievement 테이블)**
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<UserAchievement>> getUserAchievements(@PathVariable("userId") Long userId) {
+        logger.info("getUserAchievements 호출됨 - userId: {}", userId);
+        List<UserAchievement> userAchievements = userAchievementService.getAchievementsByUserId(userId);
 
+        if (userAchievements.isEmpty()) {
+            logger.warn("사용자의 업적이 발견되지 않음 - userId: {}", userId);
+        } else {
+            logger.info("사용자 업적 조회 성공 - userId: {}, 업적 수: {}", userId, userAchievements.size());
+        }
+
+        return ResponseEntity.ok(userAchievements);
+    }
+
+    // **3. 새 업적 저장 (Achievement 테이블)**
+    @PostMapping("/achievement")
+    public ResponseEntity<Achievement> createAchievement(@RequestBody Achievement achievement) {
         // 업적 생성 요청 시 입력 데이터를 로깅
         logger.info("createAchievement 호출됨 - Achievement: {}", achievement);
 
-        // 업적 저장
+        // Achievement 저장
         Achievement savedAchievement = achievementService.saveAchievement(achievement);
 
         // 업적이 성공적으로 저장되었음을 로깅
