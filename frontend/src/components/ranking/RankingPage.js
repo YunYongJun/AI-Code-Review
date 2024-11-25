@@ -10,7 +10,7 @@ const RankingPage = () => {
     const fetchRankings = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/rankings');
-       
+
         if (!response.ok) {
           throw new Error('네트워크 응답이 좋지 않습니다.');
         }
@@ -38,14 +38,18 @@ const RankingPage = () => {
 
   // 점수에 따른 등급을 반환하는 함수
   const getRankLabel = (score) => {
-    if (score > 2000) {
-      return 'gold'; // 클래스 이름
+    if (score > 10000) {
+      return 'Diamond';
+    } else if (score > 5000) {
+      return 'Platinum';
+    } else if (score > 2000) {
+      return 'Gold';
     } else if (score > 1000) {
-      return 'silver'; // 클래스 이름
-    } else if (score > 500) {
-      return 'bronze'; // 클래스 이름
+      return 'Silver';
+    } else if (score > 100) {
+      return 'Bronze';
     }
-    return 'newbie'; // 클래스 이름
+    return 'newbie';
   };
 
   if (loading) {
@@ -63,10 +67,13 @@ const RankingPage = () => {
         <div className="ranking-description">
           <h3>점수에 따른 등급</h3>
           <ul>
-            <li>0: <span className="ranking-newbie">Newbie </span>
-              | 500: <span className="ranking-bronze">Bronze </span>
-              | 1000: <span className="ranking-silver">Silver </span>
-              | 2000: <span className="ranking-gold">Gold</span></li>
+            <li>0: <span className="newbie">Newbie </span>
+              || 100: <span className="Bronze">Bronze </span>
+              || 1000: <span className="Silver">Silver </span>
+              || 2000: <span className="Gold">Gold </span>
+              || 5000: <span className="Platinum">Platinum </span>
+              || 10000: <span className="Diamond">Diamond </span>
+            </li>
           </ul>
         </div>
         {/* Ranking Table */}

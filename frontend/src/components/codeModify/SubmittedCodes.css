@@ -216,13 +216,13 @@
 
 /* '수정된 코드 제출' 버튼 스타일 */
 .sc-resubmit-button {
-  background-color: #4CAF50;
+  background-color: #363f37 !important;
   /* 녹색 */
   color: white;
 }
 
 .sc-resubmit-button:hover {
-  background-color: #45a049;
+  background-color: #bcc4bc !important;
   /* 호버 시 어두운 녹색 */
   transform: translateY(-2px);
   /* 호버 시 살짝 위로 이동 */
@@ -230,13 +230,13 @@
 
 /* 'AI 피드백 분석' 버튼 스타일 */
 .sc-analyze-feedback-button {
-  background-color: #008CBA;
+  background-color: #363f37 !important;
   /* 파란색 */
   color: white;
 }
 
 .sc-analyze-feedback-button:hover {
-  background-color: #007bb5;
+  background-color: #bcc4bc !important;
   /* 호버 시 어두운 파란색 */
   transform: translateY(-2px);
   /* 호버 시 살짝 위로 이동 */
