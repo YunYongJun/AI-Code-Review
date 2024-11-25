@@ -125,6 +125,9 @@ function SubmittedCodes() {
         // 포맷 변경: warning 메시지
         updatedLine = updatedLine.replace(/warning \(([^,]+), ([^)]+)\)/, '($1, $2)');
 
+        // 포맷 변경: error 메시지
+        updatedLine = updatedLine.replace(/error \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
         // 메시지와 설명을 분리
         const match = updatedLine.match(/^(py:\d+: \([^)]*\))\s*(.*)/);
         if (match) {
