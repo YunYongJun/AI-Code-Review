@@ -10,4 +10,6 @@ public interface RankingService {
     Ranking saveRanking(Ranking ranking); // 순위 저장
 
     List<Ranking> getAllRankings(); // 모든 랭킹 정보 조회
+
+    void updateTotalScore(Long userId, int newScore);
 }

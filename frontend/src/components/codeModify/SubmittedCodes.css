@@ -1,7 +1,8 @@
 .sc-submitted-codes-page {
   display: flex;
+  flex-wrap: wrap;
   padding: 20px;
-  height: 100vh;
+  min-height: 90vh;
   background-color: #f5f5f5;
   font-family: 'Arial', sans-serif;
 }
@@ -18,12 +19,10 @@
   flex: 1;
   background-color: #ffffff;
   padding: 10px;
-  /* Reduced padding */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow-y: auto;
   max-width: 300px;
-  /* Optional: set a maximum width */
 }
 
 .sc-code-list h3 {
@@ -31,7 +30,6 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
-  /* Reduced margin */
 }
 
 .sc-code-list ul {
@@ -41,15 +39,11 @@
 
 .sc-code-list li {
   padding: 10px;
-  /* Reduced padding */
   margin-bottom: 5px;
-  /* Reduced margin */
   background-color: #f0f0f0;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s;
-  font-size: 1rem;
-  color: #333;
 }
 
 .sc-code-list li:hover {
@@ -63,6 +57,10 @@
   background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  width: calc(100% - 340px);
+  max-width: 2000px;
+  box-sizing: border-box;
+  max-height: 2000px;
 }
 
 .sc-code-details h4 {
@@ -105,5 +103,148 @@
 
   .sc-code-list {
     margin-bottom: 20px;
+    max-width: 100%;
   }
+
+  .sc-code-details {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.sc-feedback-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 500px;
+  overflow-y: auto;
+  max-width: 1500px;
+}
+
+.sc-feedback-section h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1abc9c;
+  margin-bottom: 10px;
+}
+
+.sc-feedback-section p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.sc-highlight {
+  color: #2c2929;
+  /* 강조 색상: 붉은색 */
+  background-color: #fce4e4;
+  /* 연한 배경색 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.sc-bold {
+  /* 굵은 글씨 */
+  color: #000000;
+  /* 기본 텍스트 색상 */
+}
+
+.sc-feedback-font {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1abc9c;
+}
+
+.sc-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 충분히 불투명하게 설정 */
+  z-index: 9999;
+  /* 다른 요소 위에 위치 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.sc-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sc-loading-tip {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #ffffff !important;
+}
+
+.sc-blur {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+
+/* 버튼 기본 스타일 */
+.sc-resubmit-button,
+.sc-analyze-feedback-button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* '수정된 코드 제출' 버튼 스타일 */
+.sc-resubmit-button {
+  background-color: #4CAF50;
+  /* 녹색 */
+  color: white;
+}
+
+.sc-resubmit-button:hover {
+  background-color: #45a049;
+  /* 호버 시 어두운 녹색 */
+  transform: translateY(-2px);
+  /* 호버 시 살짝 위로 이동 */
+}
+
+/* 'AI 피드백 분석' 버튼 스타일 */
+.sc-analyze-feedback-button {
+  background-color: #008CBA;
+  /* 파란색 */
+  color: white;
+}
+
+.sc-analyze-feedback-button:hover {
+  background-color: #007bb5;
+  /* 호버 시 어두운 파란색 */
+  transform: translateY(-2px);
+  /* 호버 시 살짝 위로 이동 */
+}
+
+/* 버튼 클릭 효과 */
+.sc-resubmit-button:active,
+.sc-analyze-feedback-button:active {
+  transform: translateY(2px);
+  /* 클릭 시 버튼이 살짝 눌리는 효과 */
 }

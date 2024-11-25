@@ -1,15 +1,16 @@
 package com.aicodegem.dto;
 
 public class CodeSubmissionRequest {
-    private String userId;
+    private Long userId;
     private String code;
+    private String title;
 
     // Getters and Setters
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -20,5 +21,12 @@ public class CodeSubmissionRequest {
     public void setCode(String code) {
         this.code = code;
     }
-    
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

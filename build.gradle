@@ -64,7 +64,16 @@ dependencies {
 
     // // JsonPath를 사용할 경우 필요한 의존성
     // testImplementation 'com.jayway.jsonpath:json-path'
+
+    // Log4j2 의존성추가
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
+
+    // 내가 테스트코드를 위해 추가한 의존성
+    testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
+
 
 tasks.named('test') {
     useJUnitPlatform() // JUnit 플랫폼 사용
@@ -77,6 +86,10 @@ tasks.named('bootRun') {
 
 tasks.named('bootJar') {
     mainClass.set('com.aicodegem.AiCodeGemApplication') // bootJar 메인 클래스 설정
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
 }
 
 // 소스셋 지정

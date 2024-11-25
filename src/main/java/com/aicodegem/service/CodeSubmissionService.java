@@ -1,59 +1,81 @@
 package com.aicodegem.service;
 
-import com.aicodegem.dto.CodeSubmissionRequest;
 import com.aicodegem.model.CodeSubmission;
 import com.aicodegem.repository.CodeRepository;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CodeSubmissionService {
+
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(CodeSubmissionService.class);
 
     @Autowired
     private CodeRepository codeRepository;
 
     @Autowired
-    private AIAnalysisService aiAnalysisService;
+    private PylintService pylintService;
 
-    // 최초 코드 제출 처리
-    public CodeSubmission submitCode(CodeSubmissionRequest request) {
-        String code = request.getCode();
-        int score = aiAnalysisService.analyzeCode(code);
-        String feedback = aiAnalysisService.generateFeedback(code);
+    @Autowired
+    private RankingService rankingService;
 
-        // 제출된 코드와 결과를 저장
-        CodeSubmission submission = new CodeSubmission(request.getUserId(), code, feedback, score);
+    @Autowired
+    private AchievementService achievementService;
+
+    public CodeSubmission submitCode(Long userId, String code, String title) throws IOException, InterruptedException {
+        PylintService.PylintResult pylintResult = pylintService.runPylint(code);
+
+        // pylint 점수로 초기 점수 설정
+        int initialScore = (int) pylintResult.getScore();
+
+        CodeSubmission submission = new CodeSubmission(userId, code, title);
+        submission.setPylintOutput(pylintResult.getOutput());
+        submission.setInitialScore(initialScore);
+        submission.setSubmissionDate(LocalDate.now());
+
+        // 랭킹 점수 업데이트 (pylint 점수를 사용)
+        rankingService.updateTotalScore(userId, initialScore);
+
+        // 업적 할당
+        achievementService.assignAchievementsByTotalScore(userId);
+
         return codeRepository.save(submission);
     }
 
-    // 수정된 코드 제출 처리
-    public CodeSubmission resubmitCode(String userId, String revisedCode) {
-        CodeSubmission submission = codeRepository.findByUserId(userId);
-        if (submission == null) {
-            throw new IllegalArgumentException("해당 사용자 ID에 대한 제출 코드가 없습니다.");
+    public CodeSubmission reviseCode(String submissionId, String revisedCode) throws IOException, InterruptedException {
+        Optional<CodeSubmission> optionalSubmission = codeRepository.findById(submissionId);
+
+        if (optionalSubmission.isEmpty()) {
+            throw new RuntimeException("해당 제출물이 존재하지 않습니다.");
         }
 
-        int revisedScore = aiAnalysisService.analyzeCode(revisedCode);
-        String revisedFeedback = aiAnalysisService.generateFeedback(revisedCode);
+        CodeSubmission submission = optionalSubmission.get();
+        PylintService.PylintResult pylintResult = pylintService.runPylint(revisedCode);
 
-        // 기존 코드 제출에 수정된 결과 반영
+        int revisedScore = (int) pylintResult.getScore();
+
         submission.setRevisedCode(revisedCode);
+        submission.setRevisedPylintOutput(pylintResult.getOutput());
         submission.setRevisedScore(revisedScore);
-        submission.setFeedback(revisedFeedback);
+        submission.setFeedbackDate(LocalDate.now());
+
+        // 수정된 점수로 랭킹 점수 업데이트
+        rankingService.updateTotalScore(submission.getUserId(), revisedScore);
+
+        // 업적 할당
+        achievementService.assignAchievementsByTotalScore(submission.getUserId());
 
         return codeRepository.save(submission);
     }
 
-    // 특정 사용자 ID의 모든 제출 기록 조회
-    public List<CodeSubmission> getAllSubmissionsByUserId(String userId) {
+    // 사용자 제출물 조회
+    public List<CodeSubmission> getUserSubmissions(Long userId) {
         return codeRepository.findAllByUserId(userId);
-    }
-
-    // 특정 submissionId로 제출 코드 조회
-    public CodeSubmission getSubmissionById(String submissionId) {
-        return codeRepository.findById(submissionId).orElse(null);
     }
 }

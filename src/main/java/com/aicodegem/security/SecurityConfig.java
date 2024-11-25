@@ -50,9 +50,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/signup", "/api/auth/login") // 회원가입, 로그인 경로 허용
                         .permitAll()
-                        .requestMatchers("/api/rankings", "/api/**")
+                        .requestMatchers("/api/rankings", "/api/code/submissions")
                         .permitAll() // 모든 사용자 접근 허용
-                        .requestMatchers("/api/code/submit", "/api/code/resubmit").authenticated() // 코드 제출 경로 인증 필요
+                        .requestMatchers("/api/code/submit", "/api/code/resubmit", "/api/code/revise").authenticated() // 코드
                         .anyRequest().authenticated() // 나머지 경로는 인증 필요
                 )
                 .sessionManagement(session -> session
