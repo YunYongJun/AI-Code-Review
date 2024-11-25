@@ -150,3 +150,24 @@
   color: #555;
   line-height: 1.5;
 }
+
+.sc-highlight {
+  color: #2c2929;
+  /* 강조 색상: 붉은색 */
+  background-color: #fce4e4;
+  /* 연한 배경색 */
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.sc-bold {
+  /* 굵은 글씨 */
+  color: #000000;
+  /* 기본 텍스트 색상 */
+}
+
+.sc-feedback-font {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1abc9c;
+}

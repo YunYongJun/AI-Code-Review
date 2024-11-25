@@ -99,12 +99,6 @@ function SubmittedCodes() {
   };
 
 
-  // AI 피드백 포맷팅
-  const formatFeedback = (feedback) => {
-    if (!feedback) return '아직 피드백이 없습니다.';
-    return feedback.replace(/###결론###/, '\n###결론###');
-  };
-
   // Pylint 결과 포맷팅
   const formatPylintOutput = (output) => {
     if (!output) return 'Pylint 결과가 없습니다.';
@@ -119,13 +113,34 @@ function SubmittedCodes() {
           !line.includes('(pylint_stdout, _) = lint.py_run(file_path, return_std=True)')
       );
 
-    // 파일 경로를 'py:{line}' 형태로 변경
+    // 파일 경로를 'py:{line}' 형태로 변경 및 메시지 변환
     const formattedOutput = cleanedOutput
-      .map((line) => line.replace(/.*\\Temp\\[^\\]+\.py:(\d+):/, 'py:$1:'))
-      .join('\n');
+      .map((line) => {
+        // 파일 경로 변환
+        let updatedLine = line.replace(/.*\\Temp\\[^\\]+\.py:(\d+):/, 'py:$1:');
+
+        // 포맷 변경: convention 메시지
+        updatedLine = updatedLine.replace(/convention \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
+        // 포맷 변경: warning 메시지
+        updatedLine = updatedLine.replace(/warning \(([^,]+), ([^)]+)\)/, '($1, $2)');
+
+        // 메시지와 설명을 분리
+        const match = updatedLine.match(/^(py:\d+: \([^)]*\))\s*(.*)/);
+        if (match) {
+          const message = match[1]; // py:와 괄호 부분
+          const description = match[2]; // 설명 부분
+          return `<span class="sc-highlight">${message}</span>\n<span class="sc-bold">${description}</span>\n`;
+        } else {
+          // 매칭이 안 될 경우 전체를 굵은 글씨로 처리
+          return `<span class="sc-bold">${updatedLine}</span>`;
+        }
+      })
+      .join('\n\n'); // 메시지 간 두 줄씩 띄움
 
     return formattedOutput.trim();
   };
+
 
   return (
     <div className="sc-submitted-codes-page">
@@ -167,15 +182,20 @@ function SubmittedCodes() {
               height="400px"
             />
 
-            <div className="sc-feedback-section">
+            <div className="sc-feedback-font">
               <h5>AI 피드백</h5>
-              <pre>
-                {selectedCode.revisedPylintOutput
-                  ? formatPylintOutput(selectedCode.revisedPylintOutput)
-                  : formatPylintOutput(selectedCode.pylintOutput)}
-              </pre>
-              {/* <pre>{formatFeedback(selectedCode.feedback)}</pre> */}
             </div>
+
+            <div className="sc-feedback-section">
+              <pre
+                dangerouslySetInnerHTML={{
+                  __html: selectedCode.revisedPylintOutput
+                    ? formatPylintOutput(selectedCode.revisedPylintOutput)
+                    : formatPylintOutput(selectedCode.pylintOutput),
+                }}
+              />
+            </div>
+
 
 
 
