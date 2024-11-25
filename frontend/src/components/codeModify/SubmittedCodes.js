@@ -169,17 +169,15 @@ function SubmittedCodes() {
 
             <div className="sc-feedback-section">
               <h5>AI 피드백</h5>
-              <pre>{formatFeedback(selectedCode.feedback)}</pre>
-            </div>
-
-            <div className="sc-pylint-section">
-              <h5>Pylint 결과</h5>
               <pre>
                 {selectedCode.revisedPylintOutput
                   ? formatPylintOutput(selectedCode.revisedPylintOutput)
                   : formatPylintOutput(selectedCode.pylintOutput)}
               </pre>
+              {/* <pre>{formatFeedback(selectedCode.feedback)}</pre> */}
             </div>
+
+
 
             <p>초기 점수: {selectedCode.initialScore}</p>
             <p>수정 후 점수: {selectedCode.revisedScore}</p>
