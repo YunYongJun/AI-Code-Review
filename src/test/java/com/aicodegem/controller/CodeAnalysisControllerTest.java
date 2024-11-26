@@ -1,33 +1,33 @@
 package com.aicodegem.controller;
 
-import com.aicodegem.model.CodeSubmission;
-import com.aicodegem.repository.CodeRepository;
-import com.aicodegem.security.JwtUtil;
-import com.aicodegem.service.AchievementService;
-import com.aicodegem.service.CodeSubmissionService;
-import com.aicodegem.service.PylintService;
-import com.aicodegem.service.RankingService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
-import java.util.List;
+import com.aicodegem.model.CodeSubmission;
+import com.aicodegem.security.JwtUtil;
+import com.aicodegem.service.AchievementService;
+import com.aicodegem.service.CodeSubmissionService;
+import com.aicodegem.service.RankingService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(CodeAnalysisController.class)
+@SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class CodeAnalysisControllerTest {
 
@@ -44,12 +44,6 @@ class CodeAnalysisControllerTest {
         private AchievementService achievementService;
 
         @MockBean
-        private CodeRepository codeRepository;
-
-        @MockBean
-        private PylintService pylintService;
-
-        @MockBean
         private JwtUtil jwtUtil;
 
         @Autowired
@@ -64,7 +58,7 @@ class CodeAnalysisControllerTest {
                 mockSubmission.setInitialScore(85);
         }
 
-        @Test
+        @Test // 코드 제출 테스트
         void testSubmitCode() throws Exception {
                 Mockito.when(codeSubmissionService.submitCode(anyLong(), anyString(), anyString()))
                                 .thenReturn(mockSubmission);
@@ -81,7 +75,7 @@ class CodeAnalysisControllerTest {
                                 .andExpect(jsonPath("$.initialScore").value(85));
         }
 
-        @Test
+        @Test // 코드 수정 테스트
         void testReviseCode() throws Exception {
                 mockSubmission.setRevisedCode("revised code");
                 mockSubmission.setRevisedScore(90);
@@ -98,7 +92,7 @@ class CodeAnalysisControllerTest {
                                 .andExpect(jsonPath("$.revisedScore").value(90));
         }
 
-        @Test
+        @Test // 사용자의 모든 제출물 조회
         void testGetUserSubmissions() throws Exception {
                 List<CodeSubmission> submissions = Collections.singletonList(mockSubmission);
                 Mockito.when(codeSubmissionService.getUserSubmissions(anyLong()))
@@ -113,7 +107,7 @@ class CodeAnalysisControllerTest {
                                 .andExpect(jsonPath("$[0].title").value("Test Title"));
         }
 
-        @Test
+        @Test // 사용자의 제출물이 없을 경우 테스트
         void testGetUserSubmissions_NoContent() throws Exception {
                 Mockito.when(codeSubmissionService.getUserSubmissions(anyLong()))
                                 .thenReturn(Collections.emptyList());

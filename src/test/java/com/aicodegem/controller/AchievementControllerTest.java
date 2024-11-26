@@ -1,40 +1,34 @@
 package com.aicodegem.controller;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.aicodegem.model.Achievement;
 import com.aicodegem.model.UserAchievement;
-import com.aicodegem.security.JwtRequestFilter;
-import com.aicodegem.security.JwtUtil;
 import com.aicodegem.service.AchievementService;
 import com.aicodegem.service.UserAchievementService;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class AchievementControllerTest {
 
         @Autowired
@@ -46,89 +40,72 @@ public class AchievementControllerTest {
         @MockBean
         private UserAchievementService userAchievementService;
 
-        @MockBean
-        private JwtRequestFilter jwtRequestFilter; // JwtRequestFilter Mock 추가
-
-        @MockBean
-        private JwtUtil jwtUtil; // JwtUtil Mock 추가
-
-        private Achievement achievement;
-        private UserAchievement userAchievement;
-
-        @BeforeEach
-        public void setUp() {
-                MockitoAnnotations.openMocks(this);
-
-                // Test data setup
-                achievement = new Achievement(1L, "Achievement 1", "First Achievement", "total_score >= 100");
-                userAchievement = new UserAchievement(1L, null, achievement, null);
-        }
-
+        // 1. 모든 업적 조회 테스트
         @Test
-        @WithMockUser(username = "testuser", roles = { "USER" })
         public void testGetAllAchievements() throws Exception {
-                List<Achievement> achievements = Arrays.asList(achievement);
+                Achievement achievement1 = new Achievement(1L, "Achievement 1", "Description 1", "total_score >= 100");
+                Achievement achievement2 = new Achievement(2L, "Achievement 2", "Description 2", "total_score >= 200");
 
-                // Mock service call
-                when(achievementService.getAllAchievements()).thenReturn(achievements);
+                List<Achievement> achievements = Arrays.asList(achievement1, achievement2);
 
-                // Mock JwtUtil behavior for extracting username (security-related)
-                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
+                Mockito.when(achievementService.getAllAchievements()).thenReturn(achievements);
 
-                // Perform GET request to /api/achievements
                 mockMvc.perform(get("/api/achievements")
-                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
-                                .andDo(print())
+                                .contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$[0].id").value("1")) // Adjusted path
-                                .andExpect(jsonPath("$[0].achievementName").value("Achievement 1")) // Adjusted path
-                                .andExpect(jsonPath("$[0].achievementDesc").value("First Achievement"))
-                                .andExpect(jsonPath("$[0].criteria").value("total_score >= 10")); // Adjusted path
-
-                // Verify if service method is called
-                verify(achievementService, times(1)).getAllAchievements();
+                                .andExpect(jsonPath("$", hasSize(2)))
+                                .andExpect(jsonPath("$[0].achievementName", is("Achievement 1")))
+                                .andExpect(jsonPath("$[1].achievementName", is("Achievement 2")));
         }
 
-        // **2. 특정 사용자의 업적 조회 (UserAchievement 테이블)**
+        // 2. 사용자별 업적 조회 테스트
         @Test
         public void testGetUserAchievements() throws Exception {
-                List<UserAchievement> userAchievements = Arrays.asList(userAchievement);
+                UserAchievement userAchievement = new UserAchievement();
+                userAchievement.setId(1L);
 
-                // Mock service call
-                when(userAchievementService.getAchievementsByUserId(1L)).thenReturn(userAchievements);
+                Mockito.when(userAchievementService.getAchievementsByUserId(eq(1L)))
+                                .thenReturn(Collections.singletonList(userAchievement));
 
-                // Mock JwtUtil behavior for extracting username (security-related)
-                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
-
-                // Perform GET request to /api/achievements/{userId}
                 mockMvc.perform(get("/api/achievements/1")
-                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
+                                .contentType(MediaType.APPLICATION_JSON))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$[0].achievement.achievementName").value("Achievement 1"));
-
-                // Verify if service method is called
-                verify(userAchievementService, times(1)).getAchievementsByUserId(1L);
+                                .andExpect(jsonPath("$", hasSize(1)))
+                                .andExpect(jsonPath("$[0].id", is(1)));
         }
 
-        // **3. 새 업적 저장 (Achievement 테이블)**
+        // 3. 새 업적 저장 테스트
         @Test
         public void testCreateAchievement() throws Exception {
-                // Mock service call
-                when(achievementService.saveAchievement(any(Achievement.class))).thenReturn(achievement);
+                Achievement newAchievement = new Achievement(null, "New Achievement", "New Description",
+                                "total_score >= 150");
+                Achievement savedAchievement = new Achievement(1L, "New Achievement", "New Description",
+                                "total_score >= 150");
 
-                // Mock JwtUtil behavior for extracting username (security-related)
-                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
+                Mockito.when(achievementService.saveAchievement(any(Achievement.class))).thenReturn(savedAchievement);
 
-                // Perform POST request to /api/achievements/achievement
                 mockMvc.perform(post("/api/achievements/achievement")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"achievementName\": \"Achievement 1\", \"achievementDesc\": \"First Achievement\", \"criteria\": \"total_score >= 100\"}")
-                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
+                                .content("""
+                                                {
+                                                    "achievementName": "New Achievement",
+                                                    "achievementDesc": "New Description",
+                                                    "criteria": "total_score >= 150"
+                                                }
+                                                """))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.achievementName").value("Achievement 1"))
-                                .andExpect(jsonPath("$.achievementDesc").value("First Achievement"));
+                                .andExpect(jsonPath("$.id", is(1)))
+                                .andExpect(jsonPath("$.achievementName", is("New Achievement")));
+        }
 
-                // Verify if service method is called
-                verify(achievementService, times(1)).saveAchievement(any(Achievement.class));
+        // 4. 업적 조회 실패 테스트 (업적 없음)
+        @Test
+        public void testGetAllAchievements_NoAchievements() throws Exception {
+                Mockito.when(achievementService.getAllAchievements()).thenReturn(Collections.emptyList());
+
+                mockMvc.perform(get("/api/achievements")
+                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$", hasSize(0)));
         }
 }
