@@ -35,28 +35,37 @@
   background-color: #f1f1f1;
 }
 
-.ranking-gold {
+.Diamond {
+  color: rgb(46, 132, 230);
+  font-weight: bold;
+}
+
+.Platinum {
+  color: rgb(21, 214, 134);
+  font-weight: bold;
+}
+
+.Gold {
   color: rgb(209, 209, 78);
   /* Gold: 노란색 */
   font-weight: bold;
 }
 
-.ranking-silver {
+.Silver {
   color: gray;
   /* Silver: 회색 */
   font-weight: bold;
 }
 
-.ranking-bronze {
+.Bronze {
   color: brown;
   /* Bronze: 갈색 */
   font-weight: bold;
 }
 
-.ranking-newbie {
+.newbie {
   color: black;
   /* Newbie: 검은색 */
-  font-weight: bold;
 }
 
 .ranking-description {

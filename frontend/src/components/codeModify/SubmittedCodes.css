@@ -157,3 +157,94 @@
   font-weight: bold;
   color: #1abc9c;
 }
+
+.sc-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 충분히 불투명하게 설정 */
+  z-index: 9999;
+  /* 다른 요소 위에 위치 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.sc-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sc-loading-tip {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #ffffff !important;
+}
+
+.sc-blur {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+
+/* 버튼 기본 스타일 */
+.sc-resubmit-button,
+.sc-analyze-feedback-button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* '수정된 코드 제출' 버튼 스타일 */
+.sc-resubmit-button {
+  background-color: #363f37 !important;
+  /* 녹색 */
+  color: white;
+}
+
+.sc-resubmit-button:hover {
+  background-color: #bcc4bc !important;
+  /* 호버 시 어두운 녹색 */
+  transform: translateY(-2px);
+  /* 호버 시 살짝 위로 이동 */
+}
+
+/* 'AI 피드백 분석' 버튼 스타일 */
+.sc-analyze-feedback-button {
+  background-color: #363f37 !important;
+  /* 파란색 */
+  color: white;
+}
+
+.sc-analyze-feedback-button:hover {
+  background-color: #bcc4bc !important;
+  /* 호버 시 어두운 파란색 */
+  transform: translateY(-2px);
+  /* 호버 시 살짝 위로 이동 */
+}
+
+/* 버튼 클릭 효과 */
+.sc-resubmit-button:active,
+.sc-analyze-feedback-button:active {
+  transform: translateY(2px);
+  /* 클릭 시 버튼이 살짝 눌리는 효과 */
+}
