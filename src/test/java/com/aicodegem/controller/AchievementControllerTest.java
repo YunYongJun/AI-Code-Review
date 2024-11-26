@@ -1,136 +1,134 @@
-// package com.aicodegem.controller;
+package com.aicodegem.controller;
 
-// import static org.mockito.ArgumentMatchers.any;
-// import static org.mockito.Mockito.when;
-// import static
-// org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-// import static
-// org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-// import static
-// org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-// import static
-// org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// import java.time.LocalDate;
-// import java.util.List;
+import java.util.Arrays;
+import java.util.List;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import
-// org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.boot.test.mock.mockito.MockBean;
-// import org.springframework.http.MediaType;
-// import org.springframework.security.core.userdetails.User;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.test.context.support.WithMockUser;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.ResultActions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-// import com.aicodegem.model.Achievement;
-// import com.aicodegem.model.UserAchievement;
-// import com.aicodegem.security.JwtUtil;
-// import com.aicodegem.service.AchievementService;
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.aicodegem.model.Achievement;
+import com.aicodegem.model.UserAchievement;
+import com.aicodegem.security.JwtRequestFilter;
+import com.aicodegem.security.JwtUtil;
+import com.aicodegem.service.AchievementService;
+import com.aicodegem.service.UserAchievementService;
 
-// @SpringBootTest
-// @AutoConfigureMockMvc
-// public class AchievementControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+public class AchievementControllerTest {
 
-// @Autowired
-// private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-// @MockBean
-// private AchievementService achievementService;
+        @MockBean
+        private AchievementService achievementService;
 
-// @MockBean
-// private JwtUtil jwtUtil;
+        @MockBean
+        private UserAchievementService userAchievementService;
 
-// private String jwtToken;
+        @MockBean
+        private JwtRequestFilter jwtRequestFilter; // JwtRequestFilter Mock 추가
 
-// private final ObjectMapper objectMapper = new
-// ObjectMapper().registerModule(new JavaTimeModule());
+        @MockBean
+        private JwtUtil jwtUtil; // JwtUtil Mock 추가
 
-// @BeforeEach
-// public void setUp() {
-// // JWT 토큰을 생성하기 위해 가짜 UserDetails 생성
-// UserDetails mockUserDetails = User.withUsername("usertest")
-// .password("password")
-// .roles("USER")
-// .build();
+        private Achievement achievement;
+        private UserAchievement userAchievement;
 
-// // JWT 토큰 생성
-// jwtToken = jwtUtil.generateToken(mockUserDetails, "USER", "usertest");
+        @BeforeEach
+        public void setUp() {
+                MockitoAnnotations.openMocks(this);
 
-// // JwtUtil이 UserDetails를 반환하도록 설정
-// when(jwtUtil.validateToken(any(String.class),
-// any(UserDetails.class))).thenReturn(true);
-// when(jwtUtil.extractUsername(any(String.class))).thenReturn("usertest");
-// }
+                // Test data setup
+                achievement = new Achievement(1L, "Achievement 1", "First Achievement", "total_score >= 100");
+                userAchievement = new UserAchievement(1L, null, achievement, null);
+        }
 
-// @Test // 사용자 업적 조회
-// @WithMockUser(roles = "USER")
-// public void testGetAchievements() throws Exception {
-// // Achievement 객체 추가
-// Achievement achievement = new Achievement(1L, "First Achievement", "This is a
-// test achievement",
-// "Test criteria");
+        @Test
+        @WithMockUser(username = "testuser", roles = { "USER" })
+        public void testGetAllAchievements() throws Exception {
+                List<Achievement> achievements = Arrays.asList(achievement);
 
-// // UserAchievement 객체 추가
-// UserAchievement userAchievement = new UserAchievement(1L, null, achievement,
-// LocalDate.now());
+                // Mock service call
+                when(achievementService.getAllAchievements()).thenReturn(achievements);
 
-// // getAchievementsByUserId는 이제 UserAchievement 객체 목록을 반환하므로 이를 조정
-// when(achievementService.getAchievementsByUserId(1L))
-// .thenReturn(List.of(userAchievement));
+                // Mock JwtUtil behavior for extracting username (security-related)
+                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
 
-// // 테스트 요청
-// ResultActions resultActions = mockMvc.perform(get("/api/achievements/1")
-// .header("Authorization", "Bearer " + jwtToken) // JWT 토큰을 헤더에 추가
-// .contentType(MediaType.APPLICATION_JSON));
+                // Perform GET request to /api/achievements
+                mockMvc.perform(get("/api/achievements")
+                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$[0].id").value("1")) // Adjusted path
+                                .andExpect(jsonPath("$[0].achievementName").value("Achievement 1")) // Adjusted path
+                                .andExpect(jsonPath("$[0].achievementDesc").value("First Achievement"))
+                                .andExpect(jsonPath("$[0].criteria").value("total_score >= 10")); // Adjusted path
 
-// resultActions.andExpect(status().isOk())
-// .andExpect(jsonPath("$[0].achievement.id").value(achievement.getId()))
-// .andExpect(jsonPath("$[0].achievement.achievementName")
-// .value(achievement.getAchievementName()));
-// }
+                // Verify if service method is called
+                verify(achievementService, times(1)).getAllAchievements();
+        }
 
-// @Test // 사용자 업적 저장
-// @WithMockUser(roles = "USER")
-// public void testCreateUserAchievement() throws Exception {
-// // Achievement 객체 추가
-// Achievement achievement = new Achievement(null, "New Achievement",
-// "Achievement Description",
-// "New criteria");
+        // **2. 특정 사용자의 업적 조회 (UserAchievement 테이블)**
+        @Test
+        public void testGetUserAchievements() throws Exception {
+                List<UserAchievement> userAchievements = Arrays.asList(userAchievement);
 
-// // UserAchievement 객체 추가
-// UserAchievement userAchievement = new UserAchievement(null, new User(1L),
-// achievement, LocalDate.now());
+                // Mock service call
+                when(userAchievementService.getAchievementsByUserId(1L)).thenReturn(userAchievements);
 
-// // 업적 저장이 완료된 후 반환될 UserAchievement 객체 생성
-// // UserAchievement savedUserAchievement = new UserAchievement(1L, new
-// User(1L),
-// // achievement,
-// // LocalDate.now());
+                // Mock JwtUtil behavior for extracting username (security-related)
+                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
 
-// UserAchievement savedUserAchievement = new UserAchievement(null, new
-// User(2L), achievement,
-// LocalDate.now());
+                // Perform GET request to /api/achievements/{userId}
+                mockMvc.perform(get("/api/achievements/1")
+                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$[0].achievement.achievementName").value("Achievement 1"));
 
-// // saveAchievement 메소드 사용
-// when(achievementService.saveAchievement(any(UserAchievement.class))).thenReturn(savedUserAchievement);
+                // Verify if service method is called
+                verify(userAchievementService, times(1)).getAchievementsByUserId(1L);
+        }
 
-// // 테스트 요청
-// ResultActions resultActions = mockMvc.perform(post("/api/achievements")
-// .header("Authorization", "Bearer " + jwtToken) // JWT 토큰을 헤더에 추가
-// .content(objectMapper.writeValueAsString(userAchievement))
-// .contentType(MediaType.APPLICATION_JSON));
+        // **3. 새 업적 저장 (Achievement 테이블)**
+        @Test
+        public void testCreateAchievement() throws Exception {
+                // Mock service call
+                when(achievementService.saveAchievement(any(Achievement.class))).thenReturn(achievement);
 
-// resultActions.andExpect(status().isOk())
-// .andExpect(jsonPath("$.id").value(savedUserAchievement.getId()))
-// .andExpect(jsonPath("$.achievement.achievementName")
-// .value(savedUserAchievement.getAchievement().getAchievementName()));
-// }
-// }
+                // Mock JwtUtil behavior for extracting username (security-related)
+                when(jwtUtil.extractUsername(anyString())).thenReturn("testuser");
+
+                // Perform POST request to /api/achievements/achievement
+                mockMvc.perform(post("/api/achievements/achievement")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"achievementName\": \"Achievement 1\", \"achievementDesc\": \"First Achievement\", \"criteria\": \"total_score >= 100\"}")
+                                .header("Authorization", "Bearer testToken")) // JWT 토큰을 Authorization 헤더에 추가
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.achievementName").value("Achievement 1"))
+                                .andExpect(jsonPath("$.achievementDesc").value("First Achievement"));
+
+                // Verify if service method is called
+                verify(achievementService, times(1)).saveAchievement(any(Achievement.class));
+        }
+}
