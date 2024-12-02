@@ -1,10 +1,11 @@
+/* 업적 페이지의 기본 스타일 */
 .achievement-page {
   font-family: Arial, sans-serif;
   margin: 20px;
   background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
 }
 
-/* Achievement Table */
+/* 업적 내용을 표시하는 테이블의 스타일 */
 .achievement-table {
   margin-top: 20px;
   background-color: white;
@@ -35,6 +36,7 @@
   background-color: #f1f1f1;
 }
 
+/* 업적 설명 텍스트와 항목 스타일 */
 .achievement-description {
   margin-bottom: 20px;
   background-color: #f9f9f9;

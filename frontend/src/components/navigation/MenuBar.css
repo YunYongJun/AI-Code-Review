@@ -1,57 +1,56 @@
+/* 메뉴바 전체 스타일 */
 .menuBar-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 30px;
-  /* 전체 메뉴바 패딩을 더 키움 */
   background-color: white;
   border-bottom: 2px solid #ddd;
   color: #333;
   font-family: 'Noto Sans KR', sans-serif;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   font-weight: bold;
-
-
-  /* 아래쪽 그림자 추가 */
 }
 
+/* 메뉴바 아이콘 스타일 */
 .menuBar-icon {
   margin-right: 8px;
-  /* 아이콘과 텍스트 사이의 간격 설정 */
 }
 
+/* 로고 컨테이너 스타일 */
 .menuBar-logo {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
+/* 로고 링크 스타일 */
 .menuBar-logo-link {
   font-size: 22px;
-  /* 로고 글자 크기 확대 */
   font-weight: bold;
   color: #333;
   text-decoration: none;
   transition: color 0.3s ease;
-  /* 색상 전환 애니메이션 */
 }
 
+/* 로고 링크 마우스 오버 스타일 */
 .menuBar-logo-link:hover {
   color: #1abc9c;
-  /* 로고 호버 시 강조 색상 */
 }
 
+/* 로고 서브텍스트 스타일 */
 .menuBar-logo-subtext {
   font-size: 12px;
   color: #998e8e;
   font-weight: bold;
-  /* 글씨체를 굵게 만듦 */
 }
 
+/* 로고 강조 텍스트 스타일 */
 .menuBar-logo-highlight {
   color: #1abc9c;
 }
 
+/* 인증 관련 버튼 스타일 */
 .menuBar-item-auth {
   color: #333;
   text-decoration: none;
@@ -61,22 +60,21 @@
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-weight: bold;
-
-  /* 아래쪽 그림자 추가 */
 }
 
+/* 인증 버튼 호버 효과 */
 .menuBar-item-auth:hover {
   background-color: #1abc9c;
   color: #fff;
 }
 
-
+/* 메뉴 아이템 컨테이너 */
 .menuBar-items {
   display: flex;
   gap: 35px;
-  /* 메뉴 아이템 간 간격을 더 넓게 설정 */
 }
 
+/* 개별 메뉴 아이템 스타일 */
 .menuBar-item {
   color: #333;
   text-decoration: none;
@@ -87,36 +85,35 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* 메뉴 아이템 호버 효과 */
 .menuBar-item:hover {
   color: #fff;
   background-color: #1abc9c;
 }
 
-/* 선택된 메뉴에 적용할 스타일 */
+/* 활성화된 메뉴 스타일 */
 .menuBar-item-active {
   color: #1abc9c;
-  /* 선택된 메뉴의 글자 색상 */
   border-bottom: 2px solid #1abc9c;
-  /* 밑줄 추가 */
   font-weight: bold;
-  /* 선택된 메뉴 강조 */
 }
 
+/* 인증 버튼 및 로그아웃 버튼 컨테이너 */
 .menuBar-auth {
   display: flex;
   gap: 20px;
 }
 
+/* 인증 관련 공통 스타일 */
 .menuBar-auth .menuBar-item,
 .menuBar-auth .menuBar-logout-button {
   font-size: 16px;
-  /* 인증 관련 글자 크기 확대 */
   color: #333;
 }
 
+/* 로그아웃 버튼 스타일 */
 .menuBar-auth .menuBar-logout-button {
   background-color: #1abc9c;
-  /* 로그아웃 버튼에 배경색 추가 */
   color: white;
   border: none;
   cursor: pointer;
@@ -124,10 +121,9 @@
   border-radius: 5px;
   transition: background-color 0.3s ease;
   background-color: #1abc9c
-    /* 호버 효과 애니메이션 */
 }
 
+/* 로그아웃 버튼 호버 효과 */
 .menuBar-auth .menuBar-logout-button:hover {
   background-color: #16a085;
-  /* 호버 시 더 짙은 색상 */
 }

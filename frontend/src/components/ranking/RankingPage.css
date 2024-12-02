@@ -1,10 +1,11 @@
+/* 순위 페이지의 기본 스타일 */
 .ranking-page {
   font-family: Arial, sans-serif;
   margin: 20px;
   background: linear-gradient(to bottom, #f0f0f0 0%, #ffffff 100%);
 }
 
-/* Ranking Table */
+/* 순위 테이블 컨테이너 */
 .ranking-table {
   margin-top: 20px;
   background-color: white;
@@ -13,11 +14,13 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* 순위 테이블의 구조 스타일 */
 .ranking-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
+/* 순위 테이블의 셀 스타일 */
 .ranking-table th,
 .ranking-table td {
   padding: 12px;
@@ -25,49 +28,54 @@
   border-bottom: 1px solid #eee;
 }
 
+/* 순위 테이블 헤더 스타일 */
 .ranking-table th {
   background-color: #f7f7f7;
   color: #666;
   font-weight: bold;
 }
 
+/* 순위 테이블 호버 효과 */
 .ranking-table tr:hover {
   background-color: #f1f1f1;
 }
 
+/* 다이아몬드 등급 스타일 */
 .Diamond {
   color: rgb(46, 132, 230);
   font-weight: bold;
 }
 
+/* 플래티넘 등급 스타일 */
 .Platinum {
   color: rgb(21, 214, 134);
   font-weight: bold;
 }
 
+/* 골드 등급 스타일 */
 .Gold {
   color: rgb(209, 209, 78);
-  /* Gold: 노란색 */
   font-weight: bold;
 }
 
+/* 실버 등급 스타일 */
 .Silver {
   color: gray;
-  /* Silver: 회색 */
   font-weight: bold;
 }
 
+/* 브론즈 등급 스타일 */
 .Bronze {
   color: brown;
-  /* Bronze: 갈색 */
   font-weight: bold;
 }
 
+/* 뉴비 등급 스타일 */
 .newbie {
   color: black;
-  /* Newbie: 검은색 */
 }
 
+/* 순위(등급) 설명 컨테이너 */
 .ranking-description {
   margin-bottom: 20px;
   background-color: #f9f9f9;
@@ -76,15 +84,18 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 순위 설명 제목 스타일 */
 .ranking-description h3 {
   margin: 0;
 }
 
+/* 순위 설명 목록 스타일 */
 .ranking-description ul {
   list-style-type: none;
   padding: 0;
 }
 
+/* 순위 설명 목록 아이템 스타일 */
 .ranking-description li {
   margin: 5px 0;
 }
