@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // 사용자의 이름으로 조회
         logger.info("사용자명 '{}'으로 유저 로딩을 시도합니다.", username);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
         return role;
     }
 
+    // 사용자의 사용자 ID 조회
     public Long getUserId(String username) {
         logger.info("사용자명 '{}'의 ID를 조회합니다.", username);
         Optional<User> userOptional = userRepository.findByUsername(username);
@@ -107,8 +108,9 @@ public class UserService implements UserDetailsService {
         return "User and Ranking registered successfully";
     }
 
+    // 사용자 개인정보 수정
     public String updateUserInfo(Long userId, String email, String currentPassword, String newPassword,
-            String phoneNum) {
+            String phoneNum) { 
         logger.info("사용자 정보 수정 시도 - 사용자 ID: {}", userId);
 
         User user = userRepository.findById(userId)

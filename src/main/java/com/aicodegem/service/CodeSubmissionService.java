@@ -60,6 +60,7 @@ public class CodeSubmissionService {
 
         int revisedScore = (int) pylintResult.getScore();
 
+        // 제출된 데이터 적재
         submission.setRevisedCode(revisedCode);
         submission.setRevisedPylintOutput(pylintResult.getOutput());
         submission.setRevisedScore(revisedScore);

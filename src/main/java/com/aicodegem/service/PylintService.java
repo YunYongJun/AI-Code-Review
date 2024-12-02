@@ -12,13 +12,13 @@ public class PylintService {
     private final String PYTHON_SCRIPT_PATH = "./pylint_runner.py"; // pylint_runner.py 파일 경로
 
     public PylintResult runPylint(String code) throws IOException, InterruptedException {
-        // 1. 임시 Python 파일 생성
+        // 임시 Python 파일 생성
         File tempFile = File.createTempFile("code", ".py");
         try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(code);
         }
 
-        // 2. Python 스크립트를 호출하여 Pylint 실행
+        // Python 스크립트를 호출하여 Pylint 실행
         ProcessBuilder processBuilder = new ProcessBuilder("python", PYTHON_SCRIPT_PATH, tempFile.getAbsolutePath());
         processBuilder.redirectErrorStream(true);
 
@@ -32,7 +32,7 @@ public class PylintService {
             }
         }
 
-        // 3. 임시 파일 삭제
+        // 임시 파일 삭제
         tempFile.delete();
 
         int exitCode = process.waitFor();
@@ -40,12 +40,12 @@ public class PylintService {
             throw new RuntimeException("Pylint failed with exit code: " + exitCode);
         }
 
-        // 4. Pylint 점수 파싱
+        // Pylint 점수 파싱
         double score = parseScore(pylintOutput.toString());
         return new PylintResult(pylintOutput.toString(), score);
     }
 
-    private double parseScore(String pylintOutput) {
+    private double parseScore(String pylintOutput) { // 긴 문자열로 나오는 pylint점수 점수만 파싱
         Pattern pattern = Pattern.compile("Your code has been rated at ([0-9.]+)/10");
         Matcher matcher = pattern.matcher(pylintOutput);
         if (matcher.find()) {

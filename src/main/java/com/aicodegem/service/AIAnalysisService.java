@@ -33,7 +33,12 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict"; // AI 모델 서버 URL
+        @Value("${ai.server}")
+        private String serverUrl;
+        @Value("${ai.port}")
+        private String port;
+        
+        String aiModelUrl = String.format("%s:%s/predict", serverUrl, port); // AI 모델 서버 URL
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
