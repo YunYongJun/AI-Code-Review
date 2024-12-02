@@ -22,7 +22,7 @@ function SubmittedCodes() {
     cpp: cpp(),
   };
 
-  const tips = [
+  const tips = [ // 팁 목록
     'Tip 1: 제출된 코드 목록에서 코드를 클릭하여 상세 내용을 확인하세요.',
     'Tip 2: 코드를 수정한 후 제출하여 새 점수를 확인할 수 있습니다.',
     'Tip 3: AI 피드백 분석을 통해 코드 개선 팁을 받아보세요.',
