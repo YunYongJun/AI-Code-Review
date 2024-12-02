@@ -1,4 +1,4 @@
-/* 제출된 페이지 */
+/* 제출된 코드 페이지 레이아웃 */
 .sc-submitted-codes-page {
   display: flex;
   flex-wrap: wrap;
@@ -8,7 +8,7 @@
   font-family: 'Arial', sans-serif;
 }
 
-/* 입력 폼 */
+/* 입력 폼 스타일 */
 .sc-input {
   width: 100%;
   padding: 10px;
@@ -17,7 +17,7 @@
   font-size: 14px;
 }
 
-/* 코드 들어가는 폼*/
+/* 코드 리스트 스타일 */
 .sc-code-list {
   flex: 1;
   background-color: #ffffff;
@@ -28,6 +28,7 @@
   max-width: 300px;
 }
 
+/* 코드 리스트 제목 스타일 */
 .sc-code-list h3 {
   font-size: 1.6rem;
   font-weight: bold;
@@ -35,11 +36,13 @@
   margin-bottom: 10px;
 }
 
+/* 코드 리스트 항목 스타일 */
 .sc-code-list ul {
   list-style: none;
   padding: 0;
 }
 
+/* 코드 리스트 항목의 스타일 (배경색, 클릭 효과 등) */
 .sc-code-list li {
   padding: 10px;
   margin-bottom: 5px;
@@ -49,11 +52,12 @@
   transition: background-color 0.3s;
 }
 
+/* 코드 리스트 항목 호버 효과 */
 .sc-code-list li:hover {
   background-color: #e2e2e2;
 }
 
-/* 코드 상세정보 */
+/* 코드 상세정보 영역 스타일 */
 .sc-code-details {
   flex: 2;
   padding: 30px;
@@ -67,6 +71,7 @@
   max-height: 2000px;
 }
 
+/* 코드 상세정보 제목 스타일 */
 .sc-code-details h4 {
   font-size: 1.8rem;
   font-weight: bold;
@@ -74,6 +79,7 @@
   margin-bottom: 20px;
 }
 
+/* 코드 상세정보 내용 스타일 */
 .sc-code-details p {
   font-size: 1.1rem;
   color: #555;
@@ -81,6 +87,7 @@
   line-height: 1.6;
 }
 
+/* 코드 상세정보 버튼 스타일 */
 .sc-code-details button {
   padding: 10px 25px;
   background-color: #3498db;
@@ -92,14 +99,17 @@
   transition: background-color 0.3s;
 }
 
+/* 코드 상세정보 버튼 호버 효과 */
 .sc-code-details button:hover {
   background-color: #2980b9;
 }
 
+/* 코드 상세정보 마지막 문단 스타일 */
 .sc-code-details p:last-child {
   margin-top: 20px;
 }
 
+/* 작은 화면에서 코드 페이지 레이아웃 수정 */
 @media (max-width: 768px) {
   .sc-submitted-codes-page {
     flex-direction: column;
@@ -116,6 +126,7 @@
   }
 }
 
+/* 피드백 섹션 스타일 */
 .sc-feedback-section {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -128,6 +139,7 @@
   max-width: 1500px;
 }
 
+/* 피드백 섹션 제목 스타일 */
 .sc-feedback-section h5 {
   font-size: 1.2rem;
   font-weight: bold;
@@ -135,33 +147,34 @@
   margin-bottom: 10px;
 }
 
+/* 피드백 섹션 내용 스타일 */
 .sc-feedback-section p {
   font-size: 1rem;
   color: #555;
   line-height: 1.5;
 }
 
+/* 강조된 텍스트 스타일 */
 .sc-highlight {
   color: #2c2929;
-  /* 강조 색상: 붉은색 */
   background-color: #fce4e4;
-  /* 연한 배경색 */
   padding: 2px 4px;
   border-radius: 3px;
 }
 
+/* 굵은 글씨 스타일 */
 .sc-bold {
-  /* 굵은 글씨 */
   color: #000000;
-  /* 기본 텍스트 색상 */
 }
 
+/* 피드백 폰트 스타일 */
 .sc-feedback-font {
   font-size: 1.7rem;
   font-weight: bold;
   color: #1abc9c;
 }
 
+/* 로딩 오버레이 스타일 */
 .sc-loading-overlay {
   position: fixed;
   top: 0;
@@ -169,16 +182,14 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  /* 충분히 불투명하게 설정 */
   z-index: 9999;
-  /* 다른 요소 위에 위치 */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-
+/* 로딩 스피너 스타일 */
 .sc-loading-spinner {
   width: 50px;
   height: 50px;
@@ -188,18 +199,21 @@
   animation: spin 1s linear infinite;
 }
 
+/* 회전 애니메이션 */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
+/* 로딩 팁 스타일 */
 .sc-loading-tip {
   margin-top: 20px;
   font-size: 16px;
   color: #ffffff !important;
 }
 
+/* 흐림 효과 스타일 */
 .sc-blur {
   filter: blur(4px);
   pointer-events: none;
@@ -221,34 +235,29 @@
 /* '수정된 코드 제출' 버튼 스타일 */
 .sc-resubmit-button {
   background-color: #363f37 !important;
-  /* 녹색 */
   color: white;
 }
 
+/* '수정된 코드 제출' 버튼 호버 효과 */
 .sc-resubmit-button:hover {
   background-color: #bcc4bc !important;
-  /* 호버 시 어두운 녹색 */
   transform: translateY(-2px);
-  /* 호버 시 살짝 위로 이동 */
 }
 
 /* 'AI 피드백 분석' 버튼 스타일 */
 .sc-analyze-feedback-button {
   background-color: #363f37 !important;
-  /* 파란색 */
   color: white;
 }
 
+/* 'AI 피드백 분석' 버튼 호버 효과 */
 .sc-analyze-feedback-button:hover {
   background-color: #bcc4bc !important;
-  /* 호버 시 어두운 파란색 */
   transform: translateY(-2px);
-  /* 호버 시 살짝 위로 이동 */
 }
 
 /* 버튼 클릭 효과 */
 .sc-resubmit-button:active,
 .sc-analyze-feedback-button:active {
   transform: translateY(2px);
-  /* 클릭 시 버튼이 살짝 눌리는 효과 */
 }

@@ -3,52 +3,56 @@ import './AchievementPage.css';
 import { jwtDecode } from 'jwt-decode';
 
 const AchievementPage = () => {
-  const [achievements, setAchievements] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
+  // 상태 변수 설정
+  const [achievements, setAchievements] = useState([]); // 업적 데이터 저장
+  const [loading, setLoading] = useState(true);         // 로딩 상태
+  const [error, setError] = useState(null);             // 오류 메시지
+  const [userId, setUserId] = useState(null);           // 사용자 ID
 
+  // JWT 토큰에서 사용자 ID 추출
   useEffect(() => {
-    // JWT 토큰에서 사용자 ID 추출
-    const token = localStorage.getItem('token');
+
+    const token = localStorage.getItem('token');  // 로컬 스토리지에서 토큰 가져오기
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserId(decodedToken.userId); // 사용자 ID 설정
+      const decodedToken = jwtDecode(token);      // 토큰 디코딩
+      setUserId(decodedToken.userId);             // 디코딩된 토큰에서 사용자 ID 설정
     }
   }, []);
 
+  // 사용자 ID가 있을 때 업적 데이터를 가져오는 함수
   useEffect(() => {
-    // 사용자 ID가 있는 경우 업적을 가져옴
     const fetchAchievements = async () => {
-      if (!userId) return; // 사용자 ID가 없으면 종료
+      // 사용자 ID가 없으면 종료
+      if (!userId) return;
 
       const token = localStorage.getItem('token');
       try {
+        // 사용자 ID를 기반으로 업적 정보를 서버에서 가져오기
         const response = await fetch(`http://localhost:8080/api/achievements/${userId}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`, // JWT를 헤더에 포함
+            'Content-Type': 'application/json', // 요청 타입
+            'Authorization': `Bearer ${token}`, // JWT를 Authorization 헤더에 포함
           },
         });
         if (!response.ok) {
-          throw new Error('업적을 가져오는 데 실패했습니다.'); // 오류 처리
+          // 응답이 성공적이지 않으면 오류 처리
+          throw new Error('업적을 가져오는 데 실패했습니다.');
         }
-
+        // 응답 데이터를 JSON으로 변환
         const data = await response.json();
-        setAchievements(data); // 업적 상태 설정
+        setAchievements(data);    // 업적 상태 업데이트
       } catch (error) {
-        setError(error.message); // 오류 메시지 설정
+        setError(error.message);  // 오류 발생 시 오류 메시지 설정
       } finally {
-        setLoading(false); // 로딩 상태 false로 설정
+        setLoading(false);        // 로딩이 끝났으므로 로딩 상태 false로 설정
       }
     };
-
     fetchAchievements(); // 업적 가져오기 호출
   }, [userId]);
 
   if (loading) {
-    return <div>로딩 중...</div>; // 로딩 상태
+    return <div>로딩 중...</div>;    // 로딩 상태일 때 표시되는 텍스트
   }
 
   if (error) {

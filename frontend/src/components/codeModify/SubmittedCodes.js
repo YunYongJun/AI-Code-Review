@@ -7,22 +7,24 @@ import { jwtDecode } from 'jwt-decode';
 import './SubmittedCodes.css';
 
 function SubmittedCodes() {
-  const [submittedCodes, setSubmittedCodes] = useState([]);
-  const [selectedCode, setSelectedCode] = useState(null);
-  const [editedDetail, setEditedDetail] = useState('');
-  const [language, setLanguage] = useState('java');
-  const [aiFeedback, setAiFeedback] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // 전체 로딩 상태 관리
+  const [submittedCodes, setSubmittedCodes] = useState([]); // 제출된 코드 목록
+  const [selectedCode, setSelectedCode] = useState(null);   // 선택된 코드
+  const [editedDetail, setEditedDetail] = useState('');     // 수정된 코드 내용
+  const [language, setLanguage] = useState('java');         // 선택된 언어
+  const [aiFeedback, setAiFeedback] = useState(null);       // AI 피드백
+  const [isLoading, setIsLoading] = useState(false);        // 전체 로딩 상태 관리
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(false); // AI 피드백 로딩 상태 관리
-  const [tipIndex, setTipIndex] = useState(0); // 로딩 중 팁 인덱스 관리
+  const [tipIndex, setTipIndex] = useState(0);              // 로딩 중 팁 인덱스 관리
 
+  // 코드미러 언어 설정
   const languageExtensions = {
     java: java(),
     python: python(),
     cpp: cpp(),
   };
 
-  const tips = [ // 팁 목록
+  // 로딩 중 표시할 팁 목록
+  const tips = [
     'Tip 1: 제출된 코드 목록에서 코드를 클릭하여 상세 내용을 확인하세요.',
     'Tip 2: 코드를 수정한 후 제출하여 새 점수를 확인할 수 있습니다.',
     'Tip 3: AI 피드백 분석을 통해 코드 개선 팁을 받아보세요.',
@@ -30,11 +32,13 @@ function SubmittedCodes() {
     'Tip 5: 다른 언어의 코드를 선택하려면 언어 드롭다운을 변경하세요.',
   ];
 
+  // 팁을 5초마다 변경하는 타이머 설정
   useEffect(() => {
     const tipTimer = setInterval(() => {
       setTipIndex((prevIndex) => (prevIndex + 1) % tips.length);
-    }, 5000); // 팁 변경 주기: 5초
+    }, 5000);
 
+    // 컴포넌트가 언마운트될 때 타이머 정리
     return () => clearInterval(tipTimer);
   }, [tips.length]);
 
@@ -57,7 +61,7 @@ function SubmittedCodes() {
             if (!response.ok) throw new Error('코드 제출 목록을 불러오는 데 실패했습니다.');
             return response.json();
           })
-          .then((data) => setSubmittedCodes(data))
+          .then((data) => setSubmittedCodes(data)) // 코드 목록 상태 업데이트
           .catch((error) => console.error('Error:', error))
           .finally(() => setIsLoading(false));
       } else {
@@ -68,8 +72,9 @@ function SubmittedCodes() {
       console.error('로컬 스토리지에 토큰이 없습니다.');
       setIsLoading(false);
     }
-  }, []);
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번 실행
 
+  // 코드 선택 처리
   const handleCodeSelect = (code) => {
     setSelectedCode(code);
     setEditedDetail(code.revisedCode || code.initialCode);
@@ -77,7 +82,7 @@ function SubmittedCodes() {
     setAiFeedback(null);
   };
 
-  // 코드 수정
+  // 수정된 코드 제출
   const resubmitCode = async () => {
     if (!selectedCode) {
       alert('수정할 코드를 선택해 주세요.');
@@ -117,7 +122,7 @@ function SubmittedCodes() {
     }
   };
 
-  // AI 피드백 분석
+  // AI 피드백 분석 요청
   const analyzeFeedback = async () => {
     if (!selectedCode) {
       alert('피드백을 분석할 코드를 선택해 주세요.');
@@ -138,7 +143,8 @@ function SubmittedCodes() {
       return;
     }
 
-    setIsLoadingFeedback(true); // 로딩 상태 시작
+    // AI 피드백 로딩 시작
+    setIsLoadingFeedback(true);
     try {
       const response = await fetch('http://localhost:8080/api/code/feedback', {
         method: 'POST',
@@ -154,7 +160,7 @@ function SubmittedCodes() {
       }
 
       const data = await response.json();
-      setAiFeedback(data.response); // API 응답 저장
+      setAiFeedback(data.response); // AI 피드백 결과 저장
     } catch (error) {
       console.error('AI 피드백 분석 중 오류 발생:', error);
       alert('AI 피드백 요청 중 문제가 발생했습니다.');

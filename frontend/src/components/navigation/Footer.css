@@ -1,9 +1,11 @@
+/* 푸터 스타일 */
 .footer {
     background-color: #1f2023;
     color: #aaaaaa;
     padding: 20px 0;
 }
 
+/* 푸터 내용 스타일 */
 .footer-content {
     display: flex;
     align-items: center;
@@ -14,6 +16,7 @@
     gap: 20px;
 }
 
+/* 푸터 로고 스타일 */
 .footer-menuBar-logo {
     display: flex;
     flex-direction: column;
@@ -21,44 +24,28 @@
     font-weight: bold;
     text-align: center;
     white-space: nowrap;
-    /* 로고 부분 줄바꿈 방지 */
 }
 
+/* 푸터 로고 강조 색상 스타일 */
 .footer-menuBar-logo-highlight {
     color: #1abc9c;
 }
 
+/* 푸터 로고 서브텍스트 스타일 */
 .footer-menuBar-logo-subtext {
     font-size: 14px;
     color: #bbb;
     margin-top: 5px;
 }
 
+/* 푸터 정보 스타일 */
 .footer-info {
     text-align: left;
     line-height: 1.6;
     font-size: 14px;
 }
 
-.footer-admin {
-    display: flex;
-    align-items: center;
-}
-
-.admin-button {
-    background-color: #333;
-    color: #cccccc;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.admin-button:hover {
-    background-color: #555;
-}
-
-/* 반응형 스타일 */
+/* 반응형 스타일 (화면 크기에 따라 스타일 변경) */
 @media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
@@ -72,7 +59,6 @@
 
     .footer-menuBar-logo {
         font-size: 20px;
-        /* 작은 화면에서 폰트 크기 조정 */
     }
 
     .footer-menuBar-logo-subtext {
@@ -81,6 +67,5 @@
 
     .footer-info {
         font-size: 12px;
-        /* 작은 화면에서 정보 글씨 크기 조정 */
     }
 }
