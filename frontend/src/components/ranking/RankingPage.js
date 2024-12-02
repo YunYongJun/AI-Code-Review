@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import './RankingPage.css';
 
 const RankingPage = () => {
-  const [rankings, setRankings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // 상태 변수 정의
+  const [rankings, setRankings] = useState([]); // 랭킹 목록 저장
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  const [error, setError] = useState(null);     // 오류 상태 관리
 
+  // 컴포넌트가 마운트될 때 API 요청하여 랭킹 데이터를 가져옴
   useEffect(() => {
     const fetchRankings = async () => {
       try {
@@ -21,8 +23,8 @@ const RankingPage = () => {
           .sort((a, b) => b.totalScore - a.totalScore)
           .map((item, index) => ({
             ...item,
-            userRank: index + 1,
-            userId: String(item.userId),
+            userRank: index + 1,         // 랭킹 순위 설정
+            userId: String(item.userId), // 사용자 ID는 문자열로 변환
           }));
 
         setRankings(sortedData);
