@@ -42,31 +42,31 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public Achievement getAchievementById(Long achievementId) {
+    public Achievement getAchievementById(Long achievementId) { // 업적 id 바탕으로 업적 출력
         return achievementRepository.findById(achievementId)
                 .orElseThrow(() -> new IllegalArgumentException("Achievement not found: " + achievementId));
     }
 
     @Override
-    public void assignAchievementsByTotalScore(Long userId) {
+    public void assignAchievementsByTotalScore(Long userId) { // 누적 점수 업적들의 조건 부합시 사용자에게 업적을 부여 
         logger.info("사용자 ID {}의 누적 점수 기반으로 업적을 확인합니다.", userId);
 
-        int totalScore = rankingRepository.findByUser_Id(userId)
+        int totalScore = rankingRepository.findByUser_Id(userId) // 누적 점수 추출
                 .map(ranking -> ranking.getTotalScore())
                 .orElseThrow(() -> new IllegalArgumentException("사용자의 랭킹 정보가 없습니다."));
 
         logger.info("사용자의 누적 점수: {}", totalScore);
 
-        List<Achievement> achievements = this.getAllAchievements();
+        List<Achievement> achievements = this.getAllAchievements(); // list 형태로 업적 목록 반환
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(userId) // 사용자 id바탕으로 사용자 반환
                 .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
 
-        for (Achievement achievement : achievements) {
-            if (evaluateCriteria(achievement.getCriteria(), totalScore)) {
+        for (Achievement achievement : achievements) { // 업적 목록 순회
+            if (evaluateCriteria(achievement.getCriteria(), totalScore)) { // 조건에 누적점수가 포함되는지 확인
                 boolean alreadyAssigned = userAchievementService.isAchievementAlreadyAssigned(userId,
                         achievement.getId());
-                if (!alreadyAssigned) {
+                if (!alreadyAssigned) { // 누적 점수가 업데이트 되지 않았을 경우
                     UserAchievement userAchievement = new UserAchievement();
                     userAchievement.setUser(user);
                     userAchievement.setAchievement(achievement);
@@ -79,7 +79,7 @@ public class AchievementServiceImpl implements AchievementService {
         }
     }
 
-    private boolean evaluateCriteria(String criteria, int totalScore) {
+    private boolean evaluateCriteria(String criteria, int totalScore) { // 조건에 totalScore가 포함되어있는지 확인
         if (criteria == null || criteria.isEmpty()) {
             return false; // 또는 적절한 기본값을 반환할 수 있습니다.
         }

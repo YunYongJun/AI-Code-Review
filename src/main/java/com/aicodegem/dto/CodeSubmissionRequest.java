@@ -1,5 +1,8 @@
 package com.aicodegem.dto;
 
+import lombok.Getter;
+
+@Getter
 public class CodeSubmissionRequest {
     private Long userId;
     private String code;

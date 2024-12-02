@@ -1,3 +1,4 @@
+/* 제출된 페이지 */
 .sc-submitted-codes-page {
   display: flex;
   flex-wrap: wrap;
@@ -7,6 +8,7 @@
   font-family: 'Arial', sans-serif;
 }
 
+/* 입력 폼 */
 .sc-input {
   width: 100%;
   padding: 10px;
@@ -15,6 +17,7 @@
   font-size: 14px;
 }
 
+/* 코드 들어가는 폼*/
 .sc-code-list {
   flex: 1;
   background-color: #ffffff;
@@ -50,6 +53,7 @@
   background-color: #e2e2e2;
 }
 
+/* 코드 상세정보 */
 .sc-code-details {
   flex: 2;
   padding: 30px;

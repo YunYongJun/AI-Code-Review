@@ -25,7 +25,7 @@ public class RankingServiceImpl implements RankingService {
         logger.info("사용자 ID {}로 순위 조회 요청을 받았습니다.", userId);
         Ranking ranking = rankingRepository.findByUser_Id(userId).orElse(null); // 사용자 ID로 순위 조회
 
-        if (ranking != null) {
+        if (ranking != null) { // 순위가 있는지 확인
             logger.info("순위 조회 성공 - 사용자 ID: {}, 순위: {}", userId, ranking.getUserRank());
         } else {
             logger.warn("순위 조회 실패 - 사용자 ID {}에 대한 순위가 없습니다.", userId);
@@ -35,18 +35,20 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
-    public Ranking saveRanking(Ranking ranking) {
+    public Ranking saveRanking(Ranking ranking) { // 사용자 순위 저장
         logger.info("새 순위를 저장합니다 - 사용자 ID: {}, 순위: {}", ranking.getUser().getId(), ranking.getUserRank());
         Ranking savedRanking = rankingRepository.save(ranking); // 순위 저장
         logger.info("순위 저장 성공 - ID: {}", savedRanking.getId());
+        
         return savedRanking;
     }
 
     @Override
-    public List<Ranking> getAllRankings() {
+    public List<Ranking> getAllRankings() { // 전체 순위 조회
         logger.info("모든 랭킹 정보를 조회합니다.");
         List<Ranking> rankings = rankingRepository.findAll(); // 모든 랭킹 정보 조회
         logger.info("총 {}개의 랭킹 정보를 조회했습니다.", rankings.size());
+        
         return rankings;
     }
 
