@@ -23,7 +23,7 @@ public class CodeAnalysisController {
     @Autowired
     private CodeSubmissionService codeSubmissionService;
 
-    private static final String AI_SERVER_URL = "http://192.168.34.13:8888/predict"; // AI 서버 URL
+    private static final String AI_SERVER_URL = "http://192.168.34.16:8888/predict"; // AI 서버 URL
 
     @PostMapping("/submit")
     public ResponseEntity<CodeSubmission> submitCode(@RequestParam(name = "userId") Long userId,

@@ -33,7 +33,7 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict"; // AI 모델 서버 URL
+        String aiModelUrl = "http://192.168.34.16:8888/predict"; // AI 모델 서버 URL
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -45,7 +45,7 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict";
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -58,7 +58,7 @@ public class AIAnalysisService {
         requestBody.put("userID", userId);
         requestBody.put("submittedCode", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict";
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
 
@@ -92,7 +92,7 @@ public class AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("revisedCode", revisedCode);
 
-        String aiModelUrl = "http://192.168.34.13:8888/repredict";
+        String aiModelUrl = "http://192.168.34.16:8888/repredict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         // AI 응답 파싱
