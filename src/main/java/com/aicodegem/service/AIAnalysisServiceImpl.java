@@ -46,7 +46,7 @@ public class AIAnalysisServiceImpl implements AIAnalysisService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict";
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
 
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
@@ -59,7 +59,7 @@ public class AIAnalysisServiceImpl implements AIAnalysisService {
         requestBody.put("userID", userId);
         requestBody.put("submittedCode", code);
 
-        String aiModelUrl = "http://192.168.34.13:8888/predict";
+        String aiModelUrl = "http://192.168.34.16:8888/predict";
         String aiResponse = restTemplate.postForObject(aiModelUrl, requestBody, String.class);
         JsonNode jsonResponse = objectMapper.readTree(aiResponse);
 
