@@ -8,6 +8,17 @@ public class CodeSubmissionRequest {
     private String code;
     private String title;
 
+    // 기본 생성자 (필요한 경우)
+    public CodeSubmissionRequest() {
+    }
+
+    // 파라미터를 받는 생성자
+    public CodeSubmissionRequest(long userId, String code, String title) {
+        this.userId = userId;
+        this.code = code;
+        this.title = title;
+    }
+
     // Getters and Setters
     public Long getUserId() {
         return userId;

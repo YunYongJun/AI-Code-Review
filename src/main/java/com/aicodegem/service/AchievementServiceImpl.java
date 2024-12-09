@@ -38,7 +38,12 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public List<Achievement> getAllAchievements() {
-        return achievementRepository.findAll();
+        List<Achievement> achievements = achievementRepository.findAll();
+        if (achievements.isEmpty()) {
+            logger.warn("업적 목록이 비어 있습니다.");
+            throw new RuntimeException("업적이 없습니다.");
+        }
+        return achievements;
     }
 
     @Override
