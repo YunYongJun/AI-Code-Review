@@ -1,9 +1,12 @@
 package com.aicodegem.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity // JPA 엔티티로 설정
@@ -20,8 +23,12 @@ public class User {
     private String phoneNum;
     private String role; // 사용자의 역할 필드 추가 (예: "user", "admin")
 
+    @OneToMany(mappedBy = "user") // User와 UserAchievement의 관계 설정
+    private List<UserAchievement> userAchievements; // 사용자가 달성한 업적 목록
+
     // 기본 생성자
     public User() {
+
     }
 
     // 모든 필드를 받는 생성자 (id는 MongoDB에서 자동으로 설정)

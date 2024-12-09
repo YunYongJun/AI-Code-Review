@@ -1,59 +1,16 @@
 package com.aicodegem.service;
 
-import com.aicodegem.dto.CodeSubmissionRequest;
-import com.aicodegem.model.CodeSubmission;
-import com.aicodegem.repository.CodeRepository;
-
+import java.io.IOException;
 import java.util.List;
+import com.aicodegem.model.CodeSubmission;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+public interface CodeSubmissionService {
+    /** 코드 제출 */
+    CodeSubmission submitCode(Long userId, String code, String title) throws IOException, InterruptedException;
 
-@Service
-public class CodeSubmissionService {
+    /** 코드 재제출 */
+    CodeSubmission reviseCode(String submissionId, String revisedCode) throws IOException, InterruptedException;
 
-    @Autowired
-    private CodeRepository codeRepository;
-
-    @Autowired
-    private AIAnalysisService aiAnalysisService;
-
-    // 최초 코드 제출 처리
-    public CodeSubmission submitCode(CodeSubmissionRequest request) {
-        String code = request.getCode();
-        int score = aiAnalysisService.analyzeCode(code);
-        String feedback = aiAnalysisService.generateFeedback(code);
-
-        // 제출된 코드와 결과를 저장
-        CodeSubmission submission = new CodeSubmission(request.getUserId(), code, feedback, score);
-        return codeRepository.save(submission);
-    }
-
-    // 수정된 코드 제출 처리
-    public CodeSubmission resubmitCode(String userId, String revisedCode) {
-        CodeSubmission submission = codeRepository.findByUserId(userId);
-        if (submission == null) {
-            throw new IllegalArgumentException("해당 사용자 ID에 대한 제출 코드가 없습니다.");
-        }
-
-        int revisedScore = aiAnalysisService.analyzeCode(revisedCode);
-        String revisedFeedback = aiAnalysisService.generateFeedback(revisedCode);
-
-        // 기존 코드 제출에 수정된 결과 반영
-        submission.setRevisedCode(revisedCode);
-        submission.setRevisedScore(revisedScore);
-        submission.setFeedback(revisedFeedback);
-
-        return codeRepository.save(submission);
-    }
-
-    // 특정 사용자 ID의 모든 제출 기록 조회
-    public List<CodeSubmission> getAllSubmissionsByUserId(String userId) {
-        return codeRepository.findAllByUserId(userId);
-    }
-
-    // 특정 submissionId로 제출 코드 조회
-    public CodeSubmission getSubmissionById(String submissionId) {
-        return codeRepository.findById(submissionId).orElse(null);
-    }
+    /** 제출된 코드 목록 가져오기 */
+    List<CodeSubmission> getUserSubmissions(Long userId);
 }

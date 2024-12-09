@@ -1,4 +1,4 @@
-/* Reset some basic styles */
+/* 기본 스타일 초기화 */
 body,
 html {
     margin: 0;
@@ -7,7 +7,7 @@ html {
     background-color: #f8f8f8;
 }
 
-/* Main container to center the form */
+/* 로그인 컨테이너 */
 .login-container {
     display: flex;
     justify-content: center;
@@ -16,7 +16,7 @@ html {
     background-color: #f8f8f8;
 }
 
-/* Login form styling */
+/* 로그인 폼 스타일 */
 .login-form {
     width: 400px;
     background-color: #ffffff;
@@ -26,7 +26,7 @@ html {
     text-align: center;
 }
 
-/* Title styling */
+/* 로그인 제목 스타일 */
 .login-title {
     font-size: 24px;
     font-weight: bold;
@@ -34,7 +34,7 @@ html {
     margin-bottom: 10px;
 }
 
-/* Description styling below the title */
+/* 로그인 설명 스타일 */
 .login-description {
     font-size: 14px;
     color: #666;
@@ -42,12 +42,12 @@ html {
     line-height: 1.5;
 }
 
-/* Input container to add spacing */
+/* 입력 컨테이너 */
 .login-input-container {
     margin-bottom: 20px;
 }
 
-/* Input styling to match the design */
+/* 입력 필드 스타일 */
 .login-input {
     width: 100%;
     padding: 12px;
@@ -58,12 +58,13 @@ html {
     transition: border-color 0.3s;
 }
 
+/* 입력 필드 호버 효과 */
 .login-input:focus {
     border-color: #007BFF;
     outline: none;
 }
 
-/* Button styling */
+/* 로그인 버튼 스타일 */
 .login-button {
     width: 100%;
     background-color: #004080;
@@ -77,22 +78,25 @@ html {
     transition: background-color 0.3s;
 }
 
+/* 로그인 버튼 호버 효과 */
 .login-button:hover {
     background-color: #003366;
 }
 
-/* Footer styling */
+/* 하단 텍스트 스타일 */
 .login-footer {
     margin-top: 15px;
     font-size: 14px;
     color: #666;
 }
 
+/* 하단 텍스트 버튼 스타일 */
 .login-footer a {
     color: #004080;
     text-decoration: none;
 }
 
+/* 하단 텍스트 버튼 호버 효과 */
 .login-footer a:hover {
     color: #003366;
     text-decoration: underline;

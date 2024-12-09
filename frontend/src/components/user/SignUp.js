@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './SignUp.css';
 
 const SignUp = () => {
+  // 회원가입 폼 데이터 상태 관리 (이메일, 사용자명, 비밀번호, 전화번호)
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -9,6 +10,7 @@ const SignUp = () => {
     phoneNum: '',
   });
 
+  // 입력 필드 값 변경 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -17,6 +19,7 @@ const SignUp = () => {
     }));
   };
 
+  // 회원가입 폼 제출 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -29,6 +32,7 @@ const SignUp = () => {
       });
       console.log(formData)
 
+      // 응답이 성공적이지 않으면 에러 처리
       if (!response.ok) {
         let errorMessage;
         try {
@@ -40,9 +44,10 @@ const SignUp = () => {
         throw new Error(errorMessage);
       }
 
+      // 회원가입 성공 시 텍스트 응답 처리
       const result = await response.text();
       console.log(result);
-
+      alert('회원가입 성공!');
       window.location.href = '/main';
     } catch (error) {
       console.error('Error:', error);

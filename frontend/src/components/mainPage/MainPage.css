@@ -1,3 +1,78 @@
+/* 전체 페이지 스타일 */
+.mainPage-App {
+  font-family: Arial, sans-serif;
+  position: relative;
+  min-height: 100vh;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transition: background-image 1s ease-in-out;
+}
+
+/* gif 이미지를 화면에 맞게 배경으로 덮는 스타일 */
+/* z-index를 통해 배경으로 설정하여 콘텐츠 위에 표시되지 않도록 */
+.image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* 이미지 비율을 유지하며 꽉 차게 만듦 */
+.image-wrapper .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 큰 화면에서 배경 이미지 스타일 */
+@media (min-width: 1024px) {
+  .mainPage-App {
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+  }
+}
+
+/* 메인 페이지 헤더 스타일 */
+.mainPage-header {
+  background-color: rgba(32, 32, 32, 0.5);
+  color: #fff;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
+
+/* 헤더 내부 콘텐츠 스타일 */
+.mainPage-header-content {
+  max-width: 700px;
+  margin: auto;
+}
+
+/* 헤더 텍스트 스타일 */
+.mainPage-header-content p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+/* 상단 라벨 스타일 */
+.mainPage-spring-label {
+  padding: 5px 10px;
+  display: inline-block;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+/* 박스 컨테이너 */
 .box-container {
   display: flex;
   justify-content: center;
@@ -5,9 +80,9 @@
   margin-top: 140px;
 }
 
+/* 박스 스타일 */
 .box {
   background-color: rgba(255, 255, 255, 0.8);
-  /* 투명한 하얀색 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
@@ -17,94 +92,34 @@
   will-change: transform, box-shadow;
 }
 
+/* 박스 호버 효과 */
 .box:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.box-icon1 {
-  width: 50px;
-  /* 아이콘의 너비 */
-  height: auto;
-  /* 자동 높이 조정 */
-  margin-bottom: 15px;
-  /* 아이콘과 텍스트 사이의 간격 */
-}
-
-.box-icon2 {
-  width: 50px;
-  /* 아이콘의 너비 */
-  height: auto;
-  /* 자동 높이 조정 */
-  margin-bottom: 15px;
-  /* 아이콘과 텍스트 사이의 간격 */
-}
-
+/* 박스 아이콘 스타일 */
+.box-icon1,
+.box-icon2,
 .box-icon3 {
   width: 50px;
   height: auto;
   margin-bottom: 15px;
-
 }
 
+/* 리뷰 텍스트 색상 */
 .review {
   color: #1abc9c;
 }
 
-
+/* 박스 제목 스타일 */
 .box-title {
   font-size: 22px;
-  /* 글씨 크기를 기존보다 키움 */
   font-weight: bold;
   margin-bottom: 10px;
-  /* 제목과 아이콘/내용 사이 간격 */
 }
 
-
-
-
-.mainPage-App {
-  font-family: Arial, sans-serif;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  transition: background-image 1s ease-in-out;
-}
-
-
-.mainPage-header {
-  background-color: rgba(128, 128, 128, 0.5);
-  /* 투명한 회색 */
-  color: white;
-  padding: 40px;
-  text-align: center;
-  position: relative;
-}
-
-
-.mainPage-header-content p {
-  font-size: 16px;
-  color: #fff;
-  /* 글씨 색상 변경 */
-  margin-top: 20px;
-  /* 위쪽 간격 */
-  margin-bottom: 30px;
-  /* 아래쪽 간격 */
-}
-
-.mainPage-header-content {
-  max-width: 700px;
-  margin: auto;
-}
-
-.mainPage-spring-label {
-  padding: 5px 10px;
-  display: inline-block;
-  border-radius: 15px;
-  font-weight: bold;
-}
-
+/* 회원가입 버튼 스타일 */
 .mainPage-signup-button {
   background-image: linear-gradient(to right, #000000, #000000);
   border: none;
@@ -116,37 +131,31 @@
   cursor: pointer;
 }
 
+/* 코드 리뷰 섹션 스타일 */
 .mainPage-code-review-section {
   background-color: rgba(128, 128, 128, 0.5);
   text-align: center;
   padding: 100px;
   margin-top: 20px;
-  /* 필요시 여백 조정 */
 }
 
+/* 코드 리뷰 섹션 제목 스타일 */
 .mainPage-code-review-section h2 {
   font-size: 28px;
   font-weight: bold;
   color: #fff;
-  /* 글씨 색상 변경 */
   margin-bottom: 10px;
 }
 
+/* 코드 리뷰 섹션 밑줄 스타일 */
 .mainPage-code-review-section .underline {
   width: 50px;
   height: 2px;
   background-color: #fff;
-  /* 변경된 색상 */
   margin: 10px auto;
 }
 
-.mainPage-code-review-section p {
-  font-size: 16px;
-  color: #fff;
-  /* 글씨 색상 변경 */
-  margin-top: 0;
-}
-
+/* 메인 페이지 푸터 스타일 */
 .mainPage-footer {
   background-color: #333;
   color: white;
@@ -154,17 +163,20 @@
   text-align: center;
 }
 
+/* 푸터 내부 콘텐츠 스타일 */
 .mainPage-footer-content {
   max-width: 800px;
   margin: auto;
 }
 
+/* 다단 컬럼 섹션 스타일 */
 .mainPage-multi-column-section {
   background-color: #212121;
   color: #ddd;
   padding: 40px 0;
 }
 
+/* 다단 컬럼 컨테이너 */
 .mainPage-multi-column-container {
   display: flex;
   justify-content: space-around;
@@ -173,35 +185,40 @@
   flex-wrap: wrap;
 }
 
+/* 개별 컬럼 스타일 */
 .mainPage-column {
   flex: 1;
   margin: 20px;
   min-width: 200px;
 }
 
+/* 컬럼 제목 스타일 */
 .mainPage-column h3 {
   font-size: 18px;
   margin-bottom: 15px;
   color: #ffffff;
 }
 
+/* 컬럼 리스트 스타일 */
 .mainPage-column ul {
   list-style-type: none;
   padding: 0;
 }
 
+/* 컬럼 리스트 항목 스타일 */
 .mainPage-column ul li {
   margin-bottom: 10px;
   font-size: 14px;
   color: #ccc;
 }
 
+/* 컬럼 리스트 항목 호버 효과 */
 .mainPage-column ul li:hover {
   color: #1abc9c;
-  /* 마우스를 올리면 글씨 색상 변경 */
   cursor: pointer;
 }
 
+/* 모바일 화면에서 다단 컬럼 레이아웃을 세로로 쌓기 위한 스타일 */
 @media (max-width: 768px) {
   .mainPage-multi-column-container {
     flex-direction: column;

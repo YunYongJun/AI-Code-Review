@@ -7,7 +7,6 @@ import MainPage from './components/mainPage/MainPage';
 import RankingPage from './components/ranking/RankingPage';
 import AchievementPage from './components/achievement/AchievementPage';
 import SubmittedCodes from './components/codeModify/SubmittedCodes';
-import GradingPage from './components/codeGrading/GradingPage';
 import SubmitCodePage from './components/codeSubmit/SubmitCodePage';
 
 const AppRouter = () => {
@@ -38,9 +37,6 @@ const AppRouter = () => {
 
         {/* 개인정보 수정 페이지 경로 */}
         <Route path="/profile-edit" element={<ProfileEdit />} />
-
-        {/* 체점 페이지 경로 추가 */}
-        <Route path="/grading" element={<GradingPage />} />
 
         {/* 기본 루트 경로를 메인 페이지로 설정 */}
         <Route path="/" element={<MainPage />} />

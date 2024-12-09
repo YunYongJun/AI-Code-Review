@@ -1,12 +1,20 @@
 package com.aicodegem.service;
 
 import com.aicodegem.model.Achievement;
+import com.aicodegem.model.UserAchievement;
 
 import java.util.List;
 
-// Achievement 관련 비즈니스 로직을 정의하는 서비스 인터페이스
 public interface AchievementService {
-    List<Achievement> getAchievementsByUserId(int userId); // 사용자 ID로 업적 조회
+    /** 전체 업적목록 가져오기 */
+    List<Achievement> getAllAchievements();
+    /** 업적 id에 해당하는 업적 가져오기   */
+    Achievement getAchievementById(Long achievementId);
+    /** 누적 점수 업적 업데이트 */
+    void assignAchievementsByTotalScore(Long userId);
+    /** 사용자 업적 저장 */
+    UserAchievement saveUserAchievement(UserAchievement userAchievement);
+    /** 베이스 업적 저장 */
+    Achievement saveAchievement(Achievement achievement);
 
-    Achievement saveAchievement(Achievement achievement); // 업적 저장
 }
