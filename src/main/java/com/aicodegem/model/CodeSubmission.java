@@ -9,21 +9,21 @@ import java.time.LocalDate;
 public class CodeSubmission {
 
     @Id
-    private String id;
+    private String id; // mongodb는 string 값으로 설정
 
-    private Long userId;
-    private String initialCode;
-    private String title;
-    private LocalDate submissionDate;
-    private String pylintOutput;
+    private Long userId; // 사용자 id
+    private String initialCode; // 초기 제출된 코드
+    private String title; // 제목
+    private LocalDate submissionDate; // 제출일자
+    private String pylintOutput; // 제출 후 나온 피드백
 
     // 추가된 필드
-    private String feedback;
-    private int initialScore;
-    private String revisedCode;
-    private int revisedScore;
-    private String revisedFeedback;
-    private LocalDate feedbackDate;
+    private String feedback; // 피드백 내용
+    private int initialScore; // 초기 점수
+    private String revisedCode; // 수정 후 코드
+    private int revisedScore; // 수정 후 점수
+    private String revisedFeedback; // 수정후 피드백 내용
+    private LocalDate feedbackDate; // 피드백 추가 일자
 
     // @SuppressWarnings("unused")
     private String revisedPylintOutput; // 추가된 필드
@@ -43,6 +43,10 @@ public class CodeSubmission {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Long getUserId() {

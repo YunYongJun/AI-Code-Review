@@ -4,9 +4,11 @@ import { FaChartLine, FaTrophy, FaStar, FaSignOutAlt } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 
 const MenuBar = () => {
+  // 로그인 상태 및 사용자 이름 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
+  // 컴포넌트 마운트 시 실행되는 useEffect
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -17,6 +19,7 @@ const MenuBar = () => {
     }
   }, []);
 
+  // 로그아웃 처리 함수
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
@@ -25,6 +28,7 @@ const MenuBar = () => {
     window.location.href = '/';
   };
 
+  // 메뉴 클릭 처리 함수
   const handleMenuClick = (url) => {
     // 업적 페이지와 코드 제출 페이지는 로그인 필요
     if ((url === '/achievement' || url === '/submission') && !isLoggedIn) {

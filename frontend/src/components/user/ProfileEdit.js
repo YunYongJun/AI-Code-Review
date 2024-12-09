@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import './ProfileEdit.css';
 
 const ProfileEdit = () => {
+  // 사용자 정보와 JWT 토큰 상태 관리
   const [formData, setFormData] = useState({
     email: '',
     currentPassword: '',
@@ -12,6 +13,7 @@ const ProfileEdit = () => {
   const [userId, setUserId] = useState(null); // 사용자 ID 상태 추가
   const [token, setToken] = useState(''); // JWT 토큰 상태 추가
 
+  // 컴포넌트가 처음 렌더링될 때, 로컬스토리지에서 JWT 토큰을 가져와서 사용자 정보를 설정
   useEffect(() => {
     // JWT 토큰에서 사용자 ID 추출
     const storedToken = localStorage.getItem('token');
@@ -20,8 +22,9 @@ const ProfileEdit = () => {
       setUserId(decodedToken.userId); // 사용자 ID 설정
       setToken(storedToken); // 토큰 설정
     }
-  }, []);
+  }, []); // 빈 배열로 최초 렌더링 후 한 번만 실행
 
+  // 입력값이 변경될 때마다 formData 상태를 업데이트
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -30,6 +33,7 @@ const ProfileEdit = () => {
     }));
   };
 
+  // 폼 제출 시 사용자 정보 업데이트 요청
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,13 +43,15 @@ const ProfileEdit = () => {
     }
 
     try {
+      // 폼 데이터를 URLSearchParams로 인코딩
       const formBody = new URLSearchParams();
       formBody.append("email", formData.email);
       formBody.append("currentPassword", formData.currentPassword);
       formBody.append("newPassword", formData.newPassword);
       formBody.append("phoneNum", formData.phoneNum);
 
-      const response = await fetch(`http://localhost:8080/api/auth/update/${userId}`, {
+      // 사용자 정보 업데이트 요청
+      const response = await fetch(`http://192.168.34.14:8080/api/auth/update/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
